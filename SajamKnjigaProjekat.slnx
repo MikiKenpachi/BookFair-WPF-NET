@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ConsoleClient/ConsoleClient.csproj" Id="e8ce9438-d917-4a20-9abd-cebbdaf00bc6" />
+  <Project Path="Core/Core.csproj" Id="4f986b13-7f68-4e02-ace3-271a0775d2e8" />
+  <Project Path="WpfClient/WpfClient.csproj" />
+</Solution>
