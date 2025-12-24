@@ -4,10 +4,6 @@ namespace SajamKnjigaProjekat.Core.Models
 {
     public class Autor
     {
-
-
-
-
         public string Ime;
         public string Prezime;
         public string Datum_rodjenja;
@@ -17,10 +13,7 @@ namespace SajamKnjigaProjekat.Core.Models
         public int Godine_iskustva;
         public string Broj_lk;
 
-        public Autor()
-        {
-
-        }
+        public Autor(){ }
 
         public Autor(string ime, string prezime, string datum_rodjenja, string adresa, string telefon, string email, string broj_lk, int godine_iskustva)
         {

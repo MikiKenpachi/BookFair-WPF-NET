@@ -10,10 +10,7 @@ namespace SajamKnjigaProjekat.Core.Models
         public string Drzava;
 
 
-        public Adresa()
-        {
-
-        }
+        public Adresa(){ }
 
         public Adresa(string ulica, string broj, string grad, string drzava)
         {

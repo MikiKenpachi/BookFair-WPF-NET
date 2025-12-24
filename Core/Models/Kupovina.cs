@@ -10,9 +10,7 @@ namespace SajamKnjigaProjekat.Core.Models
         public int Ocena { get; set; }
         public string Komentar { get; set; }
 
-        public Kupovina()
-        {
-            
-        }
+        public Kupovina() { } 
+
     }
 }

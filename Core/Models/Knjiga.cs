@@ -5,8 +5,6 @@ namespace SajamKnjigaProjekat.Core.Models
 {
     public class Knjiga
     {
-
-
         public string ISBN;
         public string Naziv;
         public string Zanr;
@@ -18,10 +16,7 @@ namespace SajamKnjigaProjekat.Core.Models
         public List<string> Kupili;
         public List<string> Na_listi_zelja;
 
-        public Knjiga()
-        {
-
-        }
+        public Knjiga() { }
 
         public Knjiga(string iSBN, string naziv, string zanr, string godina_izdanja, string cena, string broj_strana, List<Autor> autori, string izdavac, List<string> kupili, List<string> na_Listi_Zelja)
         {
