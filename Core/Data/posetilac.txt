@@ -1,2 +1,3 @@
-Miki|Triki|2004-01-01T00:00:00.0000000|Vuka Karadzica 132|0665748448|triki@uns.ac.rs|1|5|R|0
-Mile|Milenkovic|2004-12-12T00:00:00.0000000|Tolstojeva 55|0677412122|mile@gmail.com|2|3|R|0
+Miki|Triki|2004-01-01T00:00:00.0000000|Vuka|Karadzica|132|Srbija|0665748448|triki@uns.ac.rs|1|5|R|0
+Mile|Milenkovic|2004-12-12T00:00:00.0000000|Tolstojeva|Novi Sad|55|Hrvatska|0677412122|mile@gmail.com|2|3|R|0
+Jovan|Milutinov|2004-12-10T00:00:00.0000000|Mise DImitrijevica|Jagodina|24|Srb|9429492492|anifsoan|3|9494|V|0

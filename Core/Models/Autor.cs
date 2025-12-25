@@ -8,7 +8,7 @@ namespace SajamKnjigaProjekat.Core.Models
         public string Ime { get; set; }
         public string Prezime { get; set; }
         public DateTime Datum_rodjenja { get; set; }
-        public string Adresa { get; set; }
+        public Adresa Adresa { get; set; }
         public string Telefon { get; set; }
         public string Email { get; set; }
         public int Godine_iskustva { get; set; }
@@ -17,7 +17,7 @@ namespace SajamKnjigaProjekat.Core.Models
 
         public Autor() { }
 
-        public Autor(string ime, string prezime, DateTime datumRodjenja, string adresa, string telefon, string email, int godineIskustva, string brojLk)
+        public Autor(string ime, string prezime, DateTime datumRodjenja, Adresa adresa, string telefon, string email, int godineIskustva, string brojLk)
         {
             Ime = ime;
             Prezime = prezime;
@@ -44,7 +44,10 @@ namespace SajamKnjigaProjekat.Core.Models
             Ime,
             Prezime,
             Datum_rodjenja.ToString("yyyy-MM-dd"),
-            Adresa,
+            Adresa.Ulica,
+            Adresa.Grad,
+            Adresa.Broj,
+            Adresa.Drzava,
             Telefon,
             Email,
             Godine_iskustva.ToString(),
@@ -57,22 +60,22 @@ namespace SajamKnjigaProjekat.Core.Models
 
         public void FromCSV(string[] values)
         {
-            if (values == null || values.Length < 9)
+            if (values == null || values.Length < 12)
                 throw new ArgumentException("Invalid CSV data for Autor.");
 
             Ime = values[0];
             Prezime = values[1];
             Datum_rodjenja = DateTime.Parse(values[2]);
-            Adresa = values[3];
-            Telefon = values[4];
-            Email = values[5];
-            Godine_iskustva = int.Parse(values[6]);
-            Broj_lk = values[7];
+            Adresa =new Adresa(values[3], values[4], values[5], values[6]);
+            Telefon = values[7];
+            Email = values[8];
+            Godine_iskustva = int.Parse(values[9]);
+            Broj_lk = values[10];
 
             SpisakKnjiga = new List<Knjiga>();
-            if (!string.IsNullOrEmpty(values[8]))
+            if (!string.IsNullOrEmpty(values[11]))
             {
-                var isbnList = values[8].Split(';');
+                var isbnList = values[11].Split(';');
                 foreach (var isbn in isbnList)
                 {
                     

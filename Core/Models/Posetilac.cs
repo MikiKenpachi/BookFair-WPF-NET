@@ -11,7 +11,7 @@ namespace SajamKnjigaProjekat.Core.Models
         public string Ime { get; set; }
         public string Prezime { get; set; }
         public DateTime DatumRodjenja { get; set; }
-        public string Adresa { get; set; }
+        public Adresa Adresa { get; set; }
         public string Telefon { get; set; }
         public string Email { get; set; }
         public string BrClanskeKarte { get; set; }
@@ -23,7 +23,7 @@ namespace SajamKnjigaProjekat.Core.Models
 
         public Posetilac() { }
 
-        public Posetilac(string ime, string prezime, DateTime datumRodjenja, string adresa, string telefon, string email, string brClanskeKarte, int godinaClanstva, StatusPosetioca status)
+        public Posetilac(string ime, string prezime, DateTime datumRodjenja, Adresa adresa, string telefon, string email, string brClanskeKarte, int godinaClanstva, StatusPosetioca status)
         {
             Ime = ime;
             Prezime = prezime;
@@ -57,7 +57,10 @@ namespace SajamKnjigaProjekat.Core.Models
                 Ime,
                 Prezime,
                 DatumRodjenja.ToString("o"),
-                Adresa,
+                Adresa.Ulica,
+                Adresa.Grad,
+                Adresa.Broj,
+                Adresa.Drzava, 
                 Telefon,
                 Email,
                 BrClanskeKarte,
@@ -70,19 +73,19 @@ namespace SajamKnjigaProjekat.Core.Models
 
         public void FromCSV(string[] values)
         {
-            if (values.Length < 10)
+            if (values.Length < 13)
                 throw new ArgumentException("Invalid CSV data for Posetilac.");
 
             Ime = values[0];
             Prezime = values[1];
             DatumRodjenja = DateTime.Parse(values[2]);
-            Adresa = values[3];
-            Telefon = values[4];
-            Email = values[5];
-            BrClanskeKarte = values[6];
-            GodinaClanstva = int.Parse(values[7]);
-            Status = (StatusPosetioca)Enum.Parse(typeof(StatusPosetioca), values[8]);
-            ProsecnaOcena = double.Parse(values[9]);
+            Adresa = new Adresa(values[3], values[4], values[5], values[6]);
+            Telefon = values[7];
+            Email = values[8];
+            BrClanskeKarte = values[9];
+            GodinaClanstva = int.Parse(values[10]);
+            Status = (StatusPosetioca)Enum.Parse(typeof(StatusPosetioca), values[11]);
+            ProsecnaOcena = double.Parse(values[12]);
             // You may want to deserialize ListaKupovina and ListaZelja as needed
         }
     }

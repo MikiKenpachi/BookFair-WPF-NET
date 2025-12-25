@@ -1,1 +1,3 @@
-Nebojsa|Ralevic|1965-12-12|Nikole Tesle 12|0655544554|ralevic@uns.ac.rs|34|193665479|
+Nebojsa|Ralevic|1965-12-12|Seimfos|oasono|42|Srbija|0655544554|ralevic@uns.ac.rs|34|193665479|
+Boris|Step|2000-12-12|Bakal|Lozn|55|Hrvatska|214125|nsoinfas|55|242442424|
+Igor|Belan|1999-12-02|Klasdj|Jopjsd|42|Srbija|424242|sdfdfaf|44|12345|

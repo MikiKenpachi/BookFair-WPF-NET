@@ -2,6 +2,7 @@
 using SajamKnjigaProjekat.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace ConsoleClient
         PosetilacDAO posetilacDao = new PosetilacDAO();
         KnjigaDAO knjigaDao = new KnjigaDAO();
         AutorDAO autorDao = new AutorDAO();
+        AdresaDAO adresaDao= new AdresaDAO();
 
         public void Run()
         {
@@ -81,6 +83,8 @@ namespace ConsoleClient
         
         public void DodajPosetioca()
         {
+            Adresa adr=new Adresa();
+
             Console.WriteLine("=== Dodavanje posetioca ===");
             Console.Write("Ime : ");
             string ime = Console.ReadLine();
@@ -89,7 +93,7 @@ namespace ConsoleClient
             Console.Write("Datum rodjenja yyyy/mm/dd : ");
             DateTime datum = DateTime.Parse(Console.ReadLine());
             Console.Write("Adresa : ");
-            string adresa = Console.ReadLine();
+            adr = DodajAdresu();
             Console.Write("Telefon : ");
             string telefon = Console.ReadLine();
             Console.Write("Email : ");
@@ -100,7 +104,8 @@ namespace ConsoleClient
             Console.Write("Status (R - redovan, V - vip) : ");
             StatusPosetioca status = Console.ReadLine().ToUpper() == "V" ? StatusPosetioca.V : StatusPosetioca.R;
 
-            Posetilac novi = new Posetilac(ime,prezime,datum,adresa,telefon,email,brkarte,godina,status);
+           
+            Posetilac novi = new Posetilac(ime,prezime,datum,adr,telefon,email,brkarte,godina,status);
 
             posetilacDao.Add(novi);
 
@@ -146,9 +151,7 @@ namespace ConsoleClient
             string prezime = Console.ReadLine();
             if (!string.IsNullOrEmpty(prezime)) posetilac.Prezime = prezime;
 
-            Console.Write("Nova adresa / ENTER (bez izmena): ");
-            string adresa = Console.ReadLine();
-            if (!string.IsNullOrEmpty(adresa)) posetilac.Adresa = adresa;
+       
 
             Console.Write("Telefon / ENTER (bez izmena): ");
             string telefon = Console.ReadLine();
@@ -283,10 +286,29 @@ namespace ConsoleClient
 
         }
 
+        public Adresa DodajAdresu()
+        {
+            
+            Console.Write("Ime ulice : ");
+            string ulica = Console.ReadLine();
+            Console.Write("Grad : ");
+            string grad = Console.ReadLine();
+            Console.Write("Broj : ");
+            string broj = Console.ReadLine();
+            Console.Write("Drzava : ");
+            string drzava = Console.ReadLine();
 
+
+             Adresa adresa=new Adresa(ulica,grad,broj,drzava);
+
+            adresaDao.Add(adresa);
+            
+
+            return adresa;
+        }
         public void DodajAutora()
         {
-            List<Knjiga> spisak = new List<Knjiga>();
+            Adresa adr = new Adresa();
 
             Console.WriteLine("=== Dodavanje autora ===");
             Console.Write("Ime : ");
@@ -295,8 +317,10 @@ namespace ConsoleClient
             string prezime = Console.ReadLine();
             Console.Write("Datum rodjenja yyyy/mm/dd : ");
             DateTime datum = DateTime.Parse(Console.ReadLine());
-            Console.Write("Adresa : ");
-            string adresa = Console.ReadLine();
+            Console.WriteLine("Dodaj adresu");
+
+            adr=DodajAdresu();
+
             Console.Write("Telefon : ");
             string telefon = Console.ReadLine();
             Console.Write("Email : ");
@@ -307,8 +331,9 @@ namespace ConsoleClient
             int godine = int.Parse(Console.ReadLine());
 
 
+            
 
-            Autor novi = new Autor(ime, prezime, datum, adresa, telefon, email, godine, lk);
+            Autor novi = new Autor(ime, prezime, datum, adr, telefon, email, godine, lk);
 
             autorDao.Add(novi);
 
@@ -367,10 +392,10 @@ namespace ConsoleClient
             if (!string.IsNullOrEmpty(datum))
                 autor.Datum_rodjenja = DateTime.Parse(datum);
 
-            Console.Write($"Adresa ({autor.Adresa}): ");
-            string adr= Console.ReadLine();
-            if (!string.IsNullOrEmpty(adr))
-                autor.Adresa = adr;
+          //  Console.Write($"Adresa ({autor.Adresa}): ");
+            //string adr= Console.ReadLine();
+            //if (!string.IsNullOrEmpty(adr))
+              //  autor.Adresa = adr;
             Console.Write($"Telefon ({autor.Telefon}): ");
             string tel = Console.ReadLine();
             if (!string.IsNullOrEmpty(tel))
