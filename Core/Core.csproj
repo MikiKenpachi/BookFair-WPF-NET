@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DAO\AutorDAO.cs" />
     <Compile Include="DAO\KnjigaDAO.cs" />
     <Compile Include="DAO\PosetilacDAO.cs" />
     <Compile Include="Models\Adresa.cs" />
