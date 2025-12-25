@@ -6,6 +6,7 @@ namespace SajamKnjigaProjekat.Core.Models
 {
     public class Knjiga : ISerializable
     {
+
         public string ISBN;
         public string Naziv;
         public string Zanr;
@@ -50,6 +51,28 @@ namespace SajamKnjigaProjekat.Core.Models
             // ListaAutora deserialization would require more info about Autor
             Kupili = new List<string>(values[8].Split(';'));
             Na_listi_zelja = new List<string>(values[9].Split(';'));
+
+       
         }
+
+        public void DodajListuAutora(Autor autor)
+        {
+            if (!ListaAutora.Contains(autor))
+                ListaAutora.Add(autor);
+        }
+
+        public void DodajuKupili(Posetilac posetilac)
+        {
+            if (!Kupili.Contains(posetilac))
+                Kupili.Add(posetilac);
+        }
+        public void DodajuListuZelja(Posetilac posetilac)
+        {
+            var posetilacString = posetilac.ToStringRepresentation();
+            if (!Na_listi_zelja.Contains(posetilacString))
+                Na_listi_zelja.Add(posetilacString);
+        }
+
+
     }
 }

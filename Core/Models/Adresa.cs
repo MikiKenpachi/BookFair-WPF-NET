@@ -4,10 +4,10 @@ namespace SajamKnjigaProjekat.Core.Models
 {   
     public class Adresa
     {
-        public string Ulica;
-        public string Broj;
-        public string Grad;
-        public string Drzava;
+        public string Ulica { get; set; }
+        public string Broj { get; set; }
+        public string Grad { get; set; }
+        public string Drzava { get; set; }
 
 
         public Adresa(){ }

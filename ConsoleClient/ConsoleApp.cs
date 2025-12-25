@@ -13,6 +13,7 @@ namespace ConsoleClient
         //objekti u DAO sloju
         PosetilacDAO posetilacDao = new PosetilacDAO();
         KnjigaDAO knjigaDao = new KnjigaDAO();
+        AutorDAO autorDao = new AutorDAO();
 
         public void Run()
         {
@@ -50,6 +51,24 @@ namespace ConsoleClient
                     break;
                 case 6:
                     IzmenaKnjige();
+                    break;
+                case 7:
+                    DodajAutora();
+                    break;
+                case 8:
+                    PrikazAutora();
+                    break;
+                case 9:
+                    IzmenaAutora();
+                    break;
+                case 10:
+                    BrisanjeAutora();
+                    break;
+                case 11:
+                    PrikazKnjige();
+                    break;
+                case 12:
+                    BrisanjeKnjige();
                     break;
                 //TODO
                 default:
@@ -191,6 +210,7 @@ namespace ConsoleClient
             List<string> zanrovi = new List<string>();
             List<string> kljucneReci = new List<string>();
 
+
             Knjiga nova = new Knjiga();
             nova.ISBN = isbn;
             nova.Naziv = naziv;
@@ -256,6 +276,164 @@ namespace ConsoleClient
 
             StatusBar.PrikaziPoruku("Knjiga uspešno izmenjena!");
            // StatusBar.PrikaziPoruku(knjiga.(#metodazaispisknjige#))
+
+        }
+
+
+        public void DodajAutora()
+        {
+            List<Knjiga> spisak = new List<Knjiga>();
+
+            Console.WriteLine("=== Dodavanje autora ===");
+            Console.Write("Ime : ");
+            string ime = Console.ReadLine();
+            Console.Write("Prezime : ");
+            string prezime = Console.ReadLine();
+            Console.Write("Datum rodjenja yyyy/mm/dd : ");
+            DateTime datum = DateTime.Parse(Console.ReadLine());
+            Console.Write("Adresa : ");
+            string adresa = Console.ReadLine();
+            Console.Write("Telefon : ");
+            string telefon = Console.ReadLine();
+            Console.Write("Email : ");
+            string email = Console.ReadLine();       
+            Console.Write("Broj lične karte : ");
+            string lk = Console.ReadLine();
+            Console.Write("Godine iskustva : ");
+            int godine = int.Parse(Console.ReadLine());
+
+
+
+            Autor novi = new Autor(ime, prezime, datum, adresa, telefon, email,  godine, lk, spisak);
+
+            autorDao.Add(novi);
+
+            StatusBar.PrikaziPoruku("Autor uspesno dodat!");
+        }
+
+
+        public void PrikazAutora()
+        {
+            var svi = autorDao.GetAll();
+            if (svi.Count == 0)
+            {
+                StatusBar.PrikaziPoruku("Nema registrovanih autora.");
+                return;
+            }
+
+            Console.WriteLine("=== Lista autora ===");
+            foreach (var p in svi)
+            {
+                Console.WriteLine($"Ime i prezime : {p.Ime} {p.Prezime}, " +
+                                  $"Datum rodjenja: {p.Datum_rodjenja.ToShortDateString()}"
+                                  +$"Telefon: {p.Telefon}" + $"Godine iskustva: {p.Godine_iskustva}");
+            }
+            Console.WriteLine("Pritisni ENTER za nastavak...");
+            Console.ReadLine();
+        }
+
+
+        public void IzmenaAutora()
+        {
+            Console.Write("Unesite ličnu kartu autora za izmenu: ");
+            string lck = Console.ReadLine();
+
+            Autor autor = autorDao.GetByLicnaKarta(lck);
+            if (autor == null)
+            {
+                StatusBar.PrikaziPoruku("Autor ne postoji!");
+                return;
+            }
+
+            Console.Write("=== Izmena autora === ");
+            Console.WriteLine("(ENTER - bez promene)");
+
+            Console.Write($"Ime ({autor.Ime}): ");
+            string naziv = Console.ReadLine();
+            if (!string.IsNullOrEmpty(naziv))
+                autor.Ime = naziv;
+
+            Console.Write($"Prezime ({autor.Prezime}): ");
+            string pr = Console.ReadLine();
+            if (!string.IsNullOrEmpty(pr))
+                autor.Prezime = pr;
+
+            Console.Write($"Datum rodjenja ({autor.Datum_rodjenja}): ");
+            string datum = Console.ReadLine();
+            if (!string.IsNullOrEmpty(datum))
+                autor.Datum_rodjenja = DateTime.Parse(datum);
+
+            Console.Write($"Adresa ({autor.Adresa}): ");
+            string adr= Console.ReadLine();
+            if (!string.IsNullOrEmpty(adr))
+                autor.Adresa = adr;
+            Console.Write($"Telefon ({autor.Telefon}): ");
+            string tel = Console.ReadLine();
+            if (!string.IsNullOrEmpty(tel))
+                autor.Telefon = tel;
+
+            Console.Write($"Godine iskustva ({autor.Godine_iskustva}): ");
+            string godine = Console.ReadLine();
+            if (!string.IsNullOrEmpty(godine))
+                autor.Godine_iskustva = int.Parse(godine);
+
+
+            StatusBar.PrikaziPoruku("Autor uspešno izmenjen!");
+          
+
+        }
+
+        public void BrisanjeAutora()
+        {
+            Console.Write("Unesite broj licne karte autora za brisanje: ");
+            string brKarte = Console.ReadLine();
+
+            var autor = autorDao.GetByLicnaKarta(brKarte);
+            if (autor == null)
+            {
+                StatusBar.PrikaziPoruku("Autor ne postoji!");
+                return;
+            }
+
+            autorDao.Remove(autor);
+            StatusBar.PrikaziPoruku("Autor uspesno obrisan!");
+        }
+
+        public void BrisanjeKnjige()
+        {
+            Console.Write("Unesite ISBN knjige za brisanje: ");
+            string brKarte = Console.ReadLine();
+
+            var knjiga = knjigaDao.GetByISBN(brKarte);
+            if (knjiga == null)
+            {
+                StatusBar.PrikaziPoruku("Knjiga ne postoji!");
+                return;
+            }
+
+            knjigaDao.Remove(knjiga);
+            StatusBar.PrikaziPoruku("Knjiga uspesno obrisana!");
+        }
+        public void PrikazKnjige()
+        {
+            var svi = knjigaDao.GetAll();
+            if (svi.Count == 0)
+            {
+                StatusBar.PrikaziPoruku("Nema registrovanih knjiga.");
+                return;
+            }
+
+            Console.WriteLine("=== Lista knjiga ===");
+            foreach (var p in svi)
+            {
+                Console.WriteLine($"ISBN: {p.ISBN}, Naziv : {p.Naziv}, " +
+                                  $"Godina izdanja: {p.Godina_izdanja}, Zanr: {p.Zanr},"
+                                  +$"Cena: {p.Cena}," + $"Broj strana: {p.Broj_strana}," + $"Autori: {p.ListaAutora},"
+                                  + $"Izdavac: {p.Izdavac}," );
+            }
+            Console.WriteLine("Pritisni ENTER za nastavak...");
+            Console.ReadLine();
+
 
         }
     }
