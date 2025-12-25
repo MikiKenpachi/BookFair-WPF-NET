@@ -43,14 +43,7 @@ namespace SajamKnjigaProjekat.Core.Models
             Grad = values[1];
             Broj = values[2];
             Drzava= values[3];
-            if (!string.IsNullOrEmpty(values[4]))
-            {
-                var isbnList = values[4].Split(';');
-                foreach (var isbn in isbnList)
-                {
-
-                }
-            }
+         
         }
     }
 }

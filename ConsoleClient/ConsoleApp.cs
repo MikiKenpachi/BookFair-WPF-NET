@@ -1,4 +1,5 @@
-﻿using SajamKnjigaProjekat.Core.DAO;
+﻿using Core.DAO;
+using SajamKnjigaProjekat.Core.DAO;
 using SajamKnjigaProjekat.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace ConsoleClient
         KnjigaDAO knjigaDao = new KnjigaDAO();
         AutorDAO autorDao = new AutorDAO();
         AdresaDAO adresaDao= new AdresaDAO();
+        IzdavacDAO izdavacDao = new IzdavacDAO();
+        
 
         public void Run()
         {
@@ -151,7 +154,7 @@ namespace ConsoleClient
             string prezime = Console.ReadLine();
             if (!string.IsNullOrEmpty(prezime)) posetilac.Prezime = prezime;
 
-       
+            
 
             Console.Write("Telefon / ENTER (bez izmena): ");
             string telefon = Console.ReadLine();
@@ -185,6 +188,25 @@ namespace ConsoleClient
             StatusBar.PrikaziPoruku("Posetilac uspesno obrisan!");
         }
 
+        public Izdavac DodajIzdavaca()
+        {
+
+            Console.Write("Sifra izdavaca : ");
+            string sifra = Console.ReadLine();
+            Console.Write("Naziv : ");
+            string Naziv = Console.ReadLine();
+           
+           
+
+
+           Izdavac izdavac = new Izdavac(sifra, Naziv, null,null,null);
+
+            izdavacDao.Add(izdavac);
+
+
+            return izdavac;
+
+        }
         public void DodajKnjigu()
         {
             Console.WriteLine("=== Dodavanje knjige ===");
@@ -207,17 +229,17 @@ namespace ConsoleClient
             Console.Write("Broj strana: ");
             string brojStrana = Console.ReadLine();
 
-            Console.Write("Autori : ");
+           // Console.Write("Autori : ");
             //dodati autore kasnije
 
-            Console.Write("Izdavač: ");
-            string izdavac = Console.ReadLine();
+           // Console.Write("Izdavač: ");
+           // string izdavac = Console.ReadLine();
 
 
             string id = (knjigaDao.GetAll().Count + 1).ToString();
 
             List<Autor> autori = new List<Autor>();
-
+            Izdavac izdavac= new Izdavac();
 
             Knjiga nova = new Knjiga();
             nova.ISBN = isbn;
@@ -279,7 +301,7 @@ namespace ConsoleClient
             Console.Write($"Izdavač ({knjiga.Izdavac}): ");
             string izdavac = Console.ReadLine();
             if (!string.IsNullOrEmpty(izdavac))
-                knjiga.Izdavac = izdavac;
+                knjiga.Izdavac.Naziv = izdavac;
 
             StatusBar.PrikaziPoruku("Knjiga uspešno izmenjena!");
            // StatusBar.PrikaziPoruku(knjiga.(#metodazaispisknjige#))

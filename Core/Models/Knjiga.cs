@@ -14,7 +14,7 @@ namespace SajamKnjigaProjekat.Core.Models
         public string Cena { get; set; }
         public string Broj_strana { get; set; }
         public List<Autor> ListaAutora { get; set; } = new List<Autor>();
-        public string Izdavac { get; set; }
+        public Izdavac Izdavac { get; set; }
         public List<Posetilac> Kupili { get; set; } = new List<Posetilac>();
         public List<Posetilac> Na_listi_zelja { get; set; } = new List<Posetilac>();
 
@@ -29,7 +29,7 @@ namespace SajamKnjigaProjekat.Core.Models
                 Godina_izdanja,
                 Cena,
                 Broj_strana,
-                Izdavac,
+                Izdavac.Sifra,
                 ListaAutora != null ? string.Join(";", ListaAutora) : "",
                 Kupili != null ? string.Join(";", Kupili) : "",
                 Na_listi_zelja != null ? string.Join(";", Na_listi_zelja) : ""
@@ -47,7 +47,7 @@ namespace SajamKnjigaProjekat.Core.Models
             Godina_izdanja = values[3];
             Cena = values[4];
             Broj_strana = values[5];
-            Izdavac = values[6];
+            Izdavac.Sifra = values[6];
             // ListaAutora deserialization would require more info about Autor
             //Kupili = new List<Posetilac>(values[8].Split(';'));
             //Na_listi_zelja = new List<Posetilac>(values[9].Split(';'));
