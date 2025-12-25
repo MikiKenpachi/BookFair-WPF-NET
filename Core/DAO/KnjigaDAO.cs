@@ -26,11 +26,13 @@ namespace SajamKnjigaProjekat.Core.DAO
         public void Add(Knjiga knjiga)
         {
             listaKnjiga.Add(knjiga);
+            _storage.Save(listaKnjiga);
         }
 
         public void Remove(Knjiga knjiga)
         {
             listaKnjiga.Remove(knjiga);
+            _storage.Save(listaKnjiga);
         }
 
         public Knjiga GetByISBN(string isbn)
@@ -42,21 +44,6 @@ namespace SajamKnjigaProjekat.Core.DAO
             }
             return null;
         }
-        public void Update(Knjiga knjiga)
-        {
-            var stara = GetByISBN(knjiga.ISBN);
-            if (stara != null)
-            {
-                stara.Naziv = knjiga.Naziv;
-                stara.Zanr = knjiga.Zanr;
-                stara.Godina_izdanja = knjiga.Godina_izdanja;
-                stara.Cena = knjiga.Cena;
-                stara.Broj_strana = knjiga.Broj_strana;
-                stara.ListaAutora = knjiga.ListaAutora;
-                stara.Izdavac = knjiga.Izdavac;
-                stara.Kupili = knjiga.Kupili;
-                stara.Na_listi_zelja = knjiga.Na_listi_zelja;
-            }
-        }
+        
     }
 }
