@@ -191,18 +191,17 @@ namespace ConsoleClient
             List<string> zanrovi = new List<string>();
             List<string> kljucneReci = new List<string>();
 
-            Knjiga nova = new Knjiga(
-                iSBN: isbn,
-                naziv: naziv,
-                zanr: "",
-                godina_izdanja: godina,
-                cena: "",
-                broj_strana: brojStrana,
-                autori: autori,
-                izdavac: izdavac,
-                kupili: new List<string>(),
-                na_Listi_Zelja: new List<string>()
-            );
+            Knjiga nova = new Knjiga();
+            nova.ISBN = isbn;
+            nova.Naziv = naziv;
+            nova.Zanr = "";
+            nova.Godina_izdanja = godina;
+            nova.Cena = "";
+            nova.Broj_strana = brojStrana;
+            nova.ListaAutora = autori;
+            nova.Izdavac = izdavac;
+            nova.Kupili = new List<string>();
+            nova.Na_listi_zelja = new List<string>();
 
 
             knjigaDao.Add(nova);

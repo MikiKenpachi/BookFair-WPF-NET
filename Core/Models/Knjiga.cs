@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Storage.Serialization;
 
 namespace SajamKnjigaProjekat.Core.Models
 {
-    public class Knjiga
+    public class Knjiga : ISerializable
     {
         public string ISBN;
         public string Naziv;
@@ -11,25 +12,44 @@ namespace SajamKnjigaProjekat.Core.Models
         public string Godina_izdanja;
         public string Cena;
         public string Broj_strana;
-        public List<Autor> ListaAutora= new List<Autor>();
+        public List<Autor> ListaAutora;
         public string Izdavac;
         public List<string> Kupili;
         public List<string> Na_listi_zelja;
 
-        public Knjiga() { }
-
-        public Knjiga(string iSBN, string naziv, string zanr, string godina_izdanja, string cena, string broj_strana, List<Autor> autori, string izdavac, List<string> kupili, List<string> na_Listi_Zelja)
+        // Implement ISerializable members here
+        public string[] ToCSV()
         {
-            ISBN = iSBN;
-            Naziv = naziv;
-            Zanr = zanr;
-            Godina_izdanja = godina_izdanja;
-            Cena = cena;
-            Broj_strana = broj_strana;
-            ListaAutora = autori;
-            Izdavac = izdavac;
-            Kupili = kupili;
-            Na_listi_zelja = na_Listi_Zelja;
+            return new string[]
+            {
+                ISBN,
+                Naziv,
+                Zanr,
+                Godina_izdanja,
+                Cena,
+                Broj_strana,
+                Izdavac,
+                ListaAutora != null ? string.Join(";", ListaAutora) : "",
+                Kupili != null ? string.Join(";", Kupili) : "",
+                Na_listi_zelja != null ? string.Join(";", Na_listi_zelja) : ""
+            };
+        }
+
+        public void FromCSV(string[] values)
+        {
+            if (values == null || values.Length < 10)
+                throw new ArgumentException("Invalid CSV data for Knjiga.");
+
+            ISBN = values[0];
+            Naziv = values[1];
+            Zanr = values[2];
+            Godina_izdanja = values[3];
+            Cena = values[4];
+            Broj_strana = values[5];
+            Izdavac = values[6];
+            // ListaAutora deserialization would require more info about Autor
+            Kupili = new List<string>(values[8].Split(';'));
+            Na_listi_zelja = new List<string>(values[9].Split(';'));
         }
     }
 }

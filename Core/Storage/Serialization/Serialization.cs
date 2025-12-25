@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Storage.Serialization
 {
-    public interface ISeriazable
+    public interface ISerializable
     {
         string[] ToCSV();
 

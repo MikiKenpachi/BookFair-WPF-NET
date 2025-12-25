@@ -1,15 +1,22 @@
 ﻿using SajamKnjigaProjekat.Core.Models;
-using System;
+using Core.Storage;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace SajamKnjigaProjekat.Core.DAO
 {
     public class KnjigaDAO
     {
-        private List<Knjiga> listaKnjiga = new List<Knjiga>();
+        private readonly Storage<Knjiga> _storage;
+        private List<Knjiga> listaKnjiga;
+
+        public KnjigaDAO() {
+            _storage = new Storage<Knjiga>("knjiga.txt");
+
+            // učitaj sve posetioce iz fajla u memorijsku listu
+            listaKnjiga = _storage.Load();
+
+        }
 
         public List<Knjiga> GetAll()
         {

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Storage.Serialization;
 
 namespace SajamKnjigaProjekat.Core.Models
 {
     public enum StatusPosetioca { R, V }
 
-    public class Posetilac
+    public class Posetilac : ISerializable
     {
         public string Ime { get; set; }
         public string Prezime { get; set; }
@@ -46,6 +47,54 @@ namespace SajamKnjigaProjekat.Core.Models
             {
                 ListaZelja.Add(knjiga);
             }
+        }
+
+        // Implement ISerializable members here
+        public void FromString(string data)
+        {
+            // TODO: Implement deserialization logic
+        }
+
+        public string ToStringRepresentation()
+        {
+            // TODO: Implement serialization logic
+            return string.Empty;
+        }
+
+        public string[] ToCSV()
+        {
+            return new string[]
+            {
+                Ime,
+                Prezime,
+                DatumRodjenja.ToString("o"),
+                Adresa,
+                Telefon,
+                Email,
+                BrClanskeKarte,
+                GodinaClanstva.ToString(),
+                Status.ToString(),
+                ProsecnaOcena.ToString()
+                // You may want to serialize ListaKupovina and ListaZelja as needed
+            };
+        }
+
+        public void FromCSV(string[] values)
+        {
+            if (values.Length < 10)
+                throw new ArgumentException("Invalid CSV data for Posetilac.");
+
+            Ime = values[0];
+            Prezime = values[1];
+            DatumRodjenja = DateTime.Parse(values[2]);
+            Adresa = values[3];
+            Telefon = values[4];
+            Email = values[5];
+            BrClanskeKarte = values[6];
+            GodinaClanstva = int.Parse(values[7]);
+            Status = (StatusPosetioca)Enum.Parse(typeof(StatusPosetioca), values[8]);
+            ProsecnaOcena = double.Parse(values[9]);
+            // You may want to deserialize ListaKupovina and ListaZelja as needed
         }
     }
 }
