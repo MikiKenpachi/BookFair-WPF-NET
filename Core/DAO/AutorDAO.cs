@@ -20,8 +20,6 @@ namespace SajamKnjigaProjekat.Core.DAO
             listaAutora = _storage.Load();
         }
 
-       
-
         public List<Autor> GetAll()
         {
             return listaAutora;
@@ -36,6 +34,11 @@ namespace SajamKnjigaProjekat.Core.DAO
         public void Remove(Autor autor)
         {
             listaAutora.Remove(autor);
+            _storage.Save(listaAutora);
+        }
+
+        public void Save()
+        {
             _storage.Save(listaAutora);
         }
 

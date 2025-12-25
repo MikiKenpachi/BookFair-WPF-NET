@@ -56,7 +56,7 @@ namespace SajamKnjigaProjekat.Core.Models
             {
                 Ime,
                 Prezime,
-                DatumRodjenja.ToString("o"),
+                DatumRodjenja.ToString(),
                 Adresa.Ulica,
                 Adresa.Grad,
                 Adresa.Broj,
@@ -67,7 +67,7 @@ namespace SajamKnjigaProjekat.Core.Models
                 GodinaClanstva.ToString(),
                 Status.ToString(),
                 ProsecnaOcena.ToString()
-                // You may want to serialize ListaKupovina and ListaZelja as needed
+               
             };
         }
 
@@ -86,7 +86,7 @@ namespace SajamKnjigaProjekat.Core.Models
             GodinaClanstva = int.Parse(values[10]);
             Status = (StatusPosetioca)Enum.Parse(typeof(StatusPosetioca), values[11]);
             ProsecnaOcena = double.Parse(values[12]);
-            // You may want to deserialize ListaKupovina and ListaZelja as needed
+            
         }
     }
 }

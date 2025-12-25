@@ -26,10 +26,10 @@ namespace SajamKnjigaProjekat.Core.Models
         {
             return new string[]
             {
-          Ulica,
-          Grad,
-          Broj,
-          Drzava
+              Ulica,
+              Grad,
+              Broj,
+              Drzava
                 
                 };
         }

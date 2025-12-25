@@ -20,8 +20,6 @@ namespace SajamKnjigaProjekat.Core.DAO
             listaAdresa = _storage.Load();
         }
 
-
-
         public List<Adresa> GetAll()
         {
             return listaAdresa;

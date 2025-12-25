@@ -23,6 +23,11 @@ namespace SajamKnjigaProjekat.Core.DAO
             return listaPosetilaca;
         }
 
+        public void Save()
+        {
+            _storage.Save(listaPosetilaca);
+        }
+
         public void Add(Posetilac p)
         {
             listaPosetilaca.Add(p);
