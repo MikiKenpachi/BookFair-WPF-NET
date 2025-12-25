@@ -7,16 +7,16 @@ namespace SajamKnjigaProjekat.Core.Models
     public class Knjiga : ISerializable
     {
 
-        public string ISBN;
-        public string Naziv;
-        public string Zanr;
-        public string Godina_izdanja;
-        public string Cena;
-        public string Broj_strana;
-        public List<Autor> ListaAutora;
-        public string Izdavac;
-        public List<string> Kupili;
-        public List<string> Na_listi_zelja;
+        public string ISBN { get; set; }
+        public string Naziv { get; set; }
+        public string Zanr { get; set; }
+        public string Godina_izdanja { get; set; }
+        public string Cena { get; set; }
+        public string Broj_strana { get; set; }
+        public List<Autor> ListaAutora { get; set; } = new List<Autor>();
+        public string Izdavac { get; set; }
+        public List<Posetilac> Kupili { get; set; } = new List<Posetilac>();
+        public List<Posetilac> Na_listi_zelja { get; set; } = new List<Posetilac>();
 
         // Implement ISerializable members here
         public string[] ToCSV()
@@ -49,8 +49,8 @@ namespace SajamKnjigaProjekat.Core.Models
             Broj_strana = values[5];
             Izdavac = values[6];
             // ListaAutora deserialization would require more info about Autor
-            Kupili = new List<string>(values[8].Split(';'));
-            Na_listi_zelja = new List<string>(values[9].Split(';'));
+            //Kupili = new List<Posetilac>(values[8].Split(';'));
+            //Na_listi_zelja = new List<Posetilac>(values[9].Split(';'));
 
        
         }
@@ -68,9 +68,8 @@ namespace SajamKnjigaProjekat.Core.Models
         }
         public void DodajuListuZelja(Posetilac posetilac)
         {
-            var posetilacString = posetilac.ToStringRepresentation();
-            if (!Na_listi_zelja.Contains(posetilacString))
-                Na_listi_zelja.Add(posetilacString);
+            if (!Na_listi_zelja.Contains(posetilac))
+                Na_listi_zelja.Add(posetilac);
         }
 
 

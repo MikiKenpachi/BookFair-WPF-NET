@@ -186,42 +186,46 @@ namespace ConsoleClient
         {
             Console.WriteLine("=== Dodavanje knjige ===");
 
+            Console.Write("ISBN: ");
+            string isbn = Console.ReadLine();
+
             Console.Write("Naziv: ");
             string naziv = Console.ReadLine();
 
-            Console.Write("Izdavač: ");
-            string izdavac = Console.ReadLine();
+            Console.Write("Žanr: ");
+            string zanr = Console.ReadLine();
 
             Console.Write("Godina izdanja: ");
             string godina = Console.ReadLine();
 
-            Console.Write("ISBN: ");
-            string isbn = Console.ReadLine();
+            Console.Write("Cena: ");
+            string cena = Console.ReadLine();
 
             Console.Write("Broj strana: ");
             string brojStrana = Console.ReadLine();
 
-            Console.Write("Jezik: ");
-            string jezik = Console.ReadLine();
+            Console.Write("Autori : ");
+            //dodati autore kasnije
+
+            Console.Write("Izdavač: ");
+            string izdavac = Console.ReadLine();
+
 
             string id = (knjigaDao.GetAll().Count + 1).ToString();
-            
+
             List<Autor> autori = new List<Autor>();
-            List<string> zanrovi = new List<string>();
-            List<string> kljucneReci = new List<string>();
 
 
             Knjiga nova = new Knjiga();
             nova.ISBN = isbn;
             nova.Naziv = naziv;
-            nova.Zanr = "";
+            nova.Zanr = zanr;
             nova.Godina_izdanja = godina;
-            nova.Cena = "";
+            nova.Cena = cena;
             nova.Broj_strana = brojStrana;
             nova.ListaAutora = autori;
             nova.Izdavac = izdavac;
-            nova.Kupili = new List<string>();
-            nova.Na_listi_zelja = new List<string>();
+            
 
 
             knjigaDao.Add(nova);
