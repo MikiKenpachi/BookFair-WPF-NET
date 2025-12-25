@@ -49,17 +49,6 @@ namespace SajamKnjigaProjekat.Core.Models
             }
         }
 
-        // Implement ISerializable members here
-        public void FromString(string data)
-        {
-            // TODO: Implement deserialization logic
-        }
-
-        public string ToStringRepresentation()
-        {
-            // TODO: Implement serialization logic
-            return string.Empty;
-        }
 
         public string[] ToCSV()
         {

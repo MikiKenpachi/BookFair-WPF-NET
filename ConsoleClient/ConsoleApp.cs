@@ -308,7 +308,7 @@ namespace ConsoleClient
 
 
 
-            Autor novi = new Autor(ime, prezime, datum, adresa, telefon, email,  godine, lk, spisak);
+            Autor novi = new Autor(ime, prezime, datum, adresa, telefon, email, godine, lk);
 
             autorDao.Add(novi);
 

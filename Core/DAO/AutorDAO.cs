@@ -1,4 +1,5 @@
-﻿using SajamKnjigaProjekat.Core.Models;
+﻿using Core.Storage;
+using SajamKnjigaProjekat.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,17 @@ namespace SajamKnjigaProjekat.Core.DAO
 {
     public class AutorDAO
     {
+        private readonly Storage<Autor> _storage;
+        private List<Autor> listaAutora;
+        public AutorDAO()
+        {
+            // storage će čuvati podatke u autor.txt fajlu
+            _storage = new Storage<Autor>("autor.txt");
+            // učitaj sve autore iz fajla u memorijsku listu
+            listaAutora = _storage.Load();
+        }
 
-        private List<Autor> listaAutora = new List<Autor>();
+       
 
         public List<Autor> GetAll()
         {
@@ -20,14 +30,14 @@ namespace SajamKnjigaProjekat.Core.DAO
         public void Add(Autor autor)
         {
             listaAutora.Add(autor);
+            _storage.Save(listaAutora);
         }
 
         public void Remove(Autor autor)
         {
-                    listaAutora.Remove(autor);
+            listaAutora.Remove(autor);
+            _storage.Save(listaAutora);
         }
-
-
 
         public Autor GetByLicnaKarta(string lk)
         {
@@ -37,22 +47,6 @@ namespace SajamKnjigaProjekat.Core.DAO
                     return p;
             }
             return null;
-        }
-
-        public void Update(Autor autor)
-        {
-            var stara = GetByLicnaKarta(autor.Broj_lk);
-            if (stara != null)
-            {
-                stara.Ime = autor.Ime;
-                stara.Prezime = autor.Prezime;
-                stara.Datum_rodjenja=autor.Datum_rodjenja;
-                stara.Adresa = autor.Adresa;
-                stara.Telefon=autor.Telefon; 
-                stara.Godine_iskustva= autor.Godine_iskustva;
-                stara.Email=autor.Email;
-                stara.SpisakKnjiga=autor.SpisakKnjiga;
-            }
         }
 
     }

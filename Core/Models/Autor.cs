@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Storage.Serialization;
 namespace SajamKnjigaProjekat.Core.Models
 {
-    public class Autor
+    public class Autor : ISerializable
     {
         public string Ime { get; set; }
         public string Prezime { get; set; }
@@ -14,28 +15,69 @@ namespace SajamKnjigaProjekat.Core.Models
         public string Broj_lk { get; set; }
         public List<Knjiga> SpisakKnjiga { get; set; } = new List<Knjiga>();
 
-        public Autor(){ }
+        public Autor() { }
 
-        public Autor(string ime, string prezime, DateTime datum_rodjenja, string adresa, string telefon, string email, int godine_iskustva, string broj_lk, List<Knjiga> spisakKnjiga)
+        public Autor(string ime, string prezime, DateTime datumRodjenja, string adresa, string telefon, string email, int godineIskustva, string brojLk)
         {
             Ime = ime;
             Prezime = prezime;
-            Datum_rodjenja = datum_rodjenja;
+            Datum_rodjenja = datumRodjenja;
             Adresa = adresa;
             Telefon = telefon;
             Email = email;
-            Godine_iskustva = godine_iskustva;
-            Broj_lk = broj_lk;
-            SpisakKnjiga = spisakKnjiga;
-        }
+            Godine_iskustva = godineIskustva;
+            Broj_lk = brojLk;
+            
+        }   
 
         public void DodajSpisakKnjiga(Knjiga knjiga)
         {
-            if (!SpisakKnjiga.Contains(knjiga))
-                SpisakKnjiga.Add(knjiga);
+            if (SpisakKnjiga == null)
+                SpisakKnjiga = new List<Knjiga>();
+            SpisakKnjiga.Add(knjiga);
         }
 
+        public string[] ToCSV()
+        {
+            return new string[]
+            {
+            Ime,
+            Prezime,
+            Datum_rodjenja.ToString("yyyy-MM-dd"),
+            Adresa,
+            Telefon,
+            Email,
+            Godine_iskustva.ToString(),
+            Broj_lk,
+            SpisakKnjiga != null && SpisakKnjiga.Count > 0
+                ? string.Join(";", SpisakKnjiga.ConvertAll(k => k.ISBN))
+                : ""
+                };
+        }
 
+        public void FromCSV(string[] values)
+        {
+            if (values == null || values.Length < 9)
+                throw new ArgumentException("Invalid CSV data for Autor.");
+
+            Ime = values[0];
+            Prezime = values[1];
+            Datum_rodjenja = DateTime.Parse(values[2]);
+            Adresa = values[3];
+            Telefon = values[4];
+            Email = values[5];
+            Godine_iskustva = int.Parse(values[6]);
+            Broj_lk = values[7];
+
+            SpisakKnjiga = new List<Knjiga>();
+            if (!string.IsNullOrEmpty(values[8]))
+            {
+                var isbnList = values[8].Split(';');
+                foreach (var isbn in isbnList)
+                {
+                    
+                }
+            }
+        }
     }
-
 }
