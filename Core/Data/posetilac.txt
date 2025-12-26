@@ -1,3 +1,4 @@
-Miki|Triki|2004-01-01T00:00:00.0000000|Vuka|Karadzica|132|Srbija|0665748448|triki@uns.ac.rs|1|5|R|0
-Mile|Milenkovic|2004-12-12T00:00:00.0000000|Tolstojeva|Novi Sad|55|Hrvatska|0677412122|mile@gmail.com|2|3|R|0
-Jovan|Milutinov|2004-12-10T00:00:00.0000000|Mise DImitrijevica|Jagodina|24|Srb|9429492492|anifsoan|3|9494|V|0
+Marko|Markovic|1995-05-15T00:00:00.0000000|Rumenacka|Novi Sad|43|Srbija|064111222|marko@gmail.com|1|2023|R|0
+Ana|Antic|1990-12-01T00:00:00.0000000|Marsala Tita|Zrenjanin|99|Bugarska|065333444|ana@yahoo.com|2|2021|V|5
+Petar|Petrovic|1988-08-20T00:00:00.0000000|Knez Mihailova|Beograd|10|Srbija|061999888|pero@uns.ac.rs|3|2022|R|0
+Novak|Djokovic|1985-10-10T00:00:00.0000000|Vuka Karadzica|Loznica|69|Srbija|0668201010|nole@gmail.com|4|5|V|0

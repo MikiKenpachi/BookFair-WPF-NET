@@ -1,3 +1,7 @@
-Klasdj|Jopjsd|42|Srbija
-Marsala Tita|Zrenjanin|99|Bugarska
-Rumenacka|Novi Sad|43|Srbija
+Knez Mihailova|Beograd|10|Srbija
+Dunavska|Novi Sad|2|Srbija
+Bulevar Revolucije|Podgorica|45|Crna Gora
+Glavna|Kragujevac|101|Srbija
+Vuka Karadzica|Loznica|69|Srbija
+Tolstojeva|Novi Sad|17|Srbija
+Vuka Karadzica|Loznica|69|Srbija

@@ -20,8 +20,6 @@ namespace Core.DAO
             listaIzdavac = _storage.Load();
         }
 
-
-
         public List<Izdavac> GetAll()
         {
             return listaIzdavac;

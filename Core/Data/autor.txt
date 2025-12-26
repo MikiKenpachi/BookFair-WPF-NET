@@ -1,2 +1,4 @@
-Nebojsa|Ralevic|1965-12-12|Seimfos|oasono|42|Srbija|0655544554|ralevic@uns.ac.rs|34|193665479|
-Mikelandjelo|Belan|1999-12-02|Klasdj|Jopjsd|42|Srbija|424242|sdfdfaf|44|12345|
+Ivo|Andric|1892-10-09|Knez Mihailova|Beograd|10|Srbija|011123456|ivo@sajam.rs|40|11|
+Mesa|Selimovic|1910-04-26|Dunavska|Novi Sad|2|Srbija|021654321|mesa@sajam.rs|30|22|
+Jovan|Jovanovic|1833-11-24|Glavna|Kragujevac|101|Srbija|034111222|zmaj@sajam.rs|3|33|
+Ljuba|Budinski|1964-10-10|Tolstojeva|Novi Sad|17|Srbija|0668201414|ljuba@uns.ac.rs|21|44|

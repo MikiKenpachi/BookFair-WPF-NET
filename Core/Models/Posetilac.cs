@@ -34,6 +34,7 @@ namespace SajamKnjigaProjekat.Core.Models
             BrClanskeKarte = brClanskeKarte;
             GodinaClanstva = godinaClanstva;
             Status = status;
+            //izracunati prosecnu ocenu 
         }
 
         public void DodajKupovinu(Knjiga knjiga)
@@ -56,7 +57,7 @@ namespace SajamKnjigaProjekat.Core.Models
             {
                 Ime,
                 Prezime,
-                DatumRodjenja.ToString(),
+                DatumRodjenja.ToString("o"),
                 Adresa.Ulica,
                 Adresa.Grad,
                 Adresa.Broj,
@@ -73,7 +74,7 @@ namespace SajamKnjigaProjekat.Core.Models
 
         public void FromCSV(string[] values)
         {
-            if (values.Length < 13)
+            if (values == null || values.Length < 13)
                 throw new ArgumentException("Invalid CSV data for Posetilac.");
 
             Ime = values[0];

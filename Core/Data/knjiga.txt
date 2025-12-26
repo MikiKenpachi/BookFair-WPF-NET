@@ -1,1 +1,4 @@
-5|Maricka Bitka|Misterija|2001|2300|230|||
+1|Na Drini Cuprija|Istorijski_roman|1945|1200|450|||||
+2|Prokleta Avlija|Misterija|1954|850|120|||||
+3|Dervis i Smrt|Drama|1966|1100|380|||||
+5|Hari Poter i kamen mudrosti|Triler|2001|2100|333|||||

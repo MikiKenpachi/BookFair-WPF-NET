@@ -17,7 +17,7 @@ namespace Core.Storage
 
         public Storage(string fileName)
         {
-            // Dobij root folder projekta – ide do Projekat\SajamKnjigaProjekat
+            //root folder projekta 
             string projectRoot = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../../../SajamKnjigaProjekat"));
 
             // Folder Data unutar Core
@@ -31,13 +31,11 @@ namespace Core.Storage
             Console.WriteLine($"Fajl ce biti upisan u: {_filePath}");
         }
 
-
-
         public List<T> Load()
         {
             if (!File.Exists(_filePath))
             {
-                // File.WriteAllText will create the file; ensure directory already exists from ctor
+                // File.WriteAllText kreira fajl ako ne postoji
                 File.WriteAllText(_filePath, string.Empty);
                 return new List<T>();
             }

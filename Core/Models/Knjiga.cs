@@ -59,9 +59,6 @@ namespace SajamKnjigaProjekat.Core.Models
             Godina_izdanja = values[3];
             Cena = values[4];
             Broj_strana = values[5];
-            //Izdavac.Sifra = values[6];
-            //Kupili = new List<Posetilac>(values[8].Split(';'));
-            //Na_listi_zelja = new List<Posetilac>(values[9].Split(';'));
 
         }
 

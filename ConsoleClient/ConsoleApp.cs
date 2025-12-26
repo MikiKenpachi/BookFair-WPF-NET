@@ -18,6 +18,7 @@ namespace ConsoleClient
         AutorDAO autorDao = new AutorDAO();
         AdresaDAO adresaDao= new AdresaDAO();
         IzdavacDAO izdavacDao = new IzdavacDAO();
+        KupiliDAO kupiliDao = new KupiliDAO(); //neiskorisceno
 
         public void Run()
         {
@@ -74,6 +75,9 @@ namespace ConsoleClient
                 case 12:
                     BrisanjeKnjige();
                     break;
+                case 13:
+                    PrikaziAdrese();
+                    break;
                 //TODO
                 default:
                     StatusBar.PrikaziPoruku("Nepoznata opcija");
@@ -82,7 +86,26 @@ namespace ConsoleClient
             }
         }
 
-        
+        public void PrikaziAdrese()
+        {
+            var sve = adresaDao.GetAll();
+            if(sve.Count == 0)
+            {
+                StatusBar.PrikaziPoruku("Nema registrovanih adresa.");
+                return;
+            }
+            Console.WriteLine("\n" + new string('=', 30));
+            Console.WriteLine("        ADRESE : ");
+            Console.WriteLine(new string('=', 30));
+            foreach(var a in sve)
+            {
+                Console.WriteLine($"Ulica : {a.Ulica} {a.Broj} , Grad : {a.Grad} , Drzava : {a.Drzava}");
+                Console.WriteLine(new string('-', 30));
+            }
+
+            Console.WriteLine("\nPritisni ENTER za nastavak...");
+            Console.ReadLine();
+        }
         public void DodajPosetioca()
         {
             Adresa adr=new Adresa();
@@ -100,7 +123,7 @@ namespace ConsoleClient
             string telefon = Console.ReadLine();
             Console.Write("Email : ");
             string email = Console.ReadLine();
-            string brkarte = (posetilacDao.GetALL().Count + 1).ToString();
+            string brkarte = (posetilacDao.GetAll().Count + 1).ToString();
             Console.Write("Godina clanstva : ");
             int godina = int.Parse(Console.ReadLine());
             Console.Write("Status (R - redovan, V - vip) : ");
@@ -116,20 +139,39 @@ namespace ConsoleClient
 
         public void PrikazPosetilaca()
         {
-            var svi = posetilacDao.GetALL();
+            var svi = posetilacDao.GetAll(); 
             if (svi.Count == 0)
             {
                 StatusBar.PrikaziPoruku("Nema registrovanih posetilaca.");
                 return;
             }
 
-            Console.WriteLine("=== Lista posetilaca ===");
+            Console.WriteLine("\n" + new string('=', 30));
+            Console.WriteLine("      LISTA POSETILACA");
+            Console.WriteLine(new string('=', 30));
+
             foreach (var p in svi)
             {
-                Console.WriteLine($"Br karte: {p.BrClanskeKarte}, Ime i prezime : {p.Ime} {p.Prezime}, " +
-                                  $"Datum rodjenja: {p.DatumRodjenja.ToShortDateString()}, Status: {p.Status}");
+                
+                string statusOpis = p.Status == StatusPosetioca.V ? "VIP Posetilac" : "Redovni posetilac";
+
+                string adresaInfo = p.Adresa != null
+                    ? $"{p.Adresa.Ulica} {p.Adresa.Broj}, {p.Adresa.Grad}"
+                    : "Nema adrese";
+
+                Console.WriteLine($"Članska karta:  {p.BrClanskeKarte}");
+                Console.WriteLine($"Ime i prezime:  {p.Ime} {p.Prezime}");
+                Console.WriteLine($"Status:         {statusOpis}");
+                Console.WriteLine($"Član od:        {p.GodinaClanstva}. godine");
+                Console.WriteLine($"Prosečna ocena: {p.ProsecnaOcena:F2}");
+                Console.WriteLine($"Telefon:        {p.Telefon}");
+                Console.WriteLine($"Email:          {p.Email}");
+
+                Console.WriteLine($"Adresa:         {adresaInfo}");
+                Console.WriteLine(new string('-', 30));
             }
-            Console.WriteLine("Pritisni ENTER za nastavak...");
+
+            Console.WriteLine("\nPritisni ENTER za nastavak...");
             Console.ReadLine();
         }
 
@@ -188,24 +230,32 @@ namespace ConsoleClient
             StatusBar.PrikaziPoruku("Posetilac uspesno obrisan!");
         }
 
-        public Izdavac DodajIzdavaca()
+        public void DodajIzdavaca()
         {
-
-            Console.Write("Sifra izdavaca : ");
+            Console.Write("Unesite šifru izdavača: ");
             string sifra = Console.ReadLine();
-            Console.Write("Naziv : ");
-            string Naziv = Console.ReadLine();
-           
-           
+            Console.Write("Unesite naziv izdavača: ");
+            string naziv = Console.ReadLine();
+            Console.Write("Unesite Broj LK autora (Šefa): ");
+            string lkSefa = Console.ReadLine();
 
+            var autor = autorDao.GetByLicnaKarta(lkSefa);
 
-           Izdavac izdavac = new Izdavac(sifra, Naziv, null,null,null);
+            if (autor == null)
+            {
+                StatusBar.PrikaziPoruku("Greška: Autor sa tim LK ne postoji!");
+                return;
+            }
 
-            izdavacDao.Add(izdavac);
+            if (autor.Godine_iskustva < 5)
+            {
+                StatusBar.PrikaziPoruku("Greška: Šef mora imati min. 5 godina iskustva!");
+                return;
+            }
 
-
-            return izdavac;
-
+            Izdavac noviIzdavac = new Izdavac(sifra, naziv, autor, new List<Autor>(), new List<Knjiga>());
+            izdavacDao.Add(noviIzdavac);
+            StatusBar.PrikaziPoruku("Izdavač uspešno dodat!");
         }
         public void DodajKnjigu()
         {
@@ -365,14 +415,34 @@ namespace ConsoleClient
                 return;
             }
 
-            Console.WriteLine("=== Lista autora ===");
+            Console.WriteLine("\n" + new string('=', 30));
+            Console.WriteLine("       LISTA AUTORA");
+            Console.WriteLine(new string('=', 30));
+
             foreach (var p in svi)
             {
-                Console.WriteLine($"Ime i prezime : {p.Ime} {p.Prezime}, " +
-                                  $"Datum rodjenja: {p.Datum_rodjenja.ToShortDateString()}"
-                                  +$"Telefon: {p.Telefon}" + $"Godine iskustva: {p.Godine_iskustva}");
+
+                string adresaInfo = p.Adresa != null
+                    ? $"{p.Adresa.Ulica} {p.Adresa.Broj}, {p.Adresa.Grad}"
+                    : "Nema adrese";
+
+                string knjigeID = (p.SpisakKnjiga != null && p.SpisakKnjiga.Any())
+                    ? string.Join(", ", p.SpisakKnjiga.Select(k => k.ISBN))
+                    : "Nema zapisanih knjiga";
+
+                
+                Console.WriteLine($"LK:       {p.Broj_lk}");
+                Console.WriteLine($"Autor:    {p.Ime} {p.Prezime}");
+                Console.WriteLine($"Rođen:    {p.Datum_rodjenja.ToShortDateString()}");
+                Console.WriteLine($"Iskustvo: {p.Godine_iskustva} god.");
+                Console.WriteLine($"Telefon:        {p.Telefon}");
+                Console.WriteLine($"Email:          {p.Email}");
+                Console.WriteLine($"Adresa:   {adresaInfo}");
+                Console.WriteLine($"Knjige (ISBN): {knjigeID}");
+                Console.WriteLine(new string('-', 30));
             }
-            Console.WriteLine("Pritisni ENTER za nastavak...");
+
+            Console.WriteLine("\nPritisni ENTER za nastavak...");
             Console.ReadLine();
         }
 
@@ -465,18 +535,31 @@ namespace ConsoleClient
                 return;
             }
 
-            Console.WriteLine("=== Lista knjiga ===");
+            Console.WriteLine("\n" + new string('=', 30));
+            Console.WriteLine("       LISTA KNJIGA");
+            Console.WriteLine(new string('=', 30));
+
             foreach (var p in svi)
             {
-                Console.WriteLine($"ISBN: {p.ISBN}, Naziv : {p.Naziv}, " +
-                                  $"Godina izdanja: {p.Godina_izdanja}, Zanr: {p.Zanr},"
-                                  +$"Cena: {p.Cena}," + $"Broj strana: {p.Broj_strana}," + $"Autori: {p.ListaAutora},"
-                                  + $"Izdavac: {p.Izdavac}," );
+
+                string autoriID = (p.ListaAutora != null && p.ListaAutora.Any())
+                    ? string.Join(", ", p.ListaAutora.Select(a => a.Broj_lk))
+                    : "Nema autora";
+
+                string izdavacSifra = p.Izdavac != null ? p.Izdavac.Sifra : "Nema izdavača";
+
+                Console.WriteLine($"ID: {p.ISBN}");
+                Console.WriteLine($"Naslov:  {p.Naziv}");
+                Console.WriteLine($"Detalji: {p.Zanr} | {p.Godina_izdanja}. god | {p.Broj_strana} str.");
+                Console.WriteLine($"Cena:    {p.Cena} RSD");
+                Console.WriteLine($"Izdavač: {izdavacSifra}");
+                Console.WriteLine($"Autori (LK): {autoriID}");
+                Console.WriteLine(new string('-', 30));
             }
-            Console.WriteLine("Pritisni ENTER za nastavak...");
+
+            Console.WriteLine("\nPritisni ENTER za nastavak...");
             Console.ReadLine();
-
-
         }
+
     }
 }

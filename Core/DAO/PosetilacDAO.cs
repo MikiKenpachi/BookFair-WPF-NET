@@ -18,7 +18,7 @@ namespace SajamKnjigaProjekat.Core.DAO
             listaPosetilaca = _storage.Load();
         }
 
-        public List<Posetilac> GetALL()
+        public List<Posetilac> GetAll()
         {
             return listaPosetilaca;
         }

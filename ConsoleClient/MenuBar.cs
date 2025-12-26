@@ -26,7 +26,7 @@ namespace ConsoleClient
             Console.WriteLine("10. Obrisi autora");
             Console.WriteLine("11. Prikaz knjige");
             Console.WriteLine("12. Obrisi knjigu");
-            //TODO: implement remaining menu options
+            Console.WriteLine("13. Prikazi adrese");
             Console.WriteLine("0. Izlaz");
             Console.WriteLine("=========================");
             Console.Write("IZABERITE OPCIJU : ");
@@ -39,7 +39,7 @@ namespace ConsoleClient
             {
                 string unos = Console.ReadLine();
 
-                if (int.TryParse(unos, out int opcija) && opcija >= 0 && opcija <= 12) //change upper limit when more options are added
+                if (int.TryParse(unos, out int opcija) && opcija >= 0 && opcija <= 13) //change upper limit when more options are added
                 {
                     return opcija;
                 }

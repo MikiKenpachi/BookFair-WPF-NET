@@ -73,14 +73,7 @@ namespace SajamKnjigaProjekat.Core.Models
             Broj_lk = values[10];
 
             SpisakKnjiga = new List<Knjiga>();
-            if (!string.IsNullOrEmpty(values[11]))
-            {
-                var isbnList = values[11].Split(';');
-                foreach (var isbn in isbnList)
-                {
-                    
-                }
-            }
+            //popuniti spisak knjiga pri ucitavanju iz storage-a
         }
     }
 }

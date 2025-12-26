@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Core.Storage.Serialization;
+using System;
 using System.Collections.Generic;
-using Core.Storage.Serialization;
+using System.Linq;
 namespace SajamKnjigaProjekat.Core.Models
 {
-    public class Izdavac :ISerializable
+    public class Izdavac : ISerializable
     {
         public string Sifra { get; set; }
         public string Naziv { get; set; }
@@ -41,20 +42,24 @@ namespace SajamKnjigaProjekat.Core.Models
         {
             return new string[]
             {
-                Sifra, Naziv
-
+                Sifra,
+                Naziv,
+                SefIzdavaca != null ? SefIzdavaca.Broj_lk : "", 
+                string.Join(";", ListaAutora.Select(a => a.Broj_lk)), 
+                string.Join(";", ListaKnjiga.Select(k => k.ISBN))     
             };
         }
 
         public void FromCSV(string[] values)
         {
-            if (values == null || values.Length < 2)
-                throw new ArgumentException("Invalid CSV data for Autor.");
+            Sifra = values[0];
+            Naziv = values[1];
+            SefIzdavaca = new Autor { Broj_lk = values[2] };
 
-               Sifra=values[0];
-               Naziv=values[1];   
-              
-         
+            ListaAutora = new List<Autor>(); 
+            ListaKnjiga = new List<Knjiga>();
+
+
         }
     }
 }
