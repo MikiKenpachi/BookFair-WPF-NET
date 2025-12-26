@@ -548,9 +548,9 @@ namespace ConsoleClient
 
                 string izdavacSifra = p.Izdavac != null ? p.Izdavac.Sifra : "Nema izdavača";
 
-                Console.WriteLine($"ID: {p.ISBN}");
-                Console.WriteLine($"Naslov:  {p.Naziv}");
-                Console.WriteLine($"Detalji: {p.Zanr} | {p.Godina_izdanja}. god | {p.Broj_strana} str.");
+                Console.WriteLine($"ISBN: {p.ISBN}");
+                Console.WriteLine($"Naziv:  {p.Naziv}");
+                Console.WriteLine($"(Zanr, god_izd, brstr): {p.Zanr} | {p.Godina_izdanja}. god | {p.Broj_strana} str.");
                 Console.WriteLine($"Cena:    {p.Cena} RSD");
                 Console.WriteLine($"Izdavač: {izdavacSifra}");
                 Console.WriteLine($"Autori (LK): {autoriID}");
