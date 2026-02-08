@@ -1,4 +1,10 @@
-﻿using System.Text;
+﻿using Core;
+using Core.Storage.Serialization;
+using SajamKnjigaProjekat.Core.Models;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -19,6 +25,18 @@ namespace WpfClient
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainViewModel();
+            
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Width = SystemParameters.PrimaryScreenWidth * 0.75;
+            this.Height = SystemParameters.PrimaryScreenHeight * 0.75;
+        }
+        
+
+      
+
     }
 }

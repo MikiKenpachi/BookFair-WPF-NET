@@ -8,9 +8,7 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Include="obj\Debug\net10.0-windows\WpfClient.GlobalUsings.g.cs" />
-  </ItemGroup>
+  
 
   <ItemGroup>
     <Content Include="obj\project.assets.json" />
@@ -28,6 +26,10 @@
     <None Include="obj\project.nuget.cache" />
     <None Include="obj\WpfClient.csproj.nuget.g.props" />
     <None Include="obj\WpfClient.csproj.nuget.g.targets" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
 </Project>
