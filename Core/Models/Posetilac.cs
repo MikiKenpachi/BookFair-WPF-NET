@@ -58,10 +58,6 @@ namespace SajamKnjigaProjekat.Core.Models
                 Ime,
                 Prezime,
                 DatumRodjenja.ToString("o"),
-                Adresa.Ulica,
-                Adresa.Grad,
-                Adresa.Broj,
-                Adresa.Drzava, 
                 Telefon,
                 Email,
                 BrClanskeKarte,
@@ -74,19 +70,18 @@ namespace SajamKnjigaProjekat.Core.Models
 
         public void FromCSV(string[] values)
         {
-            if (values == null || values.Length < 13)
+            if (values == null || values.Length < 9)
                 throw new ArgumentException("Invalid CSV data for Posetilac.");
 
             Ime = values[0];
             Prezime = values[1];
             DatumRodjenja = DateTime.Parse(values[2]);
-            Adresa = new Adresa(values[3], values[4], values[5], values[6]);
-            Telefon = values[7];
-            Email = values[8];
-            BrClanskeKarte = values[9];
-            GodinaClanstva = int.Parse(values[10]);
-            Status = (StatusPosetioca)Enum.Parse(typeof(StatusPosetioca), values[11]);
-            ProsecnaOcena = double.Parse(values[12]);
+            Telefon = values[3];
+            Email = values[4];
+            BrClanskeKarte = values[5];
+            GodinaClanstva = int.Parse(values[6]);
+            Status = (StatusPosetioca)Enum.Parse(typeof(StatusPosetioca), values[7]);
+            ProsecnaOcena = double.Parse(values[8]);
             
         }
     }

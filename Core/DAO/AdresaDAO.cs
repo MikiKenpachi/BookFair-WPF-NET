@@ -31,10 +31,32 @@ namespace SajamKnjigaProjekat.Core.DAO
             _storage.Save(listaAdresa);
         }
 
-        public void Remove(Adresa a)
+        public void Remove(string vlasnikID)
         {
-            listaAdresa.Remove(a);
+            // filtriramo listu da izbacimo adresu čiji je VlasnikID jednak datom ID-ju
+            listaAdresa = listaAdresa
+                .Where(a => a.VlasnikID != vlasnikID)
+                .ToList();
+
+            // odmah snimamo fajl
             _storage.Save(listaAdresa);
+        }
+
+        // Opcionalno: ažuriraj adresu postojećeg vlasnika
+        public void Update(Adresa a)
+        {
+            var index = listaAdresa.FindIndex(x => x.VlasnikID == a.VlasnikID);
+            if (index >= 0)
+            {
+                listaAdresa[index] = a;
+                _storage.Save(listaAdresa);
+            }
+        }
+
+        // Pronadji adresu po ID-ju 
+        public Adresa GetByVlasnikID(string vlasnikID)
+        {
+            return listaAdresa.FirstOrDefault(a => a.VlasnikID == vlasnikID);
         }
     }
 }

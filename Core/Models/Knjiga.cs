@@ -31,8 +31,10 @@ namespace SajamKnjigaProjekat.Core.Models
         public Izdavac Izdavac { get; set; }
         public List<Posetilac> Kupili { get; set; } = new List<Posetilac>();
         public List<Posetilac> Na_listi_zelja { get; set; } = new List<Posetilac>();
+        public List<string> ListaAutoraIDs { get; set; } = new List<string>();
+        public string IzdavacID { get; set; }
 
-        
+
         public string[] ToCSV()
         {
             return new string[]
@@ -43,11 +45,9 @@ namespace SajamKnjigaProjekat.Core.Models
                 Godina_izdanja,
                 Cena,
                 Broj_strana,
-                Izdavac != null ? Izdavac.Sifra : "", // Čuvaj šifru izdavača
-                ListaAutora != null ? string.Join(";", ListaAutora.Select(a => a.Broj_lk)) : "",
-                ListaAutora != null ? string.Join(";", ListaAutora) : "",
-                Kupili != null ? string.Join(";", Kupili) : "",
-                Na_listi_zelja != null ? string.Join(";", Na_listi_zelja) : ""
+                Izdavac != null ? Izdavac.Sifra : "", // samo ID izdavača
+                ListaAutora != null ? string.Join(";", ListaAutora.Select(a => a.Broj_lk)) : "" // samo ID-evi autora
+                // Kupci i lista želja se NE čuvaju
             };
         }
 
@@ -60,7 +60,26 @@ namespace SajamKnjigaProjekat.Core.Models
             Cena = values[4];
             Broj_strana = values[5];
 
+            // Ovde čuvamo samo identifikatore za povezivanje
+            Izdavac = !string.IsNullOrEmpty(values[6]) ? new Izdavac { Sifra = values[6] } : null;
+
+            if (!string.IsNullOrEmpty(values[7]))
+            {
+                ListaAutora = values[7]
+                    .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(broj => new Autor { Broj_lk = broj })
+                    .ToList();
+            }
+            else
+            {
+                ListaAutora = new List<Autor>();
+            }
+
+            // Kupci i lista želja se popunjavaju kroz DataBinding
+            Kupili = new List<Posetilac>();
+            Na_listi_zelja = new List<Posetilac>();
         }
+
 
         public void DodajListuAutora(Autor autor)
         {

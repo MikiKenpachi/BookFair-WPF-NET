@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Core.Storage.Serialization;
+using System;
 using System.Collections.Generic;
-using Core.Storage.Serialization;
+using System.Linq;
 namespace SajamKnjigaProjekat.Core.Models
 {
     public class Autor : ISerializable
@@ -14,6 +15,8 @@ namespace SajamKnjigaProjekat.Core.Models
         public int Godine_iskustva { get; set; }
         public string Broj_lk { get; set; }
         public List<Knjiga> SpisakKnjiga { get; set; } = new List<Knjiga>();
+
+        public List<string> SpisakKnjigaISBN { get; set; } = new List<string>();
 
         public Autor() { }
 
@@ -44,10 +47,6 @@ namespace SajamKnjigaProjekat.Core.Models
             Ime,
             Prezime,
             Datum_rodjenja.ToString("yyyy-MM-dd"),
-            Adresa.Ulica,
-            Adresa.Grad,
-            Adresa.Broj,
-            Adresa.Drzava,
             Telefon,
             Email,
             Godine_iskustva.ToString(),
@@ -60,20 +59,17 @@ namespace SajamKnjigaProjekat.Core.Models
 
         public void FromCSV(string[] values)
         {
-            if (values == null || values.Length < 12)
-                throw new ArgumentException("Invalid CSV data for Autor.");
-
             Ime = values[0];
             Prezime = values[1];
             Datum_rodjenja = DateTime.Parse(values[2]);
-            Adresa =new Adresa(values[3], values[4], values[5], values[6]);
-            Telefon = values[7];
-            Email = values[8];
-            Godine_iskustva = int.Parse(values[9]);
-            Broj_lk = values[10];
+            Telefon = values[3];
+            Email = values[4];
+            Godine_iskustva = int.Parse(values[5]);
+            Broj_lk = values[6];
 
+            // Kreiramo praznu listu knjiga, popuniće se u DataBinding
             SpisakKnjiga = new List<Knjiga>();
-            //popuniti spisak knjiga pri ucitavanju iz storage-a
         }
+
     }
 }

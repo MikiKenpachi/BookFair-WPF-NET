@@ -13,6 +13,9 @@ namespace SajamKnjigaProjekat.Core.Models
         public List<Autor> ListaAutora { get; set; } = new List<Autor>();
         public List<Knjiga> ListaKnjiga { get; set; } = new List<Knjiga>();
 
+        public string SefIzdavacaID { get; set; }
+        public List<string> ListaKnjigaISBN { get; set; } = new List<string>();
+
         public Izdavac(string sifra, string naziv, Autor sefIzdavaca, List<Autor> listaAutora, List<Knjiga> listaKnjiga)
         {
             Sifra = sifra;
@@ -54,12 +57,12 @@ namespace SajamKnjigaProjekat.Core.Models
         {
             Sifra = values[0];
             Naziv = values[1];
-            SefIzdavaca = new Autor { Broj_lk = values[2] };
+            SefIzdavaca = !string.IsNullOrEmpty(values[2]) ? new Autor { Broj_lk = values[2] } : null;
 
-            ListaAutora = new List<Autor>(); 
+            // Prazne liste, popuniće se kroz DataBinding
+            ListaAutora = new List<Autor>();
             ListaKnjiga = new List<Knjiga>();
-
-
         }
+
     }
 }

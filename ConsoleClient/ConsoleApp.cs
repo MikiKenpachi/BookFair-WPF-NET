@@ -1,4 +1,5 @@
 ﻿using Core.DAO;
+using Core.Storage;
 using SajamKnjigaProjekat.Core.DAO;
 using SajamKnjigaProjekat.Core.Models;
 using System;
@@ -31,6 +32,47 @@ namespace ConsoleClient
 
             }while(opcija != 0);
         }
+
+       /* public void TestDataBinding()
+        {
+            // 1️⃣ Učitaj sve podatke iz DAO-a
+            var posetioci = posetilacDao.GetAll();
+            var knjige = knjigaDao.GetAll();
+            var autori = autorDao.GetAll();
+            var izdavaci = izdavacDao.GetAll();
+            var kupovine = kupiliDao.GetAll(); // koristi instancu kupiliDao
+
+            // 2️⃣ Pozovi DataBinding
+            DataBinding.PoveziSve(posetioci, knjige, autori, izdavaci, kupovine);
+
+            // 3️⃣ Test ispisa za proveru veza
+            Console.WriteLine("=== Test DataBinding ===\n");
+
+            foreach (var p in posetioci)
+            {
+                Console.WriteLine($"Posetilac: {p.Ime} {p.Prezime}, broj kupovina: {kupovine.Count}");
+            }
+
+            foreach (var k in knjige)
+            {
+                string autoriStr = k.ListaAutora.Count > 0
+                    ? string.Join(", ", k.ListaAutora.Select(a => a.Ime + " " + a.Prezime))
+                    : "Nema autora";
+
+                string izdavac = k.Izdavac != null ? k.Izdavac.Naziv : "Nema izdavača";
+
+                Console.WriteLine($"Knjiga: {k.Naziv}, Autori: {autoriStr}, Izdavač: {izdavac}");
+            }
+
+            foreach (var i in izdavaci)
+            {
+                string sef = i.SefIzdavaca != null ? i.SefIzdavaca.Ime + " " + i.SefIzdavaca.Prezime : "Nema šefa";
+                Console.WriteLine($"Izdavač: {i.Naziv}, Šef: {sef}, broj autora: {i.ListaAutora.Count}");
+            }
+
+            Console.WriteLine("\n=== Kraj testa DataBinding ===");
+        }*/
+
 
         public void ObradiOpciju(int opcija)
         {
@@ -78,7 +120,11 @@ namespace ConsoleClient
                 case 13:
                     PrikaziAdrese();
                     break;
-                //TODO
+                case 14:
+                    DodajIzdavaca();
+                    break;
+                case 15:
+                    
                 default:
                     StatusBar.PrikaziPoruku("Nepoznata opcija");
                     break;
@@ -111,6 +157,9 @@ namespace ConsoleClient
             Adresa adr=new Adresa();
 
             Console.WriteLine("=== Dodavanje posetioca ===");
+
+            int nextId = posetilacDao.GetAll().Count + 1;  // broj novog posetioca
+            string brClanskeKarte = $"CK-{nextId}";
             Console.Write("Ime : ");
             string ime = Console.ReadLine();
             Console.Write("Prezime : ");
@@ -118,19 +167,19 @@ namespace ConsoleClient
             Console.Write("Datum rodjenja yyyy/mm/dd : ");
             DateTime datum = DateTime.Parse(Console.ReadLine());
             Console.Write("Adresa : ");
-            adr = DodajAdresu();
+            adr = DodajAdresu(brClanskeKarte);
             Console.Write("Telefon : ");
             string telefon = Console.ReadLine();
             Console.Write("Email : ");
             string email = Console.ReadLine();
-            string brkarte = (posetilacDao.GetAll().Count + 1).ToString();
+            
             Console.Write("Godina clanstva : ");
             int godina = int.Parse(Console.ReadLine());
             Console.Write("Status (R - redovan, V - vip) : ");
             StatusPosetioca status = Console.ReadLine().ToUpper() == "V" ? StatusPosetioca.V : StatusPosetioca.R;
 
            
-            Posetilac novi = new Posetilac(ime,prezime,datum,adr,telefon,email,brkarte,godina,status);
+            Posetilac novi = new Posetilac(ime,prezime,datum,adr,telefon,email, brClanskeKarte, godina,status);
 
             posetilacDao.Add(novi);
 
@@ -210,8 +259,41 @@ namespace ConsoleClient
             if (status == "R") posetilac.Status = StatusPosetioca.R;
             else if (status == "V") posetilac.Status = StatusPosetioca.V;
 
+            IzmeniAdresu(posetilac.BrClanskeKarte);
+
             StatusBar.PrikaziPoruku("Posetilac uspesno izmenjen!");
             posetilacDao.Save();
+
+            
+        }
+
+        public void IzmeniAdresu(string vlasnikID)
+        {
+            var adresa = adresaDao
+                .GetAll()
+                .FirstOrDefault(a => a.VlasnikID == vlasnikID);
+
+            if (adresa == null)
+            {
+                StatusBar.PrikaziPoruku("Adresa za datog vlasnika ne postoji!");
+                return;
+            }
+
+            Console.Write("Unesite novu ulicu: ");
+            adresa.Ulica = Console.ReadLine();
+
+            Console.Write("Unesite novi broj: ");
+            adresa.Broj = Console.ReadLine();
+
+            Console.Write("Unesite novi grad: ");
+            adresa.Grad = Console.ReadLine();
+
+            Console.Write("Unesite novu državu: ");
+            adresa.Drzava = Console.ReadLine();
+
+            adresaDao.Update(adresa);
+
+            StatusBar.PrikaziPoruku("Adresa uspešno izmenjena!");
         }
 
         public void BrisanjePosetioca()
@@ -226,8 +308,17 @@ namespace ConsoleClient
                 return;
             }
 
+
+            var adresa = adresaDao.GetAll().FirstOrDefault(a => a.VlasnikID == brKarte);
+            if (adresa != null)
+            {
+                adresaDao.Remove(adresa.VlasnikID);
+                posetilacDao.Remove(posetilac);
+            }
+
             posetilacDao.Remove(posetilac);
             StatusBar.PrikaziPoruku("Posetilac uspesno obrisan!");
+            StatusBar.PrikaziPoruku("Adresa uspesno obrisana!");
         }
 
         public void DodajIzdavaca()
@@ -267,8 +358,9 @@ namespace ConsoleClient
             Console.Write("Naziv: ");
             string naziv = Console.ReadLine();
 
-            Console.Write("Žanr: ");
-            string zanr = Console.ReadLine();
+            Console.Write("Žanr (Romantika, Naučna_fantastika, Misterija, Biografija, Istorijski_roman, Fantazija, Triler, Horor, Poezija, Drama): ");
+            string zanrInput = Console.ReadLine();
+            var zanr = (Knjiga.Zanrovi)Enum.Parse(typeof(Knjiga.Zanrovi), zanrInput.Replace(' ', '_'), true);
 
             Console.Write("Godina izdanja: ");
             string godina = Console.ReadLine();
@@ -279,26 +371,52 @@ namespace ConsoleClient
             Console.Write("Broj strana: ");
             string brojStrana = Console.ReadLine();
 
-            // string id = (knjigaDao.GetAll().Count + 1).ToString();
+            // -----------------------
+            // Unos autora
+            var sviAutori = autorDao.GetAll();
+            Console.WriteLine("Dostupni autori:");
+            foreach (var a in sviAutori)
+                Console.WriteLine($"{a.Broj_lk} - {a.Ime} {a.Prezime}");
 
-            List<Autor> autori = new List<Autor>();
-            Izdavac izdavac = new Izdavac();
+            Console.Write("Unesite Broj LK autora (odvojene sa ; ako ih je više): ");
+            string autoriInput = Console.ReadLine();
+            var uneseniAutori = autoriInput.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(id => sviAutori.FirstOrDefault(a => a.Broj_lk == id.Trim()))
+                .Where(a => a != null)
+                .ToList();
 
-            Knjiga nova = new Knjiga();
-            nova.ISBN = isbn;
-            nova.Naziv = naziv;
-            
-            nova.Zanr = (Knjiga.Zanrovi)Enum.Parse(typeof(Knjiga.Zanrovi), zanr.Replace(' ', '_'), true);
-            nova.Godina_izdanja = godina;
-            nova.Cena = cena;
-            nova.Broj_strana = brojStrana;
-            nova.ListaAutora = autori;
-            nova.Izdavac = izdavac;
+            // -----------------------
+            // Unos izdavača
+            var sviIzdavaci = izdavacDao.GetAll();
+            Console.WriteLine("Dostupni izdavači:");
+            foreach (var i in sviIzdavaci)
+                Console.WriteLine($"{i.Sifra} - {i.Naziv}");
 
+            Console.Write("Unesite ID izdavača: ");
+            string izdavacID = Console.ReadLine();
+            var izdavac = sviIzdavaci.FirstOrDefault(i => i.Sifra == izdavacID);
+
+            // -----------------------
+            // Kreiranje nove knjige
+            Knjiga nova = new Knjiga
+            {
+                ISBN = isbn,
+                Naziv = naziv,
+                Zanr = zanr,
+                Godina_izdanja = godina,
+                Cena = cena,
+                Broj_strana = brojStrana,
+                ListaAutora = uneseniAutori,
+                Izdavac = izdavac
+            };
+
+            // -----------------------
+            // Čuvanje knjige
             knjigaDao.Add(nova);
 
             StatusBar.PrikaziPoruku("Knjiga uspešno dodata!");
         }
+
 
         public void IzmenaKnjige()
         {
@@ -350,7 +468,7 @@ namespace ConsoleClient
 
         }
 
-        public Adresa DodajAdresu()
+        public Adresa DodajAdresu(string ID) //id moze biti broj licne karte autora, ili broj clanske karte posetioca (sluzi kao ID)
         {
             
             Console.Write("Ime ulice : ");
@@ -363,7 +481,7 @@ namespace ConsoleClient
             string drzava = Console.ReadLine();
 
 
-             Adresa adresa=new Adresa(ulica,grad,broj,drzava);
+            Adresa adresa = new Adresa(ID, ulica, grad, broj, drzava);
 
             adresaDao.Add(adresa);
             
@@ -380,11 +498,8 @@ namespace ConsoleClient
             Console.Write("Prezime : ");
             string prezime = Console.ReadLine();
             Console.Write("Datum rodjenja yyyy/mm/dd : ");
-            
-            DateTime datum = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("Dodaj adresu");
 
-            adr=DodajAdresu();
+            DateTime datum = DateTime.Parse(Console.ReadLine());
 
             Console.Write("Telefon : ");
             string telefon = Console.ReadLine();
@@ -395,8 +510,8 @@ namespace ConsoleClient
             Console.Write("Godine iskustva : ");
             int godine = int.Parse(Console.ReadLine());
 
-
-            
+            Console.WriteLine("Dodaj adresu");
+            adr = DodajAdresu(lk);
 
             Autor novi = new Autor(ime, prezime, datum, adr, telefon, email, godine, lk);
 
@@ -477,7 +592,6 @@ namespace ConsoleClient
             if (!string.IsNullOrEmpty(datum))
                 autor.Datum_rodjenja = DateTime.Parse(datum);
 
-           //Izmena adrese ???
 
             Console.Write($"Telefon ({autor.Telefon}): ");
             string tel = Console.ReadLine();
@@ -489,6 +603,7 @@ namespace ConsoleClient
             if (!string.IsNullOrEmpty(godine))
                 autor.Godine_iskustva = int.Parse(godine);
 
+            IzmeniAdresu(autor.Broj_lk);
 
             StatusBar.PrikaziPoruku("Autor uspešno izmenjen!");
             autorDao.Save();
@@ -507,6 +622,7 @@ namespace ConsoleClient
                 return;
             }
 
+            adresaDao.Remove(autor.Broj_lk);
             autorDao.Remove(autor);
             StatusBar.PrikaziPoruku("Autor uspesno obrisan!");
         }
