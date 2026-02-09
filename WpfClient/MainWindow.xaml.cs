@@ -16,12 +16,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace WpfClient
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    
+
     public partial class MainWindow : Window
     {
 
@@ -38,7 +41,12 @@ namespace WpfClient
         {
 
             InitializeComponent(); // Prvo inicijalizuj komponente
-          
+
+            // Podešavanje tajmera za sat
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += timer_Tick;
+            timer.Start();
 
             List<Posetilac> sviPosetioci = posetilacDao.GetAll();
             List<Autor> sviAutori = autorDao.GetAll();
@@ -67,13 +75,58 @@ namespace WpfClient
             DataGridPosetioci.ItemsSource = Posetioci;
             this.DataContext = this;
         }
-        
+
+        // Prebacivanje na tab Posetioci
+        private void MenuPosetioci_Click(object sender, RoutedEventArgs e)
+        {
+            MainTabControl.SelectedIndex = 0;
+        }
+
+        // Prebacivanje na tab Autori
+        private void MenuAutori_Click(object sender, RoutedEventArgs e)
+        {
+            MainTabControl.SelectedIndex = 1;
+        }
+
+        // Prebacivanje na tab Knjige
+        private void MenuKnjige_Click(object sender, RoutedEventArgs e)
+        {
+            MainTabControl.SelectedIndex = 2;
+        }
+
+        // Otvaranje novog prozora za Izdavače
+        private void MenuIzdavaci_Click(object sender, RoutedEventArgs e)
+        {
+            // Pretpostavka da imaš napravljen prozor IzdavaciWindow
+            // var prozor = new IzdavaciWindow();
+            // prozor.ShowDialog();
+            MessageBox.Show("Otvaranje prozora za izdavače...");
+        }
+
+        // Help - About prozor
+        private void MenuAbout_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Sajam Knjiga v1.0\n\nAplikacija za kupovinu knjiga u okviru Sajma Knjiga.\n\nAutori: \n- - - - - - - - - - - - -\n[Milos Trisic] - RA 39/2023\n[Boris Stepanovic] - RA 97/2023\n");
+        }
+
+        // Zatvaranje aplikacije
+        private void MenuClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        // Save (za sada samo potvrda)
+        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Stanje aplikacije je uspešno sačuvano!", "Save");
+        }
 
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-           this.Width = SystemParameters.PrimaryScreenWidth * 0.75;
-           this.Height = SystemParameters.PrimaryScreenHeight * 0.75;
+            this.Width = SystemParameters.PrimaryScreenWidth * 0.75;
+            this.Height = SystemParameters.PrimaryScreenHeight * 0.75;
+
         }
 
         private void BtnDodaj_Click(object sender, RoutedEventArgs e)
@@ -97,7 +150,7 @@ namespace WpfClient
                     Posetilac p = dijaloškiProzor.NoviPosetilac;
                     Adresa d = dijaloškiProzor.NoviPosetilac.Adresa;
 
-                    p.BrClanskeKarte=brClanskeKarte;
+                    p.BrClanskeKarte = brClanskeKarte;
 
                     if (p != null)
                     {
@@ -133,11 +186,11 @@ namespace WpfClient
                         // A) Brišemo iz memorijske liste (ObservableCollection) 
                         // Ovo odmah sklanja red sa ekrana!
                         Knjige.Remove(selektovanaKnjiga);
-                        
+
 
                         // B) Brišemo iz fajla preko DAO
                         knjigaDao.Remove(selektovanaKnjiga);
-                       
+
                     }
                 }
                 else
@@ -148,7 +201,7 @@ namespace WpfClient
 
             if (aktivniTab == 1) // Ako je selektovan tab "Autor"
             {
-               
+
                 Autor selektovanAutor = (Autor)dbAutori.SelectedItem;
 
                 // 3. Proveravamo da li je korisnik uopšte išta kliknuo
@@ -165,7 +218,6 @@ namespace WpfClient
 
                         // B) Brišemo iz fajla preko DAO
                         autorDao.Remove(selektovanAutor);
-                        adresaDao.Remove(selektovanAutor.Adresa.Ulica);
                     }
                 }
                 else
@@ -204,12 +256,48 @@ namespace WpfClient
 
         private void BtnIzmeni_Click(object sender, RoutedEventArgs e)
         {
-           
+            // 1. Proveravamo da li je korisnik selektovao red u tabeli
+            Posetilac selektovan = (Posetilac)DataGridPosetioci.SelectedItem;
+
+            if (selektovan != null)
+            {
+                // 2. Otvaramo prozor i šaljemo mu selektovanog posetioca
+                DodajPosetiocaProzor prozorZaIzmenu = new DodajPosetiocaProzor(selektovan);
+                prozorZaIzmenu.Owner = this;
+
+                if (prozorZaIzmenu.ShowDialog() == true)
+                {
+                    // 3. Ovde ide logika za čuvanje izmena u DAO/Bazu
+                    posetilacDao.Update(selektovan);
+
+                    // 4. OSVEŽAVANJE TABELE
+                    // Pošto koristimo ObservableCollection, a menjamo property unutar objekta,
+                    // nekad je potrebno "osvežiti" ItemsSource ako objekat ne implementira INotifyPropertyChanged
+                    DataGridPosetioci.Items.Refresh();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Molimo odaberite posetioca kojeg želite da izmenite.", "Obaveštenje");
+            }
         }
 
         private void DataGridPosetioci_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+
+        private void timer_Tick(object? sender, EventArgs e)
+        {
+            // Uzimamo trenutno vreme i datum
+            DateTime now = DateTime.Now;
+
+            // Vreme format (npr. 22:45:10)
+            lblTime.Text = now.ToString("HH:mm:ss");
+
+            // Datum format (npr. 09.02.2026.)
+            lblDate.Text = now.ToString("dd.MM.yyyy.");
         }
     }
 }

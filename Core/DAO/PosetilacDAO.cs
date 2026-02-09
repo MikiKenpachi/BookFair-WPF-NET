@@ -40,6 +40,25 @@ namespace SajamKnjigaProjekat.Core.DAO
             _storage.Save(listaPosetilaca); 
         }
 
+        public void Update(Posetilac p)
+        {
+            // 1. Učitamo sve (ako već nisu u memoriji)
+            List<Posetilac> svi = GetAll();
+
+            // 2. Pronađemo index postojećeg posetioca
+            int index = svi.FindIndex(x => x.BrClanskeKarte == p.BrClanskeKarte);
+
+            if (index != -1)
+            {
+                // 3. Zamenimo starog novim
+                svi[index] = p;
+
+                // 4. Snimimo nazad u fajl (pozivamo tvoju postojeću metodu za snimanje)
+                listaPosetilaca = svi;
+                Save();
+            }
+        }
+
         public Posetilac GetByClanskaKarta(string brKarte)
         {
             foreach (var p in listaPosetilaca)

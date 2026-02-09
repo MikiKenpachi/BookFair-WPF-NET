@@ -52,7 +52,7 @@
         <TextBox x:Name="txtAdresa" Grid.Row="7" Grid.Column="1" Margin="5" />
 
         <StackPanel Orientation="Horizontal" Grid.Row="8" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-            <Button Content="Odustani" Width="80" Margin="5" Click="BtnOdustani_Click"/>
+            <Button Content="Odustani" Width="80" Margin="5" Click="BtnOdustani_Click" IsCancel="True"/>
             <Button Content="Potvrdi" Width="80" Margin="5" Background="CornflowerBlue" Click="BtnPotvrdi_Click"/>
         </StackPanel>
     </Grid>

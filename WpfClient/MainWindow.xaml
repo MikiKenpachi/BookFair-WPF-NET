@@ -10,45 +10,82 @@
     <DockPanel>
 
         <!-- MENU BAR -->
-        <Menu DockPanel.Dock="Top" FontFamily="Kristen ITC">
-            <MenuItem Header="File">
-                <MenuItem Header="Exit"/>
+        <Menu DockPanel.Dock="Top" FontFamily="Kristen ITC" Background="White">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" Click="BtnDodaj_Click" InputGestureText="Ctrl+N" />
+                <MenuItem Header="_Save" Click="BtnSave_Click" InputGestureText="Ctrl+S" />
+                <Separator />
+                <MenuItem Header="_Open">
+                    <MenuItem Header="_Posetioci" Click="MenuPosetioci_Click" />
+                    <MenuItem Header="_Knjige" Click="MenuKnjige_Click" />
+                    <MenuItem Header="_Autori" Click="MenuAutori_Click" />
+                    <Separator />
+                    <MenuItem Header="_Izdavači" Click="MenuIzdavaci_Click" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="_Close" Click="MenuClose_Click" InputGestureText="Alt+F4" />
             </MenuItem>
-            <MenuItem Header="Edit"/>
-            <MenuItem Header="Help"/>
+
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Edit" Click="BtnIzmeni_Click" />
+                <MenuItem Header="_Delete" Click="BtnObrisi_Click" />
+            </MenuItem>
+
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" Click="MenuAbout_Click" />
+            </MenuItem>
         </Menu>
 
-        <!-- TOOLBAR -->
         <ToolBarTray DockPanel.Dock="Top">
-            <ToolBar>
-                <ToolBar.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <DockPanel LastChildFill="False"/>
-                    </ItemsPanelTemplate>
-                </ToolBar.ItemsPanel>
+            <ToolBar Background="#F0F0F0" BorderBrush="#D0D0D0" BorderThickness="0,0,0,1" 
+             Height="40" ToolBarTray.IsLocked="True">
 
-                <!-- Dugmad levo -->
-                <Button Content="+" Width="30" Height="30" DockPanel.Dock="Left" Click="BtnDodaj_Click" ToolTip="Dodaj novi entitet"/>
-                <Button Content="✎" Width="30" Height="30" DockPanel.Dock="Left" Click="BtnIzmeni_Click" ToolTip="Izmeni selektovani entitet"/>
-                <Button Content="🗑" Width="30" Height="30" DockPanel.Dock="Left" Click="BtnObrisi_Click" ToolTip="Obriši selektovani entitet"/>
-                <Separator DockPanel.Dock="Left" Width="250" Opacity="0"/>
+                <ToolBar.Template>
+                    <ControlTemplate TargetType="ToolBar">
+                        <ToolBarPanel IsItemsHost="True" Background="{TemplateBinding Background}"/>
+                    </ControlTemplate>
+                </ToolBar.Template>
 
-                <!-- Search desno -->
-                <DockPanel Width="200" DockPanel.Dock="Right">
-                    <TextBox Width="154" Margin="5,0" />
-                    <Button Content="🔍" Width="30"/>
-                </DockPanel>
+                <Grid Width="{Binding RelativeSource={RelativeSource AncestorType=ToolBarTray}, Path=ActualWidth}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="5,0">
+                        <Button Content="+" Width="30" Height="30" Click="BtnDodaj_Click" ToolTip="Dodaj" Margin="2,0"/>
+                        <Button Content="✎" Width="30" Height="30" Click="BtnIzmeni_Click" ToolTip="Izmeni" Margin="2,0"/>
+                        <Button Content="🗑" Width="30" Height="30" Click="BtnObrisi_Click" ToolTip="Obriši" Margin="2,0"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
+                        <TextBox Width="154" Height="25" VerticalContentAlignment="Center" Margin="5,0" />
+                        <Button Content="🔍" Width="30" Height="25"/>
+                    </StackPanel>
+                </Grid>
             </ToolBar>
         </ToolBarTray>
 
-
+    
+        
+        
+        
         <!-- STATUS BAR -->
         <StatusBar DockPanel.Dock="Bottom" FontFamily="Kristen ITC">
             <StatusBarItem>
-                <TextBlock Text="Sajam knjiga - Posetioci"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Sajam knjiga - "/>
+                    <TextBlock Text="{Binding ElementName=MainTabControl, Path=SelectedItem.Header}"/>
+                </StackPanel>
             </StatusBarItem>
+
             <StatusBarItem HorizontalAlignment="Right">
-                <TextBlock Text="{Binding CurrentTime}"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="lblTime" />
+                    <TextBlock Text="   " />
+                    <TextBlock x:Name="lblDate" Margin="0,0,10,0" />
+                </StackPanel>
             </StatusBarItem>
         </StatusBar>
 
