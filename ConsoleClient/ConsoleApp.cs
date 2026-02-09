@@ -165,6 +165,7 @@ namespace ConsoleClient
             Console.Write("Prezime : ");
             string prezime = Console.ReadLine();
             Console.Write("Datum rodjenja yyyy/mm/dd : ");
+            
             DateTime datum = DateTime.Parse(Console.ReadLine());
             Console.Write("Adresa : ");
             adr = DodajAdresu(brClanskeKarte);

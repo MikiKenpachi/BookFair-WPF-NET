@@ -31,11 +31,11 @@
                 <Button Content="+" Width="30" Height="30" DockPanel.Dock="Left" Click="BtnDodaj_Click" ToolTip="Dodaj novi entitet"/>
                 <Button Content="✎" Width="30" Height="30" DockPanel.Dock="Left" Click="BtnIzmeni_Click" ToolTip="Izmeni selektovani entitet"/>
                 <Button Content="🗑" Width="30" Height="30" DockPanel.Dock="Left" Click="BtnObrisi_Click" ToolTip="Obriši selektovani entitet"/>
-                <Separator DockPanel.Dock="Left"/>
+                <Separator DockPanel.Dock="Left" Width="250" Opacity="0"/>
 
                 <!-- Search desno -->
                 <DockPanel Width="200" DockPanel.Dock="Right">
-                    <TextBox Width="150" Margin="5,0" />
+                    <TextBox Width="154" Margin="5,0" />
                     <Button Content="🔍" Width="30"/>
                 </DockPanel>
             </ToolBar>
@@ -63,7 +63,7 @@
           CanUserAddRows="False"
           CanUserDeleteRows="False"
           IsReadOnly="True"
-          SelectionMode="Single" Background="#FFF7D5D5" SelectionChanged="DataGridPosetioci_SelectionChanged" Opacity="0.9" FontWeight="Bold">
+          SelectionMode="Single" Background="#FF95B5EB" SelectionChanged="DataGridPosetioci_SelectionChanged" Opacity="0.9" FontWeight="Bold">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Broj članske karte" Binding="{Binding BrClanskeKarte}" Width="*" />
                             <DataGridTextColumn Header="Ime" Binding="{Binding Ime}" Width="*" />
@@ -91,7 +91,7 @@
 
             <TabItem Header="Autori">
                 <Grid Margin="5">
-                    <DataGrid ItemsSource="{Binding Autori}" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single">
+                    <DataGrid  x:Name="dbAutori" ItemsSource="{Binding Autori}" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Ime" Binding="{Binding Ime}" Width="*"/>
                             <DataGridTextColumn Header="Prezime" Binding="{Binding Prezime}" Width="*"/>
@@ -105,7 +105,7 @@
 
             <TabItem Header="Knjige">
                 <Grid Margin="5">
-                    <DataGrid ItemsSource="{Binding Knjige}" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single">
+                    <DataGrid x:Name="dbKnjige" ItemsSource="{Binding Knjige}" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="*"/>
                             <DataGridTextColumn Header="Naziv" Binding="{Binding Naziv}" Width="2*"/>

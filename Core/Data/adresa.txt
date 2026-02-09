@@ -1,4 +1,1 @@
-02021963|Hitlerova|Berlin|10|Nemacka
-CK-1|VUKA KARADZICA|LOZNICA|69|SRBIJA
-CK-1|VV|VV|2|VV
-CK-2|Nikole|Novi Sad|99|Srbija
+
