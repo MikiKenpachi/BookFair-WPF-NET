@@ -5,12 +5,12 @@
         Title="Sajam knjiga"
         WindowStartupLocation="CenterScreen"
         SizeToContent="Manual"
-        Loaded="Window_Loaded" av:DesignHeight="378.3" av:DesignWidth="574.75">
+        Loaded="Window_Loaded" av:DesignHeight="378.3" av:DesignWidth="574.75" FontFamily="Kristen ITC">
 
     <DockPanel>
 
         <!-- MENU BAR -->
-        <Menu DockPanel.Dock="Top">
+        <Menu DockPanel.Dock="Top" FontFamily="Kristen ITC">
             <MenuItem Header="File">
                 <MenuItem Header="Exit"/>
             </MenuItem>
@@ -28,9 +28,9 @@
                 </ToolBar.ItemsPanel>
 
                 <!-- Dugmad levo -->
-                <Button Content="+" Width="30" Height="30" DockPanel.Dock="Left"/>
-                <Button Content="✎" Width="30" Height="30" DockPanel.Dock="Left"/>
-                <Button Content="🗑" Width="30" Height="30" DockPanel.Dock="Left"/>
+                <Button Content="+" Width="30" Height="30" DockPanel.Dock="Left" Click="BtnDodaj_Click" ToolTip="Dodaj novi entitet"/>
+                <Button Content="✎" Width="30" Height="30" DockPanel.Dock="Left" Click="BtnIzmeni_Click" ToolTip="Izmeni selektovani entitet"/>
+                <Button Content="🗑" Width="30" Height="30" DockPanel.Dock="Left" Click="BtnObrisi_Click" ToolTip="Obriši selektovani entitet"/>
                 <Separator DockPanel.Dock="Left"/>
 
                 <!-- Search desno -->
@@ -43,7 +43,7 @@
 
 
         <!-- STATUS BAR -->
-        <StatusBar DockPanel.Dock="Bottom">
+        <StatusBar DockPanel.Dock="Bottom" FontFamily="Kristen ITC">
             <StatusBarItem>
                 <TextBlock Text="Sajam knjiga - Posetioci"/>
             </StatusBarItem>
@@ -53,7 +53,7 @@
         </StatusBar>
 
         <!-- CENTRALNI PANEL -->
-        <TabControl>
+        <TabControl x:Name="MainTabControl">
 
             <!-- TAB 1 -->
             <TabItem Header="Posetioci">
@@ -63,7 +63,7 @@
           CanUserAddRows="False"
           CanUserDeleteRows="False"
           IsReadOnly="True"
-          SelectionMode="Single">
+          SelectionMode="Single" Background="#FFF7D5D5" SelectionChanged="DataGridPosetioci_SelectionChanged" Opacity="0.9" FontWeight="Bold">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Broj članske karte" Binding="{Binding BrClanskeKarte}" Width="*" />
                             <DataGridTextColumn Header="Ime" Binding="{Binding Ime}" Width="*" />

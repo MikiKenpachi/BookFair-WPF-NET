@@ -74,8 +74,40 @@ namespace WpfClient
            this.Height = SystemParameters.PrimaryScreenHeight * 0.75;
         }
 
-    
+        private void BtnDodaj_Click(object sender, RoutedEventArgs e)
+        {
+            int index = MainTabControl.SelectedIndex;
 
-       
+            if (index == 0)
+            {
+                // Otvori dijalog za novog Posetioca
+                // var dijalo = new PosetilacDialog();
+                // if (dijalog.ShowDialog() == true) { ... }
+            }
+            else if (index == 1)
+            {
+                // Otvori dijalog za Autora
+            }
+            else if (index == 2)
+            {
+                // Otvori dijalog za Knjigu
+            }
+        }
+
+        private void BtnObrisi_Click(object sender, RoutedEventArgs e)
+        {
+            
+            // Ponoviti logiku za ostale tabove...
+        }
+
+        private void BtnIzmeni_Click(object sender, RoutedEventArgs e)
+        {
+           
+        }
+
+        private void DataGridPosetioci_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
