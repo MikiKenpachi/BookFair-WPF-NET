@@ -21,19 +21,26 @@
         <!-- TOOLBAR -->
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button Content="+" Width="30" Height="30" />
-                <Button Content="✎" Width="30" Height="30" />
-                <Button Content="🗑" Width="30" Height="30" />
+                <ToolBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <DockPanel LastChildFill="False"/>
+                    </ItemsPanelTemplate>
+                </ToolBar.ItemsPanel>
 
-                <Separator/>
+                <!-- Dugmad levo -->
+                <Button Content="+" Width="30" Height="30" DockPanel.Dock="Left"/>
+                <Button Content="✎" Width="30" Height="30" DockPanel.Dock="Left"/>
+                <Button Content="🗑" Width="30" Height="30" DockPanel.Dock="Left"/>
+                <Separator DockPanel.Dock="Left"/>
 
                 <!-- Search desno -->
-                <DockPanel Width="200">
-                    <TextBox Width="150" Margin="5,0"/>
+                <DockPanel Width="200" DockPanel.Dock="Right">
+                    <TextBox Width="150" Margin="5,0" />
                     <Button Content="🔍" Width="30"/>
                 </DockPanel>
             </ToolBar>
         </ToolBarTray>
+
 
         <!-- STATUS BAR -->
         <StatusBar DockPanel.Dock="Bottom">
@@ -51,42 +58,62 @@
             <!-- TAB 1 -->
             <TabItem Header="Posetioci">
                 <Grid Margin="5">
-                    <DataGrid ItemsSource="{Binding Posetioci}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" SelectionMode="Single">
+                    <DataGrid x:Name="DataGridPosetioci" 
+          AutoGenerateColumns="False"
+          CanUserAddRows="False"
+          CanUserDeleteRows="False"
+          IsReadOnly="True"
+          SelectionMode="Single">
                         <DataGrid.Columns>
-                            <!-- Kolona za broj članske karte -->
-                            <DataGridTextColumn Header="Broj članske karte" Binding="{Binding BrClanskeKarte}" Width="2*"/>
+                            <DataGridTextColumn Header="Broj članske karte" Binding="{Binding BrClanskeKarte}" Width="*" />
+                            <DataGridTextColumn Header="Ime" Binding="{Binding Ime}" Width="*" />
+                            <DataGridTextColumn Header="Prezime" Binding="{Binding Prezime}" Width="*" />
+                            <DataGridTextColumn Header="Adresa" Width="3*">
+                                <DataGridTextColumn.Binding>
+                                    <MultiBinding StringFormat="{}{0} {1}, {2}, {3}">
+                                        <Binding Path="Adresa.Ulica" />
+                                        <Binding Path="Adresa.Broj" />
+                                        <Binding Path="Adresa.Grad" />
+                                        <Binding Path="Adresa.Drzava" />
+                                    </MultiBinding>
+                                </DataGridTextColumn.Binding>
+                            </DataGridTextColumn>
+                            
+                            <DataGridTextColumn Header="Status" 
+                            Binding="{Binding Status}" 
+                            Width="0.5*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
 
-                            <!-- Kolona za ime posetioca -->
+                </Grid>
+            </TabItem>
+
+
+            <TabItem Header="Autori">
+                <Grid Margin="5">
+                    <DataGrid ItemsSource="{Binding Autori}" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single">
+                        <DataGrid.Columns>
                             <DataGridTextColumn Header="Ime" Binding="{Binding Ime}" Width="*"/>
-
-                            <!-- Kolona za prezime posetioca -->
                             <DataGridTextColumn Header="Prezime" Binding="{Binding Prezime}" Width="*"/>
-
-                            <!-- Kolona za adresu (dot notation za pristup svojstvu Adresa.Ulica) -->
-                            <DataGridTextColumn Header="Adresa" Binding="{Binding Adresa.Ulica}" Width="3*"/>
-
-                            <!-- Kolona za status posetioca (prikazuje enum StatusPosetioca) -->
-                            <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="1.5*"/>
-
-                            <!-- Kolona za prosečnu ocenu (ako postoji) -->
-                            <DataGridTextColumn Header="Prosečna ocena" Binding="{Binding ProsecnaOcena}" Width="*"/>
+                            <DataGridTextColumn Header="Br. lične karte" Binding="{Binding Broj_lk}" Width="*"/>
+                            <DataGridTextColumn Header="Datum rođenja" Binding="{Binding Datum_rodjenja, StringFormat=\{0:dd.MM.yyyy\}}" Width="*"/>
+                            <DataGridTextColumn Header="E-mail" Binding="{Binding Email}" Width="1.5*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
 
-
-            <!-- TAB 2 -->
-            <TabItem Header="Autori">
-                <Grid Margin="5">
-                    <DataGrid AutoGenerateColumns="True"/>
-                </Grid>
-            </TabItem>
-
-            <!-- TAB 3 -->
             <TabItem Header="Knjige">
                 <Grid Margin="5">
-                    <DataGrid AutoGenerateColumns="True"/>
+                    <DataGrid ItemsSource="{Binding Knjige}" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="*"/>
+                            <DataGridTextColumn Header="Naziv" Binding="{Binding Naziv}" Width="2*"/>
+                            <DataGridTextColumn Header="Cena" Binding="{Binding Cena}" Width="*"/>
+                            <DataGridTextColumn Header="Godina izdanja" Binding="{Binding Godina_izdanja}" Width="*"/>
+                            <DataGridTextColumn Header="Žanr" Binding="{Binding Zanr}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </TabItem>
 

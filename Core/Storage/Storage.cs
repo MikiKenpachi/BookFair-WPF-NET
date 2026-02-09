@@ -17,11 +17,22 @@ namespace Core.Storage
 
         public Storage(string fileName)
         {
-            //root folder projekta 
-            string projectRoot = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../../../SajamKnjigaProjekat"));
+            // Uvek stabilna polazna tačka (Console + WPF)
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
 
-            // Folder Data unutar Core
-            string dataPath = Path.Combine(projectRoot, "Core", "Data");
+            // Penjemo se dok ne nadjemo Core folder
+            DirectoryInfo dir = new DirectoryInfo(baseDir);
+
+            while (dir != null && !Directory.Exists(Path.Combine(dir.FullName, "Core")))
+            {
+                dir = dir.Parent;
+            }
+
+            if (dir == null)
+                throw new Exception("Core folder nije pronadjen. Proveri strukturu projekta.");
+
+            // Core/Data folder
+            string dataPath = Path.Combine(dir.FullName, "Core", "Data");
 
             if (!Directory.Exists(dataPath))
                 Directory.CreateDirectory(dataPath);

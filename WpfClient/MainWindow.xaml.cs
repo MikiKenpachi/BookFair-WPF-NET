@@ -1,5 +1,7 @@
 ﻿using Core;
+using Core.DAO;
 using Core.Storage.Serialization;
+using SajamKnjigaProjekat.Core.DAO;
 using SajamKnjigaProjekat.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -22,21 +24,58 @@ namespace WpfClient
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public ObservableCollection<Posetilac> Posetioci { get; set; }
+        public ObservableCollection<Autor> Autori { get; set; }
+        public ObservableCollection<Knjiga> Knjige { get; set; }
         public MainWindow()
         {
-            InitializeComponent();
-            DataContext = new MainViewModel();
-            
-        }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.Width = SystemParameters.PrimaryScreenWidth * 0.75;
-            this.Height = SystemParameters.PrimaryScreenHeight * 0.75;
+            InitializeComponent(); // Prvo inicijalizuj komponente
+            KnjigaDAO knjigaDao = new KnjigaDAO();
+            AutorDAO autorDao = new AutorDAO();
+            AdresaDAO adresaDao = new AdresaDAO();
+            IzdavacDAO izdavacDao = new IzdavacDAO();
+            PosetilacDAO posetilacDao = new PosetilacDAO();
+
+            List<Posetilac> sviPosetioci = posetilacDao.GetAll();
+            List<Autor> sviAutori = autorDao.GetAll();
+            var listaIzFajla = knjigaDao.GetAll();
+
+
+            foreach (var p in sviPosetioci)
+            {
+                // Koristimo BrClanskeKarte kao ID vlasnika (ili BrLicneKarte, proveri šta ti je ID)
+                p.Adresa = adresaDao.GetByVlasnikID(p.BrClanskeKarte);
+            }
+
+            foreach (var p in sviAutori)
+            {
+                // Koristimo BrClanskeKarte kao ID vlasnika (ili BrLicneKarte, proveri šta ti je ID)
+                p.Adresa = adresaDao.GetByVlasnikID(p.Broj_lk);
+            }
+
+            // 4. Sada napuni ObservableCollection uparenim podacima
+            Posetioci = new ObservableCollection<Posetilac>(sviPosetioci);
+            Autori = new ObservableCollection<Autor>(sviAutori);
+            Knjige = new ObservableCollection<Knjiga>(listaIzFajla);
+
+
+            // 5. Poveži sa DataGrid-om
+            DataGridPosetioci.ItemsSource = Posetioci;
+            this.DataContext = this;
         }
         
 
-      
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+           this.Width = SystemParameters.PrimaryScreenWidth * 0.75;
+           this.Height = SystemParameters.PrimaryScreenHeight * 0.75;
+        }
+
+    
+
+       
     }
 }
