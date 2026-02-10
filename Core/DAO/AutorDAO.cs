@@ -41,7 +41,24 @@ namespace SajamKnjigaProjekat.Core.DAO
         {
             _storage.Save(listaAutora);
         }
+        public void Update(Autor a)
+        {
+            // 1. Učitamo sve (ako već nisu u memoriji)
+            List<Autor> svi = GetAll();
 
+            // 2. Pronađemo index postojećeg posetioca
+            int index = svi.FindIndex(x => x.Broj_lk == a.Broj_lk);
+
+            if (index != -1)
+            {
+                // 3. Zamenimo starog novim
+                svi[index] = a;
+
+                // 4. Snimimo nazad u fajl (pozivamo tvoju postojeću metodu za snimanje)
+                listaAutora = svi;
+                Save();
+            }
+        }
         public Autor GetByLicnaKarta(string lk)
         {
             foreach (var p in listaAutora)

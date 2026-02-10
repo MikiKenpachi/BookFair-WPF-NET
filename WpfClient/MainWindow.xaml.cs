@@ -149,6 +149,7 @@ namespace WpfClient
                     // 1. Uzimamo kreiranog posetioca iz dijaloga
                     Posetilac p = dijaloškiProzor.NoviPosetilac;
                     Adresa d = dijaloškiProzor.NoviPosetilac.Adresa;
+                    dijaloškiProzor.NoviPosetilac.Adresa.VlasnikID = brClanskeKarte;
 
                     p.BrClanskeKarte = brClanskeKarte;
 
@@ -163,6 +164,38 @@ namespace WpfClient
                     }
                 }
             }
+            if (MainTabControl.SelectedIndex == 1)
+            {
+                // Kreiramo instancu novog prozora
+                DodajAutoraProzor dijaloškiProzor = new DodajAutoraProzor();
+
+                // Postavljamo MainWindow kao vlasnika (da bi iskočio tačno ispred njega)
+                dijaloškiProzor.Owner = this;
+
+
+                // ShowDialog() zaustavlja rad u MainWindow dok se ovaj prozor ne zatvori
+                if (dijaloškiProzor.ShowDialog() == true)
+                {
+                   
+                    // 1. Uzimamo kreiranog posetioca iz dijaloga
+                    Autor a = dijaloškiProzor.NoviAutor;
+                    Adresa d = dijaloškiProzor.NoviAutor.Adresa;
+                    dijaloškiProzor.NoviAutor.Adresa.VlasnikID=dijaloškiProzor.NoviAutor.Broj_lk;
+
+                    
+
+                    if (a != null)
+                    {
+                        // 2. Dodajemo ga u DAO (da se upiše u fajl)
+                        autorDao.Add(a);
+                        adresaDao.Add(d);
+
+                        // 3. Dodajemo ga u ObservableCollection (da se odmah pojavi u Gridu)
+                        Autori.Add(a);
+                    }
+                }
+            }
+            
         }
 
         private void BtnObrisi_Click(object sender, RoutedEventArgs e)
@@ -189,6 +222,7 @@ namespace WpfClient
 
 
                         // B) Brišemo iz fajla preko DAO
+                       
                         knjigaDao.Remove(selektovanaKnjiga);
 
                     }
@@ -217,6 +251,7 @@ namespace WpfClient
                         Autori.Remove(selektovanAutor);
 
                         // B) Brišemo iz fajla preko DAO
+                        adresaDao.Remove(selektovanAutor.Broj_lk);
                         autorDao.Remove(selektovanAutor);
                     }
                 }
@@ -244,6 +279,7 @@ namespace WpfClient
                         Posetioci.Remove(selektovanPosetilac);
 
                         // B) Brišemo iz fajla preko DAO
+                        adresaDao.Remove(selektovanPosetilac.BrClanskeKarte);
                         posetilacDao.Remove(selektovanPosetilac);
                     }
                 }
@@ -256,30 +292,64 @@ namespace WpfClient
 
         private void BtnIzmeni_Click(object sender, RoutedEventArgs e)
         {
-            // 1. Proveravamo da li je korisnik selektovao red u tabeli
-            Posetilac selektovan = (Posetilac)DataGridPosetioci.SelectedItem;
+            int aktivniTab = MainTabControl.SelectedIndex;
 
-            if (selektovan != null)
+            if (aktivniTab == 0) // Ako je selektovan tab "Posetilac"
             {
-                // 2. Otvaramo prozor i šaljemo mu selektovanog posetioca
-                DodajPosetiocaProzor prozorZaIzmenu = new DodajPosetiocaProzor(selektovan);
-                prozorZaIzmenu.Owner = this;
+                // 1. Proveravamo da li je korisnik selektovao red u tabeli
+                Posetilac selektovan = (Posetilac)DataGridPosetioci.SelectedItem;
 
-                if (prozorZaIzmenu.ShowDialog() == true)
+                if (selektovan != null)
                 {
-                    // 3. Ovde ide logika za čuvanje izmena u DAO/Bazu
-                    posetilacDao.Update(selektovan);
+                    // 2. Otvaramo prozor i šaljemo mu selektovanog posetioca
+                    DodajPosetiocaProzor prozorZaIzmenu = new DodajPosetiocaProzor(selektovan);
+                    prozorZaIzmenu.Owner = this;
 
-                    // 4. OSVEŽAVANJE TABELE
-                    // Pošto koristimo ObservableCollection, a menjamo property unutar objekta,
-                    // nekad je potrebno "osvežiti" ItemsSource ako objekat ne implementira INotifyPropertyChanged
-                    DataGridPosetioci.Items.Refresh();
+                    if (prozorZaIzmenu.ShowDialog() == true)
+                    {
+                        // 3. Ovde ide logika za čuvanje izmena u DAO/Bazu
+                        posetilacDao.Update(selektovan);
+
+                        // 4. OSVEŽAVANJE TABELE
+                        // Pošto koristimo ObservableCollection, a menjamo property unutar objekta,
+                        // nekad je potrebno "osvežiti" ItemsSource ako objekat ne implementira INotifyPropertyChanged
+                        DataGridPosetioci.Items.Refresh();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Molimo odaberite posetioca kojeg želite da izmenite.", "Obaveštenje");
                 }
             }
-            else
+
+            if (aktivniTab == 1) // Ako je selektovan tab "Posetilac"
             {
-                MessageBox.Show("Molimo odaberite posetioca kojeg želite da izmenite.", "Obaveštenje");
+                // 1. Proveravamo da li je korisnik selektovao red u tabeli
+                Autor selektovan = (Autor)dbAutori.SelectedItem;
+
+                if (selektovan != null)
+                {
+                    // 2. Otvaramo prozor i šaljemo mu selektovanog posetioca
+                    DodajAutoraProzor prozorZaIzmenu = new DodajAutoraProzor(selektovan);
+                    prozorZaIzmenu.Owner = this;
+
+                    if (prozorZaIzmenu.ShowDialog() == true)
+                    {
+                        // 3. Ovde ide logika za čuvanje izmena u DAO/Bazu
+                        autorDao.Update(selektovan);
+
+                        // 4. OSVEŽAVANJE TABELE
+                        // Pošto koristimo ObservableCollection, a menjamo property unutar objekta,
+                        // nekad je potrebno "osvežiti" ItemsSource ako objekat ne implementira INotifyPropertyChanged
+                        dbAutori.Items.Refresh();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Molimo odaberite posetioca kojeg želite da izmenite.", "Obaveštenje");
+                }
             }
+
         }
 
         private void DataGridPosetioci_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -43,7 +43,10 @@ namespace WpfClient
             dpDatum.SelectedDate = NoviPosetilac.DatumRodjenja; // Proveri naziv property-ja
             txtTelefon.Text = NoviPosetilac.Telefon;
             txtEmail.Text = NoviPosetilac.Email;
-            txtAdresa.Text = $"{NoviPosetilac.Adresa.Ulica} {NoviPosetilac.Adresa.Broj}";
+            txtUlica.Text = $"{NoviPosetilac.Adresa.Ulica}";
+            txtBroj.Text = $"{NoviPosetilac.Adresa.Broj}";
+            txtGrad.Text = $"{NoviPosetilac.Adresa.Grad}";
+            txtDrzava.Text = $"{NoviPosetilac.Adresa.Drzava}";
             // Postavi i ComboBox status ako je potrebno
         }
 
@@ -57,23 +60,54 @@ namespace WpfClient
 
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
-            if (NoviPosetilac.Adresa == null)
+            if (string.IsNullOrWhiteSpace(txtIme.Text) || string.IsNullOrWhiteSpace(txtPrezime.Text))
+            {
+                MessageBox.Show("Molimo unesite ime i prezime.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // 2. Ako NoviPosetilac ne postoji (dodavanje novog), kreiraj novu instancu
+            // Ako postoji (izmena), samo ćemo mu ažurirati property-je
+            if (NoviPosetilac == null)
+            {
+                NoviPosetilac = new Posetilac();
+                // Ako tvoja klasa Posetilac ima i instancu klase Adresa unutar sebe:
                 NoviPosetilac.Adresa = new Adresa();
-
-            // Veoma jednostavan način da podeliš unos (npr. "Knez Mihailova 10")
-            string[] delovi = txtAdresa.Text.Split(' ');
-            if (delovi.Length >= 2)
-            {
-                NoviPosetilac.Adresa.Broj = delovi[delovi.Length - 1]; // Zadnja reč je broj
-                NoviPosetilac.Adresa.Ulica = string.Join(" ", delovi.Take(delovi.Length - 1));
-            }
-            else
-            {
-                NoviPosetilac.Adresa.Ulica = txtAdresa.Text;
-                NoviPosetilac.Adresa.Broj = "bb"; // ili ostavi prazno
             }
 
+            // 3. Mapiranje podataka iz UI kontrola u objekat
+            NoviPosetilac.Ime = txtIme.Text;
+            NoviPosetilac.Prezime = txtPrezime.Text;
+            NoviPosetilac.DatumRodjenja = dpDatum.SelectedDate ?? DateTime.Now;
+            NoviPosetilac.Telefon = txtTelefon.Text;
+            NoviPosetilac.Email = txtEmail.Text;
+
+            // Čitanje statusa iz ComboBox-a
+            if (cbStatus.SelectedItem is ComboBoxItem selectedItem)
+            {
+                string sadrzaj = selectedItem.Content.ToString();
+
+                if (sadrzaj == "V.I.P.")
+                {
+                    NoviPosetilac.Status = StatusPosetioca.V;
+                }
+                else
+                {
+                    NoviPosetilac.Status = StatusPosetioca.R;
+                }
+            }
+
+            // Čitanje razdvojenih polja adrese
+            NoviPosetilac.Adresa.Ulica = txtUlica.Text;
+            NoviPosetilac.Adresa.Broj = txtBroj.Text;
+            NoviPosetilac.Adresa.Grad = txtGrad.Text;
+            NoviPosetilac.Adresa.Drzava = txtDrzava.Text;
+
+            // 4. Zatvaranje prozora uz potvrdu
+            // Postavljanjem DialogResult na true, signaliziramo pozivaocu (MainWindow) da je akcija uspešna
             this.DialogResult = true;
+            this.Close();
+
         }
 
         private void txtBrClanske_TextChanged(object sender, TextChangedEventArgs e)

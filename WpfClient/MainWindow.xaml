@@ -128,7 +128,8 @@
 
             <TabItem Header="Autori">
                 <Grid Margin="5">
-                    <DataGrid  x:Name="dbAutori" ItemsSource="{Binding Autori}" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single">
+                    <DataGrid  x:Name="dbAutori" ItemsSource="{Binding Autori}" CanUserDeleteRows="False"
+IsReadOnly="True" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Ime" Binding="{Binding Ime}" Width="*"/>
                             <DataGridTextColumn Header="Prezime" Binding="{Binding Prezime}" Width="*"/>
@@ -142,7 +143,8 @@
 
             <TabItem Header="Knjige">
                 <Grid Margin="5">
-                    <DataGrid x:Name="dbKnjige" ItemsSource="{Binding Knjige}" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single">
+                    <DataGrid x:Name="dbKnjige" ItemsSource="{Binding Knjige}" CanUserDeleteRows="False"
+IsReadOnly="True" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Single">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="*"/>
                             <DataGridTextColumn Header="Naziv" Binding="{Binding Naziv}" Width="2*"/>
