@@ -1,3 +1,7 @@
-CK-1|sfs|NS|4|SRB
-123123|sds|sss|33|dasdasdasddas
+CK-1|sfs|NS|4|SRBBBB
+123123|sds|Novi sad|33|dasdasdasddas
 12345|dd|dd|2|dd
+CK-2|Jovna|sNS|23|HRV
+CK-3|dsads|sdds|2|sdds
+CK-4|aa|aaa|2|aaa
+CK-5|sdad|sdsd|3|dssd

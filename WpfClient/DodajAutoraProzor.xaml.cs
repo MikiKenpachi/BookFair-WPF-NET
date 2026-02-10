@@ -49,14 +49,13 @@ namespace WpfClient
             txtTelefon.Text = NoviAutor.Telefon;
             txtEmail.Text = NoviAutor.Email;
 
+            txtUlica.Text = $"{NoviAutor.Adresa.Ulica}";
+            txtBroj.Text = $"{NoviAutor.Adresa.Broj}";
+            txtGrad.Text = $"{NoviAutor.Adresa.Grad}";
+            txtDrzava.Text = $"{NoviAutor.Adresa.Drzava}";
+
             // Adresa (pretpostavka da je NoviAutor.Adresa inicijalizovana)
-            if (NoviAutor.Adresa != null)
-            {
-                txtUlica.Text = NoviAutor.Adresa.Ulica;
-                txtBroj.Text = NoviAutor.Adresa.Broj;
-                txtGrad.Text = NoviAutor.Adresa.Grad;
-                txtDrzava.Text = NoviAutor.Adresa.Drzava;
-            }
+           
 
             // Specifična polja za Autora
             // ToString() je neophodan jer su godine iskustva tipa int
@@ -81,12 +80,12 @@ namespace WpfClient
             }
 
             // 3. Mapiranje podataka iz UI kontrola u objekat
-            string ime = txtIme.Text;
-            string prezime = txtPrezime.Text;
-            DateTime datumRodjenja = dpDatum.SelectedDate ?? DateTime.Now;
-            string telefon = txtTelefon.Text;
-            string email = txtEmail.Text;
-            string brojLk = txtBrojLk.Text;
+            NoviAutor.Ime = txtIme.Text;
+            NoviAutor.Prezime = txtPrezime.Text;
+            NoviAutor.Datum_rodjenja = dpDatum.SelectedDate ?? DateTime.Now;
+            NoviAutor.Telefon = txtTelefon.Text;
+            NoviAutor.Email = txtEmail.Text;
+            NoviAutor.Broj_lk = txtBrojLk.Text;
 
             // 2. Parsiranje godina iskustva (iz stringa u int)
             if (!int.TryParse(txtIskustvo.Text, out int godineIskustva))
@@ -94,32 +93,13 @@ namespace WpfClient
                 MessageBox.Show("Molimo unesite ispravan broj za godine iskustva.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
+            NoviAutor.Godine_iskustva = godineIskustva;
 
-            // 3. Kreiranje objekta Adresa
-            // Pretpostavljamo da Adresa ima default konstruktor ili setere
-            Adresa adr = new Adresa
-            {
-                Ulica = txtUlica.Text,
-                Broj = txtBroj.Text,
-                Grad = txtGrad.Text,
-                Drzava = txtDrzava.Text
-            };
+            NoviAutor.Adresa.Ulica = txtUlica.Text;
+            NoviAutor.Adresa.Broj = txtBroj.Text;
+            NoviAutor.Adresa.Grad = txtGrad.Text;
+            NoviAutor.Adresa.Drzava = txtDrzava.Text;
 
-            // 4. Pozivanje tvog konstruktora za Autora
-            // Redosled: (ime, prezime, datumRodjenja, adresa, telefon, email, godineIskustva, brojLk)
-            NoviAutor = new Autor(
-                ime,
-                prezime,
-                datumRodjenja,
-                adr,
-                telefon,
-                email,
-                godineIskustva,
-                brojLk
-            );
-
-            // 4. Zatvaranje prozora uz potvrdu
-            // Postavljanjem DialogResult na true, signaliziramo pozivaocu (MainWindow) da je akcija uspešna
             this.DialogResult = true;
             this.Close();
         }

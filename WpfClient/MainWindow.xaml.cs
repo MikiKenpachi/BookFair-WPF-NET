@@ -6,6 +6,7 @@ using SajamKnjigaProjekat.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,6 +32,10 @@ namespace WpfClient
         public ObservableCollection<Posetilac> Posetioci { get; set; }
         public ObservableCollection<Autor> Autori { get; set; }
         public ObservableCollection<Knjiga> Knjige { get; set; }
+
+        public ICollectionView PosetiociView { get; set; }
+        public ICollectionView AutoriView { get; set; }
+        public ICollectionView KnjigeView { get; set; }
 
         KnjigaDAO knjigaDao = new KnjigaDAO();
         AutorDAO autorDao = new AutorDAO();
@@ -69,6 +74,17 @@ namespace WpfClient
             Posetioci = new ObservableCollection<Posetilac>(sviPosetioci);
             Autori = new ObservableCollection<Autor>(sviAutori);
             Knjige = new ObservableCollection<Knjiga>(listaIzFajla);
+
+            // Kreiramo poglede na osnovu tvojih kolekcija
+            PosetiociView = CollectionViewSource.GetDefaultView(Posetioci);
+            AutoriView = CollectionViewSource.GetDefaultView(Autori);
+            KnjigeView = CollectionViewSource.GetDefaultView(Knjige);
+
+            // Povezujemo DataGrid sa View-om umesto direktno sa kolekcijom
+            DataGridPosetioci.ItemsSource = PosetiociView;
+            // Ako imaš i ostale DataGrid-ove:
+            // DataGridAutori.ItemsSource = AutoriView;
+            // DataGridKnjige.ItemsSource = KnjigeView;
 
 
             // 5. Poveži sa DataGrid-om
@@ -309,6 +325,7 @@ namespace WpfClient
                     {
                         // 3. Ovde ide logika za čuvanje izmena u DAO/Bazu
                         posetilacDao.Update(selektovan);
+                        adresaDao.Update(selektovan.Adresa);
 
                         // 4. OSVEŽAVANJE TABELE
                         // Pošto koristimo ObservableCollection, a menjamo property unutar objekta,
@@ -337,6 +354,7 @@ namespace WpfClient
                     {
                         // 3. Ovde ide logika za čuvanje izmena u DAO/Bazu
                         autorDao.Update(selektovan);
+                        adresaDao.Update(selektovan.Adresa);
 
                         // 4. OSVEŽAVANJE TABELE
                         // Pošto koristimo ObservableCollection, a menjamo property unutar objekta,
@@ -369,5 +387,164 @@ namespace WpfClient
             // Datum format (npr. 09.02.2026.)
             lblDate.Text = now.ToString("dd.MM.yyyy.");
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string filter = txtPretraga.Text.ToLower();
+
+            // Proveravamo koji je tab trenutno otvoren
+            // Pretpostavljamo da tabovi imaju imena ili proveravamo po Indexu
+            if (MainTabControl.SelectedIndex == 0) // Npr. Prvi tab su Posetioci
+            {
+                FiltrirajPosetioce(filter);
+            }
+            else if (MainTabControl.SelectedIndex == 1) // Drugi tab su Autori
+            {
+                FiltrirajAutore(filter);
+            }
+            else if (MainTabControl.SelectedIndex == 2) // Drugi tab su Autori
+            {
+                FiltrirajKnjige(filter);
+            }
+
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+          
+        }
+
+            private void FiltrirajPosetioce(string filter)
+        {
+            if (PosetiociView == null) return;
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                PosetiociView.Filter = null; // Poništi filter ako je polje prazno
+            }
+            else
+            {
+                PosetiociView.Filter = obj =>
+                {
+                    var p = obj as Posetilac;
+                    if (p == null) return false;
+
+                    // 1. Priprema filtera (sve u mala slova i brišemo razmake sa krajeva)
+                    string f = txtPretraga.Text.ToLower().Trim();
+
+                    if (string.IsNullOrEmpty(f)) return true;
+
+                    // 2. Provera imena i prezimena (ToLower obezbeđuje da "V" nađe i "v" i "V")
+                    bool matchImePrezime = p.Ime.ToLower().Contains(filter) ||
+                           p.Prezime.ToLower().Contains(filter) ||
+                           p.Adresa.Ulica.ToLower().Contains(filter) ||
+                           p.Adresa.Broj.ToLower().Contains(filter) ||
+                           p.Adresa.Grad.ToLower().Contains(filter) ||
+                           p.Adresa.Drzava.ToLower().Contains(filter) ||
+
+                           p.BrClanskeKarte.ToLower().Contains(filter);
+
+                    // 3. Provera Statusa
+                    // Proveravamo da li je unos "v" i da li je status V
+                    // ILI da li string reprezentacija enuma sadrži filter
+                    bool matchStatus = false;
+                    if (f == "v")
+                    {
+                        matchStatus = (p.Status == StatusPosetioca.V);
+                    }
+                    else if (f == "r")
+                    {
+                        matchStatus = (p.Status == StatusPosetioca.R);
+                    }
+                    else
+                    {
+                        // Ovo pokriva slučaj ako neko ukuca "Redovan" ili "V.I.P."
+                        matchStatus = p.Status.ToString().ToLower().Contains(f);
+                    }
+
+                    // 4. Rezultat: Prikaži ako se poklapa bilo šta od navedenog
+                    return matchImePrezime || matchStatus;
+
+                  
+                };
+            }
+            PosetiociView.Refresh(); // Osveži prikaz u DataGrid-u
+        }
+
+        private void FiltrirajAutore(string filter)
+        {
+            if (AutoriView == null) return;
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                AutoriView.Filter = null;
+            }
+            else
+            {
+                string f = filter.ToLower().Trim();
+
+                AutoriView.Filter = obj =>
+                {
+                    var a = obj as Autor;
+                    if (a == null) return false;
+
+                    // 1. Provera Imena i Prezimena
+                    bool matchImePrezime = a.Ime.ToLower().Contains(f) ||
+                                           a.Prezime.ToLower().Contains(f);
+
+                    // 2. Provera Broja lične karte (string)
+                    bool matchLk = a.Broj_lk.ToLower().Contains(f);
+
+                    // 3. Provera E-maila (string)
+                    bool matchEmail = a.Email.ToLower().Contains(f);
+
+                    // 4. Provera Datuma rođenja (DateTime)
+                    // Pretvaramo datum u string formata dd.MM.yyyy da bi korisnik mogao 
+                    // da kuca npr. "1985" ili "05.10" i nađe autora
+                    bool matchDatum = a.Datum_rodjenja.ToString("dd.MM.yyyy").Contains(f);
+
+                    // Vraća true ako bilo koji uslov ispunjava kriterijum
+                    return matchImePrezime || matchLk || matchEmail || matchDatum;
+                };
+            }
+            AutoriView.Refresh();
+        }
+
+        private void FiltrirajKnjige(string filter)
+        {
+            if (KnjigeView == null) return;
+
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                KnjigeView.Filter = null;
+            }
+            else
+            {
+                string f = filter.ToLower().Trim();
+
+                KnjigeView.Filter = obj =>
+                {
+                    var k = obj as Knjiga;
+                    if (k == null) return false;
+
+                    // 1. Provera ISBN-a i Naziva
+                    bool matchOsnovno = k.ISBN.ToLower().Contains(f) ||
+                                        k.Naziv.ToLower().Contains(f);
+
+                    // 2. Provera Godine izdanja i Cene (pretvaramo u string za pretragu)
+                    bool matchTehnicki = k.Godina_izdanja.ToString().Contains(f) ||
+                                         k.Cena.ToString().Contains(f);
+
+                    // 3. Provera Žanra (Enum)
+                    // Replace('_', ' ') omogućava da korisnik kuca "Naučna fantastika" 
+                    // iako je u Enumu "Naučna_fantastika"
+                    string zanrString = k.Zanr.ToString().ToLower().Replace('_', ' ');
+                    bool matchZanr = zanrString.Contains(f);
+
+                    return matchOsnovno || matchTehnicki || matchZanr;
+                };
+            }
+            KnjigeView.Refresh();
+        }
     }
-}
+    }
