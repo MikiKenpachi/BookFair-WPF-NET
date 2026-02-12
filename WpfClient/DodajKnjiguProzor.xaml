@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfClient"
         mc:Ignorable="d"
-        Title="DodajKnjiguProzor" Height="450" Width="350"
+        Title="DodajKnjiguProzor" Height="350" Width="350"
         WindowStartupLocation="CenterOwner">
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -34,7 +34,7 @@
         <TextBox x:Name="txtNaziv" Grid.Row="1" Grid.Column="1" Margin="5" />
 
         <Label Content="Godina izdanja" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
-        <DatePicker x:Name="dpGI" Grid.Row="2" Grid.Column="1" Margin="5" />
+        <TextBox x:Name="dpGI" Grid.Row="2" Grid.Column="1" Margin="5" />
 
         <Label Content="Cena" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtCena" Grid.Row="3" Grid.Column="1" Margin="5" />
@@ -44,18 +44,31 @@
 
         <Label Content="Status" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
         <ComboBox x:Name="cbStatus" Grid.Row="5" Grid.Column="1" Margin="5">
-            <ComboBoxItem Content="Romantika" IsSelected="True"/>
-            <ComboBoxItem Content="Naučna fantastika"/>
-            <ComboBoxItem Content="Triler"/>
-            <ComboBoxItem Content="Horor"/>
-            <ComboBoxItem Content="Misterija"/>
-            <ComboBoxItem Content="Biografija"/>
-            <ComboBoxItem Content="Fantazija"/>
-            <ComboBoxItem Content="Poezija"/>
-            <ComboBoxItem Content="Drama"/>
+            <ComboBoxItem Content="Romantika" Tag="Roman" IsSelected="True"/>
+            <ComboBoxItem Content="Naučna fantastika" Tag="Naucna_Fantastika"/>
+            <ComboBoxItem Content="Triler" Tag="Triler"/>
+            <ComboBoxItem Content="Horor" Tag="Horor"/>
+            <ComboBoxItem Content="Biografija" Tag="Biografija"/>
+            <ComboBoxItem Content="Fantazija" Tag="Fantastika"/>
+            <ComboBoxItem Content="Poezija" Tag="Poezija"/>
+            <ComboBoxItem Content="Drama" Tag="Drama"/>
+            <ComboBoxItem Content="Kriminalistika" Tag="Kriminalistika"/>
+            <ComboBoxItem Content="Klasika" Tag="Klasika"/>
+            <ComboBoxItem Content="Psihologija" Tag="Psihologija"/>
+            <ComboBoxItem Content="Dečija literatura" Tag="Decija_Literatura"/>
+            <ComboBoxItem Content="Stručna literatura" Tag="Strucna_Literatura"/>
+            <ComboBoxItem Content="Enciklopedija" Tag="Enciklopedija"/>
         </ComboBox>
 
-        
+        <Label Content="Autor" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox x:Name="cbAutor" Grid.Row="6" Grid.Column="1" Margin="5" 
+          DisplayMemberPath="ImePrezime" />
+
+        <Label Content="Izdavač" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox x:Name="cbIzdavac" Grid.Row="7" Grid.Column="1" Margin="5" 
+          DisplayMemberPath="Naziv" />
+
+
 
         <StackPanel Orientation="Horizontal" Grid.Row="10" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Content="Odustani" Width="80" Margin="5" Click="BtnOdustani_Click" IsCancel="True"/>

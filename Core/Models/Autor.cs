@@ -18,6 +18,8 @@ namespace SajamKnjigaProjekat.Core.Models
 
         public List<string> SpisakKnjigaISBN { get; set; } = new List<string>();
 
+        public string ImePrezime => $"{Ime} {Prezime}";
+
         public Autor() { }
 
         public Autor(string ime, string prezime, DateTime datumRodjenja, Adresa adresa, string telefon, string email, int godineIskustva, string brojLk)

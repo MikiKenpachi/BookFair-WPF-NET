@@ -253,7 +253,25 @@ namespace WpfClient
                     }
                 }
             }
-            
+            if (MainTabControl.SelectedIndex == 2)
+            {
+          
+                DodajKnjiguProzor dijaloškiProzor = new DodajKnjiguProzor();
+
+                dijaloškiProzor.Owner = this;
+
+                if (dijaloškiProzor.ShowDialog() == true)
+                {
+                    Knjiga a = dijaloškiProzor.NovaKnjiga;
+              
+                    if (a != null)
+                    {
+                        //knjigaDao.Add(a);
+                        Knjige.Add(a);
+                    }
+                }
+            }
+
         }
 
         private void BtnObrisi_Click(object sender, RoutedEventArgs e)
@@ -386,6 +404,22 @@ namespace WpfClient
                 if (prozor.ShowDialog() == true) { AutoriView.Refresh(); }
 
                 DataGridAutori.SelectedItem = null;
+            }
+            else if (aktivniTab == 2) // KNJIGE
+            {
+                var selektovan = DataGridKnjige.SelectedItem as Knjiga;
+
+                if (selektovan == null)
+                {
+                    MessageBox.Show("Morate prvo selektovati knjigu u tabeli!", "Obaveštenje");
+                    return;
+                }
+
+                DodajKnjiguProzor prozor = new DodajKnjiguProzor(selektovan);
+                prozor.Owner = this;
+                if (prozor.ShowDialog() == true) { KnjigeView.Refresh(); }
+
+                DataGridKnjige.SelectedItem = null;
             }
         }
 
