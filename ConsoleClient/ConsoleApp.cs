@@ -30,49 +30,8 @@ namespace ConsoleClient
                 opcija = MenuBar.UcitajOpciju();
                 ObradiOpciju(opcija);
 
-            }while(opcija != 0);
+            } while (opcija != 0);
         }
-
-       /* public void TestDataBinding()
-        {
-            // 1️⃣ Učitaj sve podatke iz DAO-a
-            var posetioci = posetilacDao.GetAll();
-            var knjige = knjigaDao.GetAll();
-            var autori = autorDao.GetAll();
-            var izdavaci = izdavacDao.GetAll();
-            var kupovine = kupiliDao.GetAll(); // koristi instancu kupiliDao
-
-            // 2️⃣ Pozovi DataBinding
-            DataBinding.PoveziSve(posetioci, knjige, autori, izdavaci, kupovine);
-
-            // 3️⃣ Test ispisa za proveru veza
-            Console.WriteLine("=== Test DataBinding ===\n");
-
-            foreach (var p in posetioci)
-            {
-                Console.WriteLine($"Posetilac: {p.Ime} {p.Prezime}, broj kupovina: {kupovine.Count}");
-            }
-
-            foreach (var k in knjige)
-            {
-                string autoriStr = k.ListaAutora.Count > 0
-                    ? string.Join(", ", k.ListaAutora.Select(a => a.Ime + " " + a.Prezime))
-                    : "Nema autora";
-
-                string izdavac = k.Izdavac != null ? k.Izdavac.Naziv : "Nema izdavača";
-
-                Console.WriteLine($"Knjiga: {k.Naziv}, Autori: {autoriStr}, Izdavač: {izdavac}");
-            }
-
-            foreach (var i in izdavaci)
-            {
-                string sef = i.SefIzdavaca != null ? i.SefIzdavaca.Ime + " " + i.SefIzdavaca.Prezime : "Nema šefa";
-                Console.WriteLine($"Izdavač: {i.Naziv}, Šef: {sef}, broj autora: {i.ListaAutora.Count}");
-            }
-
-            Console.WriteLine("\n=== Kraj testa DataBinding ===");
-        }*/
-
 
         public void ObradiOpciju(int opcija)
         {

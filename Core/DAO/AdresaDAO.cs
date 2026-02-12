@@ -53,6 +53,11 @@ namespace SajamKnjigaProjekat.Core.DAO
             }
         }
 
+        public void SaveAll(List<Adresa> lista)
+        {
+            _storage.Save(lista);
+        }
+
         // Pronadji adresu po ID-ju 
         public Adresa GetByVlasnikID(string vlasnikID)
         {

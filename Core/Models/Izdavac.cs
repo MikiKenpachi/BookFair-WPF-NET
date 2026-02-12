@@ -13,8 +13,7 @@ namespace SajamKnjigaProjekat.Core.Models
         public List<Autor> ListaAutora { get; set; } = new List<Autor>();
         public List<Knjiga> ListaKnjiga { get; set; } = new List<Knjiga>();
 
-        public string SefIzdavacaID { get; set; }
-        public List<string> ListaKnjigaISBN { get; set; } = new List<string>();
+        //public List<string> ListaKnjigaISBN { get; set; } = new List<string>();  nepotrebno ???
 
         public Izdavac(string sifra, string naziv, Autor sefIzdavaca, List<Autor> listaAutora, List<Knjiga> listaKnjiga)
         {

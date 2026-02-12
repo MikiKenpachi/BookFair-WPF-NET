@@ -1,5 +1,6 @@
-﻿using SajamKnjigaProjekat.Core.Models;
-using Core.Storage;
+﻿using Core.Storage;
+using Core.Storage.Serialization;
+using SajamKnjigaProjekat.Core.Models;
 using System.Collections.Generic;
 
 namespace SajamKnjigaProjekat.Core.DAO
@@ -27,6 +28,12 @@ namespace SajamKnjigaProjekat.Core.DAO
         {
             _storage.Save(listaPosetilaca);
         }
+
+        public void SaveAll(List<Posetilac> lista)
+        { 
+            _storage.Save(lista);
+        }
+
 
         public void Add(Posetilac p)
         {

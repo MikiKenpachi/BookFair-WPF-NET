@@ -55,17 +55,7 @@
             <ComboBoxItem Content="Drama"/>
         </ComboBox>
 
-        <Label Content="Ulica" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox x:Name="txtUlica" Grid.Row="6" Grid.Column="1" Margin="5" />
-
-        <Label Content="Broj" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox x:Name="txtBroj" Grid.Row="7" Grid.Column="1" Margin="5" />
-
-        <Label Content="Grad" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox x:Name="txtGrad" Grid.Row="8" Grid.Column="1" Margin="5" />
-
-        <Label Content="Država" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox x:Name="txtDrzava" Grid.Row="9" Grid.Column="1" Margin="5" />
+        
 
         <StackPanel Orientation="Horizontal" Grid.Row="10" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Content="Odustani" Width="80" Margin="5" Click="BtnOdustani_Click" IsCancel="True"/>

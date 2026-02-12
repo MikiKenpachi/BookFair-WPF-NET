@@ -41,6 +41,11 @@ namespace SajamKnjigaProjekat.Core.DAO
         {
             _storage.Save(listaAutora);
         }
+
+        public void SaveAll(List<Autor> lista)
+        {
+            _storage.Save(lista);
+        }
         public void Update(Autor a)
         {
             // 1. Učitamo sve (ako već nisu u memoriji)

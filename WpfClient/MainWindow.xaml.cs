@@ -111,12 +111,31 @@ namespace WpfClient
         }
 
         // Otvaranje novog prozora za Izdavače
-        private void MenuIzdavaci_Click(object sender, RoutedEventArgs e)
+        private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            // Pretpostavka da imaš napravljen prozor IzdavaciWindow
-            // var prozor = new IzdavaciWindow();
-            // prozor.ShowDialog();
-            MessageBox.Show("Otvaranje prozora za izdavače...");
+            // Provera da li je pritisnut Control taster
+            bool isCtrlDown = Keyboard.Modifiers == ModifierKeys.Control;
+
+            // Ctrl + N za New
+            if (isCtrlDown && e.Key == Key.N)
+            {
+                BtnDodaj_Click(sender, null);
+                e.Handled = true; // Sprečava dalje širenje događaja
+            }
+
+            // Ctrl + S za Save
+            if (isCtrlDown && e.Key == Key.S)
+            {
+                BtnSave_Click(sender, null);
+                e.Handled = true;
+            }
+
+            // Escape za izlaz (opciono, ali korisno)
+            if (e.Key == Key.Escape)
+            {
+                MenuClose_Click(sender, null);
+                e.Handled = true;
+            }
         }
 
         // Help - About prozor
@@ -134,7 +153,30 @@ namespace WpfClient
         // Save (za sada samo potvrda)
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Stanje aplikacije je uspešno sačuvano!", "Save");
+            try
+            {
+                // 1. ČUVANJE POSETILACA
+                posetilacDao.SaveAll(new List<Posetilac>(Posetioci));
+
+                // 2. ČUVANJE AUTORA
+                autorDao.SaveAll(new List<Autor>(Autori));
+
+                // 3. ČUVANJE KNJIGA
+                knjigaDao.SaveAll(new List<Knjiga>(Knjige));
+
+                // 4. ČUVANJE SVIH ADRESA (Skupljamo adrese od svih)
+                List<Adresa> sveAdrese = new List<Adresa>();
+                foreach (var p in Posetioci) if (p.Adresa != null) sveAdrese.Add(p.Adresa);
+                foreach (var a in Autori) if (a.Adresa != null) sveAdrese.Add(a.Adresa);
+
+                adresaDao.SaveAll(sveAdrese);
+
+                MessageBox.Show("Sve izmene su uspešno sačuvane!", "Status", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Došlo je do greške pri čuvanju: {ex.Message}");
+            }
         }
 
 
@@ -172,8 +214,8 @@ namespace WpfClient
                     if (p != null)
                     {
                         // 2. Dodajemo ga u DAO (da se upiše u fajl)
-                        posetilacDao.Add(p);
-                        adresaDao.Add(d);
+                        //posetilacDao.Add(p);
+                        //adresaDao.Add(d);
 
                         // 3. Dodajemo ga u ObservableCollection (da se odmah pojavi u Gridu)
                         Posetioci.Add(p);
@@ -203,8 +245,8 @@ namespace WpfClient
                     if (a != null)
                     {
                         // 2. Dodajemo ga u DAO (da se upiše u fajl)
-                        autorDao.Add(a);
-                        adresaDao.Add(d);
+                        //autorDao.Add(a);
+                        //adresaDao.Add(d);
 
                         // 3. Dodajemo ga u ObservableCollection (da se odmah pojavi u Gridu)
                         Autori.Add(a);
@@ -222,13 +264,13 @@ namespace WpfClient
             if (aktivniTab == 2) // Ako je selektovan tab "Knjige"
             {
                 // 2. Uzimamo selektovani red i "kastujemo" ga u klasu Knjiga
-                Knjiga selektovanaKnjiga = (Knjiga)dbKnjige.SelectedItem;
+                Knjiga selektovanaKnjiga = (Knjiga)DataGridKnjige.SelectedItem;
 
                 // 3. Proveravamo da li je korisnik uopšte išta kliknuo
                 if (selektovanaKnjiga != null)
                 {
                     // Potvrda brisanja (opciono, ali preporučljivo)
-                    var result = MessageBox.Show("Da li ste sigurni?", "Potvrda", MessageBoxButton.YesNo);
+                    var result = MessageBox.Show("Da li ste sigurni da želite da obrišete knjigu?", "Brisanje knjige", MessageBoxButton.YesNo);
 
                     if (result == MessageBoxResult.Yes)
                     {
@@ -252,13 +294,13 @@ namespace WpfClient
             if (aktivniTab == 1) // Ako je selektovan tab "Autor"
             {
 
-                Autor selektovanAutor = (Autor)dbAutori.SelectedItem;
+                Autor selektovanAutor = (Autor)DataGridAutori.SelectedItem;
 
                 // 3. Proveravamo da li je korisnik uopšte išta kliknuo
                 if (selektovanAutor != null)
                 {
                     // Potvrda brisanja (opciono, ali preporučljivo)
-                    var result = MessageBox.Show("Da li ste sigurni?", "Potvrda", MessageBoxButton.YesNo);
+                    var result = MessageBox.Show("Da li ste sigurni da želite da obrišete autora?", "Brisanje autora", MessageBoxButton.YesNo);
 
                     if (result == MessageBoxResult.Yes)
                     {
@@ -267,8 +309,8 @@ namespace WpfClient
                         Autori.Remove(selektovanAutor);
 
                         // B) Brišemo iz fajla preko DAO
-                        adresaDao.Remove(selektovanAutor.Broj_lk);
-                        autorDao.Remove(selektovanAutor);
+                       // adresaDao.Remove(selektovanAutor.Broj_lk);
+                       // autorDao.Remove(selektovanAutor);
                     }
                 }
                 else
@@ -286,7 +328,7 @@ namespace WpfClient
                 if (selektovanPosetilac != null)
                 {
                     // Potvrda brisanja (opciono, ali preporučljivo)
-                    var result = MessageBox.Show("Da li ste sigurni?", "Potvrda", MessageBoxButton.YesNo);
+                    var result = MessageBox.Show("Da li ste sigurni da želite da obrišete posetioca?", "Brisanje posetioca", MessageBoxButton.YesNo);
 
                     if (result == MessageBoxResult.Yes)
                     {
@@ -296,7 +338,7 @@ namespace WpfClient
 
                         // B) Brišemo iz fajla preko DAO
                         adresaDao.Remove(selektovanPosetilac.BrClanskeKarte);
-                        posetilacDao.Remove(selektovanPosetilac);
+                        //posetilacDao.Remove(selektovanPosetilac);
                     }
                 }
                 else
@@ -310,64 +352,41 @@ namespace WpfClient
         {
             int aktivniTab = MainTabControl.SelectedIndex;
 
-            if (aktivniTab == 0) // Ako je selektovan tab "Posetilac"
+            if (aktivniTab == 0) // POSJETIOCI
             {
-                // 1. Proveravamo da li je korisnik selektovao red u tabeli
-                Posetilac selektovan = (Posetilac)DataGridPosetioci.SelectedItem;
+                // Uzmi šta je trenutno selektovano
+                var selektovan = DataGridPosetioci.SelectedItem as Posetilac;
 
-                if (selektovan != null)
+                // KLJUČNA PROVERA: Ako je null ili ako korisnik nije zapravo kliknuo na red
+                if (selektovan == null)
                 {
-                    // 2. Otvaramo prozor i šaljemo mu selektovanog posetioca
-                    DodajPosetiocaProzor prozorZaIzmenu = new DodajPosetiocaProzor(selektovan);
-                    prozorZaIzmenu.Owner = this;
-
-                    if (prozorZaIzmenu.ShowDialog() == true)
-                    {
-                        // 3. Ovde ide logika za čuvanje izmena u DAO/Bazu
-                        posetilacDao.Update(selektovan);
-                        adresaDao.Update(selektovan.Adresa);
-
-                        // 4. OSVEŽAVANJE TABELE
-                        // Pošto koristimo ObservableCollection, a menjamo property unutar objekta,
-                        // nekad je potrebno "osvežiti" ItemsSource ako objekat ne implementira INotifyPropertyChanged
-                        DataGridPosetioci.Items.Refresh();
-                    }
+                    MessageBox.Show("Morate prvo selektovati posetioca u tabeli!", "Obaveštenje");
+                    return;
                 }
-                else
-                {
-                    MessageBox.Show("Molimo odaberite posetioca kojeg želite da izmenite.", "Obaveštenje");
-                }
+
+                IzmenaPosetioca prozor = new IzmenaPosetioca(selektovan);
+                prozor.Owner = this;
+                if (prozor.ShowDialog() == true) { PosetiociView.Refresh(); }
+
+                // OPCIONO: Odselektuj nakon zatvaranja prozora da "isprazniš" bafer
+                DataGridPosetioci.SelectedItem = null;
             }
-
-            if (aktivniTab == 1) // Ako je selektovan tab "Posetilac"
+            else if (aktivniTab == 1) // AUTORI
             {
-                // 1. Proveravamo da li je korisnik selektovao red u tabeli
-                Autor selektovan = (Autor)dbAutori.SelectedItem;
+                var selektovan = DataGridAutori.SelectedItem as Autor;
 
-                if (selektovan != null)
+                if (selektovan == null)
                 {
-                    // 2. Otvaramo prozor i šaljemo mu selektovanog posetioca
-                    DodajAutoraProzor prozorZaIzmenu = new DodajAutoraProzor(selektovan);
-                    prozorZaIzmenu.Owner = this;
-
-                    if (prozorZaIzmenu.ShowDialog() == true)
-                    {
-                        // 3. Ovde ide logika za čuvanje izmena u DAO/Bazu
-                        autorDao.Update(selektovan);
-                        adresaDao.Update(selektovan.Adresa);
-
-                        // 4. OSVEŽAVANJE TABELE
-                        // Pošto koristimo ObservableCollection, a menjamo property unutar objekta,
-                        // nekad je potrebno "osvežiti" ItemsSource ako objekat ne implementira INotifyPropertyChanged
-                        dbAutori.Items.Refresh();
-                    }
+                    MessageBox.Show("Morate prvo selektovati autora u tabeli!", "Obaveštenje");
+                    return;
                 }
-                else
-                {
-                    MessageBox.Show("Molimo odaberite posetioca kojeg želite da izmenite.", "Obaveštenje");
-                }
+
+                IzmenaAutora prozor = new IzmenaAutora(selektovan);
+                prozor.Owner = this;
+                if (prozor.ShowDialog() == true) { AutoriView.Refresh(); }
+
+                DataGridAutori.SelectedItem = null;
             }
-
         }
 
         private void DataGridPosetioci_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -392,17 +411,16 @@ namespace WpfClient
         {
             string filter = txtPretraga.Text.ToLower();
 
-            // Proveravamo koji je tab trenutno otvoren
-            // Pretpostavljamo da tabovi imaju imena ili proveravamo po Indexu
-            if (MainTabControl.SelectedIndex == 0) // Npr. Prvi tab su Posetioci
+            // Proveravamo po indexu koji je tab trenutno otvoren
+            if (MainTabControl.SelectedIndex == 0) // Posetioci
             {
                 FiltrirajPosetioce(filter);
             }
-            else if (MainTabControl.SelectedIndex == 1) // Drugi tab su Autori
+            else if (MainTabControl.SelectedIndex == 1) // Autori
             {
                 FiltrirajAutore(filter);
             }
-            else if (MainTabControl.SelectedIndex == 2) // Drugi tab su Autori
+            else if (MainTabControl.SelectedIndex == 2) // Knjige
             {
                 FiltrirajKnjige(filter);
             }
@@ -415,61 +433,62 @@ namespace WpfClient
         }
 
             private void FiltrirajPosetioce(string filter)
-        {
-            if (PosetiociView == null) return;
+            {
 
-            if (string.IsNullOrWhiteSpace(filter))
-            {
-                PosetiociView.Filter = null; // Poništi filter ako je polje prazno
-            }
-            else
-            {
-                PosetiociView.Filter = obj =>
+                if (PosetiociView == null) return;
+
+                if (string.IsNullOrWhiteSpace(filter))
                 {
-                    var p = obj as Posetilac;
-                    if (p == null) return false;
-
-                    // 1. Priprema filtera (sve u mala slova i brišemo razmake sa krajeva)
-                    string f = txtPretraga.Text.ToLower().Trim();
-
-                    if (string.IsNullOrEmpty(f)) return true;
-
-                    // 2. Provera imena i prezimena (ToLower obezbeđuje da "V" nađe i "v" i "V")
-                    bool matchImePrezime = p.Ime.ToLower().Contains(filter) ||
-                           p.Prezime.ToLower().Contains(filter) ||
-                           p.Adresa.Ulica.ToLower().Contains(filter) ||
-                           p.Adresa.Broj.ToLower().Contains(filter) ||
-                           p.Adresa.Grad.ToLower().Contains(filter) ||
-                           p.Adresa.Drzava.ToLower().Contains(filter) ||
-
-                           p.BrClanskeKarte.ToLower().Contains(filter);
-
-                    // 3. Provera Statusa
-                    // Proveravamo da li je unos "v" i da li je status V
-                    // ILI da li string reprezentacija enuma sadrži filter
-                    bool matchStatus = false;
-                    if (f == "v")
+                    PosetiociView.Filter = null; // Poništi filter ako je polje prazno
+                }
+                else
+                {
+                    PosetiociView.Filter = obj =>
                     {
-                        matchStatus = (p.Status == StatusPosetioca.V);
-                    }
-                    else if (f == "r")
-                    {
-                        matchStatus = (p.Status == StatusPosetioca.R);
-                    }
-                    else
-                    {
-                        // Ovo pokriva slučaj ako neko ukuca "Redovan" ili "V.I.P."
-                        matchStatus = p.Status.ToString().ToLower().Contains(f);
-                    }
+                        var p = obj as Posetilac;
+                        if (p == null) return false;
 
-                    // 4. Rezultat: Prikaži ako se poklapa bilo šta od navedenog
-                    return matchImePrezime || matchStatus;
+                        // 1. Priprema filtera (sve u mala slova i brišemo razmake sa krajeva)
+                        string f = txtPretraga.Text.ToLower().Trim();
+
+                        if (string.IsNullOrEmpty(f)) return true;
+
+                        // 2. Provera imena i prezimena (ToLower obezbeđuje da "V" nađe i "v" i "V")
+                        bool matchImePrezime = p.Ime.ToLower().Contains(filter) ||
+                               p.Prezime.ToLower().Contains(filter) ||
+                               p.Adresa.Ulica.ToLower().Contains(filter) ||
+                               p.Adresa.Broj.ToLower().Contains(filter) ||
+                               p.Adresa.Grad.ToLower().Contains(filter) ||
+                               p.Adresa.Drzava.ToLower().Contains(filter) ||
+
+                               p.BrClanskeKarte.ToLower().Contains(filter);
+
+                        // 3. Provera Statusa
+                        // Proveravamo da li je unos "v" i da li je status V
+                        // ILI da li string reprezentacija enuma sadrži filter
+                        bool matchStatus = false;
+                        if (f == "v")
+                        {
+                            matchStatus = (p.Status == StatusPosetioca.V);
+                        }
+                        else if (f == "r")
+                        {
+                            matchStatus = (p.Status == StatusPosetioca.R);
+                        }
+                        else
+                        {
+                            // Ovo pokriva slučaj ako neko ukuca "Redovan" ili "V.I.P."
+                            matchStatus = p.Status.ToString().ToLower().Contains(f);
+                        }
+
+                        // 4. Rezultat: Prikaži ako se poklapa bilo šta od navedenog
+                        return matchImePrezime || matchStatus;
 
                   
-                };
+                    };
+                }
+                PosetiociView.Refresh(); // Osveži prikaz u DataGrid-u
             }
-            PosetiociView.Refresh(); // Osveži prikaz u DataGrid-u
-        }
 
         private void FiltrirajAutore(string filter)
         {
@@ -546,5 +565,20 @@ namespace WpfClient
             }
             KnjigeView.Refresh();
         }
+
+        private void MenuIzdavaci_Click(object sender, RoutedEventArgs e)
+        {
+            // 1. Inicijalizacija
+            IzdavaciProzor popUp = new IzdavaciProzor();
+
+            // 2. Postavljanje vlasnika (da pop-up bude centriran preko glavnog prozora)
+            popUp.Owner = this;
+
+            // 3. Povezivanje podataka (ovde pozivaš svoju listu izdavača)
+            // popUp.dgIzdavaci.ItemsSource = tvojDAO.GetAll();
+
+            // 4. Prikaz (ShowDialog znači da ne možeš kliknuti nazad dok ne zatvoriš pop-up)
+            popUp.ShowDialog();
+        }
     }
-    }
+}

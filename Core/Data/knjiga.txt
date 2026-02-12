@@ -1,2 +1,2 @@
-222|ss|Romantika|44|2222|22||12345
-2422|Rok|Istorijski_roman|442|999|44|12345|123123
+111|Kralj Artur|Istorijska|1994|1999|245|111|05041976
+222|Terminator|Triler|2001|1460|108|111|10101965

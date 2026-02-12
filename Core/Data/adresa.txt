@@ -1,7 +1,6 @@
-CK-1|sfs|NS|4|SRBBBB
-123123|sds|Novi sad|33|dasdasdasddas
-12345|dd|dd|2|dd
-CK-2|Jovna|sNS|23|HRV
-CK-3|dsads|sdds|2|sdds
-CK-4|aa|aaa|2|aaa
-CK-5|sdad|sdsd|3|dssd
+CK-1|Vuka Karadzica|Surcin|70|Srbija
+CK-2|Nikole Tesle|Sombor|6|Srbija
+10101965|Nikole Tesle|Kikinda|14|Srbija
+03021970|Kosovska|Novi Sad|26|Srbija
+05041976|Drinska|Loznica|63|Srbija
+10071987|Milunke Savic|Zvornik|76|Srbija

@@ -9,16 +9,21 @@ namespace SajamKnjigaProjekat.Core.Models
     {
         public enum Zanrovi
         {
-            Romantika,
-            Naučna_fantastika,
-            Misterija,
-            Biografija,
-            Istorijski_roman,
-            Fantazija,
+            Roman,
             Triler,
+            Kriminalistika,
+            Fantastika,
+            Naucna_Fantastika,
             Horor,
+            Biografija,
+            Istorijska,
+            Drama,
             Poezija,
-            Drama
+            Klasika,
+            Psihologija,
+            Decija_Literatura,
+            Strucna_Literatura,
+            Enciklopedija
         }
 
         public string ISBN { get; set; }
