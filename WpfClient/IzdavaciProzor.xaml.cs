@@ -68,7 +68,7 @@ namespace WpfClient
             }
             else
             {
-                MessageBox.Show("Molimo selektujte izdavača za izmenu.", "Obaveštenje");
+                MessageBox.Show("Morate prvo selektovati izdavača u tabeli!.", "Obaveštenje");
             }
         }
 
@@ -78,13 +78,13 @@ namespace WpfClient
 
             if (selektovan != null)
             {
-                var rezultat = MessageBox.Show($"Obrisati izdavača {selektovan.Naziv}?", "Potvrda", MessageBoxButton.YesNo);
+                var rezultat = MessageBox.Show($"Da li želite da obrišete izdavača {selektovan.Naziv}?", "Brisanje izdavača", MessageBoxButton.YesNo);
                 if (rezultat == MessageBoxResult.Yes)
                 {
                     ListaIzdavaca.Remove(selektovan);
 
                     IzdavacDAO dao = new IzdavacDAO();
-                    dao.Remove(selektovan); // Proveri da li se metoda zove Delete ili Remove u tvom DAO
+                    dao.Remove(selektovan); 
                 }
             }
         }

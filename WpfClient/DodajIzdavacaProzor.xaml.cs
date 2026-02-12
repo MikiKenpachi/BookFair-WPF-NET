@@ -48,7 +48,7 @@ namespace WpfClient
 
                 // Postavljamo selektovanog šefa
                 // (Moraš imati ispravno implementiran Equals u klasi Autor ili da se reference poklapaju)
-                // Ako ovo ne radi odmah, koristi: cbSefovi.SelectedValue = Izdavac.SefIzdavaca.Broj_lk;
+                //  cbSefovi.SelectedValue = Izdavac.SefIzdavaca.Broj_lk;
                 cbSefovi.SelectedItem = Izdavac.SefIzdavaca;
 
                 this.Title = "Izmena izdavača";
