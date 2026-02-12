@@ -93,29 +93,7 @@ namespace WpfClient
             // Postavi i ComboBox status ako je potrebno
         }
 
-        private bool ProveriZanr(string sadrzaj, Knjiga.Zanrovi zanrIzKnjige)
-        {
-            // Ovde mapiraš tekstove iz XAML-a na tvoje Enum vrednosti
-            switch (zanrIzKnjige)
-            {
-                case Knjiga.Zanrovi.Roman: return Tag == "Roman";
-                case Knjiga.Zanrovi.Naucna_Fantastika: return Tag == "Naucna_Fantastika";
-                case Knjiga.Zanrovi.Triler: return Tag == "Triler";
-                case Knjiga.Zanrovi.Horor: return Tag == "Horor";
-                case Knjiga.Zanrovi.Fantastika: return Tag == "Fanstika";
-                case Knjiga.Zanrovi.Biografija: return Tag == "Biografija";
-                case Knjiga.Zanrovi.Poezija: return Tag == "Poezija";
-                case Knjiga.Zanrovi.Drama: return Tag == "Drama";
-                case Knjiga.Zanrovi.Kriminalistika: return Tag == "Kriminalistika";
-                case Knjiga.Zanrovi.Klasika: return Tag == "Klasika";
-                case Knjiga.Zanrovi.Psihologija: return Tag == "Psihologija";
-                case Knjiga.Zanrovi.Decija_Literatura: return Tag == "Decija_Literatura";
-                case Knjiga.Zanrovi.Strucna_Literatura: return Tag == "Strucna_Literatura";
-                case Knjiga.Zanrovi.Enciklopedija: return Tag == "Enciklopedija";
-                case Knjiga.Zanrovi.Istorijska: return Tag == "Istorijska";
-                default: return false;
-            }
-        }
+    
         private void BtnOdustani_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;

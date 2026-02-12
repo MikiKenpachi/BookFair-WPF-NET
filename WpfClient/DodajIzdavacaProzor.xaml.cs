@@ -12,6 +12,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using SajamKnjigaProjekat.Core.DAO;
 using System.Windows.Shapes;
 
 namespace WpfClient
@@ -19,9 +20,12 @@ namespace WpfClient
     /// <summary>
     /// Interaction logic for DodajIzdavacaProzor.xaml
     /// </summary>
+    
     public partial class DodajIzdavacaProzor : Window
     {
         public Izdavac Izdavac { get; set; }
+
+        AutorDAO autorDao = new AutorDAO();
 
         // Konstruktor prima parametar (ako je null, znači dodajemo novog)
 
@@ -34,6 +38,7 @@ namespace WpfClient
 
             // Učitavanje iz fajla preko DAO klase
             var dao = new IzdavacDAO();
+            cbSefovi.ItemsSource = autorDao.GetAll();
             ListaIzdavaca = new ObservableCollection<Izdavac>(dao.GetAll());
 
 
