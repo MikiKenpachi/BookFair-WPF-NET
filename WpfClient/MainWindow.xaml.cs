@@ -475,135 +475,116 @@ namespace WpfClient
           
         }
 
-            private void FiltrirajPosetioce(string filter)
+            private void FiltrirajPosetioce(string upit)
             {
 
-                if (PosetiociView == null) return;
+            if (PosetiociView == null) return;
 
-                if (string.IsNullOrWhiteSpace(filter))
+            if (string.IsNullOrWhiteSpace(upit))
+            {
+                PosetiociView.Filter = null;
+            }
+            else
+            {
+                // 1. Parsiranje: Razdvajamo upit po zarezu i čistimo razmake
+                // Primer: "Petrovic, Petar" -> ["petrovic", "petar"]
+                string[] delovi = upit.ToLower().Split(',');
+                for (int i = 0; i < delovi.Length; i++) delovi[i] = delovi[i].Trim();
+
+                PosetiociView.Filter = obj =>
                 {
-                    PosetiociView.Filter = null; // Poništi filter ako je polje prazno
-                }
-                else
-                {
-                    PosetiociView.Filter = obj =>
+                    var p = obj as Posetilac;
+                    if (p == null) return false;
+
+                    // Uzimamo podatke posetioca u malim slovima radi case-insensitive poređenja
+                    string prezime = p.Prezime.ToLower();
+                    string ime = p.Ime.ToLower();
+                    string karta = p.BrClanskeKarte.ToLower();
+
+                    // Pravila na osnovu broja reči:
+                    if (delovi.Length == 1)
                     {
-                        var p = obj as Posetilac;
-                        if (p == null) return false;
+                        // JEDNA REČ -> Preзиме sadrži reč
+                        return prezime.Contains(delovi[0]);
+                    }
+                    else if (delovi.Length == 2)
+                    {
+                        // DVE REČI -> Prva u prezimenu, druga u imenu
+                        return prezime.Contains(delovi[0]) && ime.Contains(delovi[1]);
+                    }
+                    else if (delovi.Length >= 3)
+                    {
+                        // TRI REČI -> Prva u broju karte, druga u imenu, treća u prezimenu
+                        return karta.Contains(delovi[0]) &&
+                               ime.Contains(delovi[1]) &&
+                               prezime.Contains(delovi[2]);
+                    }
 
-                        // 1. Priprema filtera (sve u mala slova i brišemo razmake sa krajeva)
-                        string f = txtPretraga.Text.ToLower().Trim();
-
-                        if (string.IsNullOrEmpty(f)) return true;
-
-                        // 2. Provera imena i prezimena (ToLower obezbeđuje da "V" nađe i "v" i "V")
-                        bool matchImePrezime = p.Ime.ToLower().Contains(filter) ||
-                               p.Prezime.ToLower().Contains(filter) ||
-                               p.Adresa.Ulica.ToLower().Contains(filter) ||
-                               p.Adresa.Broj.ToLower().Contains(filter) ||
-                               p.Adresa.Grad.ToLower().Contains(filter) ||
-                               p.Adresa.Drzava.ToLower().Contains(filter) ||
-
-                               p.BrClanskeKarte.ToLower().Contains(filter);
-
-                        // 3. Provera Statusa
-                        // Proveravamo da li je unos "v" i da li je status V
-                        // ILI da li string reprezentacija enuma sadrži filter
-                        bool matchStatus = false;
-                        if (f == "v")
-                        {
-                            matchStatus = (p.Status == StatusPosetioca.V);
-                        }
-                        else if (f == "r")
-                        {
-                            matchStatus = (p.Status == StatusPosetioca.R);
-                        }
-                        else
-                        {
-                            // Ovo pokriva slučaj ako neko ukuca "Redovan" ili "V.I.P."
-                            matchStatus = p.Status.ToString().ToLower().Contains(f);
-                        }
-
-                        // 4. Rezultat: Prikaži ako se poklapa bilo šta od navedenog
-                        return matchImePrezime || matchStatus;
-
-                  
-                    };
-                }
-                PosetiociView.Refresh(); // Osveži prikaz u DataGrid-u
+                    return false;
+                };
+            }
+            PosetiociView.Refresh(); // Osveži prikaz u DataGrid-u
             }
 
-        private void FiltrirajAutore(string filter)
+        private void FiltrirajAutore(string upit)
         {
             if (AutoriView == null) return;
 
-            if (string.IsNullOrWhiteSpace(filter))
+            if (string.IsNullOrWhiteSpace(upit))
             {
                 AutoriView.Filter = null;
             }
             else
             {
-                string f = filter.ToLower().Trim();
+                // Razdvajamo po zarezu i brišemo razmake
+                string[] delovi = upit.ToLower().Split(',');
+                for (int i = 0; i < delovi.Length; i++) delovi[i] = delovi[i].Trim();
 
                 AutoriView.Filter = obj =>
                 {
                     var a = obj as Autor;
                     if (a == null) return false;
 
-                    // 1. Provera Imena i Prezimena
-                    bool matchImePrezime = a.Ime.ToLower().Contains(f) ||
-                                           a.Prezime.ToLower().Contains(f);
+                    string prezime = a.Prezime.ToLower();
+                    string ime = a.Ime.ToLower();
 
-                    // 2. Provera Broja lične karte (string)
-                    bool matchLk = a.Broj_lk.ToLower().Contains(f);
+                    if (delovi.Length == 1)
+                    {
+                        // JEDNA REČ -> Preзиме садржи реч
+                        return prezime.Contains(delovi[0]);
+                    }
+                    else if (delovi.Length >= 2)
+                    {
+                        // DVE REČI -> Prva u prezimenu, druga u imenu
+                        return prezime.Contains(delovi[0]) && ime.Contains(delovi[1]);
+                    }
 
-                    // 3. Provera E-maila (string)
-                    bool matchEmail = a.Email.ToLower().Contains(f);
-
-                    // 4. Provera Datuma rođenja (DateTime)
-                    // Pretvaramo datum u string formata dd.MM.yyyy da bi korisnik mogao 
-                    // da kuca npr. "1985" ili "05.10" i nađe autora
-                    bool matchDatum = a.Datum_rodjenja.ToString("dd.MM.yyyy").Contains(f);
-
-                    // Vraća true ako bilo koji uslov ispunjava kriterijum
-                    return matchImePrezime || matchLk || matchEmail || matchDatum;
+                    return false;
                 };
             }
             AutoriView.Refresh();
         }
 
-        private void FiltrirajKnjige(string filter)
+        private void FiltrirajKnjige(string upit)
         {
             if (KnjigeView == null) return;
 
-            if (string.IsNullOrWhiteSpace(filter))
+            if (string.IsNullOrWhiteSpace(upit))
             {
                 KnjigeView.Filter = null;
             }
             else
             {
-                string f = filter.ToLower().Trim();
+                string f = upit.ToLower().Trim();
 
                 KnjigeView.Filter = obj =>
                 {
                     var k = obj as Knjiga;
                     if (k == null) return false;
 
-                    // 1. Provera ISBN-a i Naziva
-                    bool matchOsnovno = k.ISBN.ToLower().Contains(f) ||
-                                        k.Naziv.ToLower().Contains(f);
-
-                    // 2. Provera Godine izdanja i Cene (pretvaramo u string za pretragu)
-                    bool matchTehnicki = k.Godina_izdanja.ToString().Contains(f) ||
-                                         k.Cena.ToString().Contains(f);
-
-                    // 3. Provera Žanra (Enum)
-                    // Replace('_', ' ') omogućava da korisnik kuca "Naučna fantastika" 
-                    // iako je u Enumu "Naučna_fantastika"
-                    string zanrString = k.Zanr.ToString().ToLower().Replace('_', ' ');
-                    bool matchZanr = zanrString.Contains(f);
-
-                    return matchOsnovno || matchTehnicki || matchZanr;
+                    // Pretraga: Deo naziva ILI deo ISBN broja
+                    return k.Naziv.ToLower().Contains(f) ||
+                           k.ISBN.ToLower().Contains(f);
                 };
             }
             KnjigeView.Refresh();
