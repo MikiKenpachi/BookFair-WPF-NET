@@ -45,10 +45,21 @@ namespace WpfClient
         AdresaDAO adresaDao = new AdresaDAO();
         IzdavacDAO izdavacDao = new IzdavacDAO();
         PosetilacDAO posetilacDao = new PosetilacDAO();
+
+        private int trenutnaStranica = 1;
+        private const int velicinaStranice = 16;
+
+        // Liste koje čuvaju SVE podatke iz fajla (da bismo mogli da vadimo parčiće)
+        private List<Posetilac> sviPosetiociList;
+        private List<Autor> sviAutoriList;
+        private List<Knjiga> sveKnjigeList;
         public MainWindow()
         {
 
             InitializeComponent(); // Prvo inicijalizuj komponente
+            sviPosetiociList = posetilacDao.GetAll();
+            sviAutoriList = autorDao.GetAll();
+            sveKnjigeList = knjigaDao.GetAll();
 
             // Podešavanje tajmera za sat
             DispatcherTimer timer = new DispatcherTimer();
@@ -86,7 +97,7 @@ namespace WpfClient
             KnjigeView = CollectionViewSource.GetDefaultView(Knjige);
 
             // Povezujemo DataGrid sa View-om umesto direktno sa kolekcijom
-            DataGridPosetioci.ItemsSource = PosetiociView;
+            //DataGridPosetioci.ItemsSource = PosetiociView;
             // Ako imaš i ostale DataGrid-ove:
             // DataGridAutori.ItemsSource = AutoriView;
             // DataGridKnjige.ItemsSource = KnjigeView;
@@ -94,6 +105,7 @@ namespace WpfClient
 
             // 5. Poveži sa DataGrid-om
             DataGridPosetioci.ItemsSource = Posetioci;
+            OsveziPrikaz();
             this.DataContext = this;
         }
 
@@ -102,7 +114,46 @@ namespace WpfClient
         {
             MainTabControl.SelectedIndex = 0;
         }
+        private void OsveziPrikaz()
+        {
+            int preskoci = (trenutnaStranica - 1) * velicinaStranice;
 
+            // 1. Paginacija Posetilaca
+            Posetioci.Clear();
+            var pagedPosetioci = sviPosetiociList.Skip(preskoci).Take(velicinaStranice).ToList();
+            foreach (var p in pagedPosetioci) Posetioci.Add(p);
+            txtStranaInfo.Text = $"Stranica {trenutnaStranica}"; // Labela na prvom tabu
+
+            // 2. Paginacija Autora
+            Autori.Clear();
+            var pagedAutori = sviAutoriList.Skip(preskoci).Take(velicinaStranice).ToList();
+            foreach (var a in pagedAutori) Autori.Add(a);
+            txtStranaInfoAutori.Text = $"Stranica {trenutnaStranica}"; // Labela na drugom tabu
+
+            // 3. Paginacija Knjiga
+            Knjige.Clear();
+            var pagedKnjige = sveKnjigeList.Skip(preskoci).Take(velicinaStranice).ToList();
+            foreach (var k in pagedKnjige) Knjige.Add(k);
+            txtStranaInfoKnjige.Text = $"Stranica {trenutnaStranica}"; // Labela na trećem tabu
+        }
+        private void btnPrethodna_Click(object sender, RoutedEventArgs e)
+        {
+            if (trenutnaStranica > 1)
+            {
+                trenutnaStranica--;
+                OsveziPrikaz(); // Ova metoda mora da ažurira labelu!
+            }
+        }
+
+        private void btnSledeca_Click(object sender, RoutedEventArgs e)
+        {
+            // Provera da li ima još podataka za sledeću stranu
+            if (trenutnaStranica * velicinaStranice < sviPosetiociList.Count)
+            {
+                trenutnaStranica++;
+                OsveziPrikaz();
+            }
+        }
         // Prebacivanje na tab Autori
         private void MenuAutori_Click(object sender, RoutedEventArgs e)
         {

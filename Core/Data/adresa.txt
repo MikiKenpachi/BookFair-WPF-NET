@@ -3,6 +3,19 @@ CK-2|Nikole Tesle|Sombor|6|Srbija
 CK-3|Vuka Karadzica|Loznica|16|Srbija
 CK-4|Drinska|Bijeljina|59|BIH
 CK-5|Kolubarska|Valjevo|12|Srbija
+CK-6|fas|sfsf|24|safsf
+CK-7|amčsdmč|amčsdmč|3|amčsdmč
+CK-8|amčsdmč|amčsdmč|4|amčsdmč
+CK-9|amčsdmč|amčsdmč|4|amčsdmč
+CK-10|amčsdmč|amčsdmč|4|amčsdmč
+CK-11|amčsdmč|amčsdmč|42|amčsdmč
+CK-12|amčsdmč|amčsdmč|3|amčsdmč
+CK-13|amčsdmč|amčsdmč|4|amčsdmč
+CK-14|amčsdmč|amčsdmč|2|amčsdmč
+CK-15|amčsdmč|amčsdmč|5|amčsdmč
+CK-16|amčsdmč|amčsdmč|4|amčsdmč
+CK-17|amčsdmč|amčsdmč|3|amčsdmč
+CK-18|amčsdmč|amčsdmč|4|amčsdmč
 10101965|Nikole Tesle|Kikinda|14|Srbija
 03021970|Kosovska|Novi Sad|26|Srbija
 05041976|Drinska|Loznica|63|Srbija
