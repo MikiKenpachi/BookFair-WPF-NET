@@ -1,2 +1,5 @@
-Lazar|Markovic|2003-03-19T00:00:00.0000000|0662355665|markoni@uns.ac.rs|CK-1|0|R|0
-Andjela|Bozin|2010-09-24T00:00:00.0000000|0677447714|andja@gmail.com|CK-2|0|V|0
+Lazar|Markovic|2003-03-19T00:00:00.0000000|0662355665|markoni@uns.ac.rs|CK-1|0|R|4
+Andjela|Bozin|2010-09-24T00:00:00.0000000|0677447714|andja@gmail.com|CK-2|0|V|3
+Tamara|Zivanovic|2004-11-17T00:00:00.0000000|0662355441|tasa@uns.ac.rs|CK-3|0|V|0
+Bogdan|Ljubinkovic|2026-02-11T00:00:00.0000000|0662355652|lju@uns.ac.rs|CK-4|0|V|0
+Biljana|Kovacevic|2026-02-09T00:00:00.0000000|0662356698|marcelja.rs|CK-5|0|R|0

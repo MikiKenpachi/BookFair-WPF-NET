@@ -3,3 +3,4 @@ Ljuba|Budinski|1970-03-02|0622778898|ljuba@uns.ac.rs|27|03021970|
 Srdjan|Popov|1976-05-04|0677453223|popov@uns.ac.rs|26|05041976|
 Vladimir|Dimitrieski|1987-10-07|0665748965|dimitrieski@uns.ac.rs|21|10071987|
 Erik|Najt|1897-04-10|0691231232|eriknajt@gmail.com|39|123456789|
+Stefan|Radic|2000-06-13|0633332223|radic@uns.ac.rs|14|13062000|

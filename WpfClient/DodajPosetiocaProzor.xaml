@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:WpfClient"
         mc:Ignorable="d"
         Title="Dodaj Posetioca" Height="450" Width="350"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        Icon="Resources/bookshelf.ico">
 
     <Grid Margin="20">
         <Grid.RowDefinitions>

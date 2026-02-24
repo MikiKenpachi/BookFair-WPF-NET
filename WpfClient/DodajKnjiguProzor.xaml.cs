@@ -37,7 +37,7 @@ namespace WpfClient
             }
             else
             {
-                this.Title = "Dodaj novou knjigu";
+                this.Title = "Dodaj novu knjigu";
             }
             
         }

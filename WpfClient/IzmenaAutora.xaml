@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Izmena autora" Height="650" Width="450" 
         WindowStartupLocation="CenterOwner"
-        FontFamily="Kristen ITC" ResizeMode="NoResize">
+        FontFamily="Kristen ITC" ResizeMode="NoResize"
+        Icon="Resources/bookshelf.ico">
 
     <Grid Margin="10">
         <Grid.RowDefinitions>

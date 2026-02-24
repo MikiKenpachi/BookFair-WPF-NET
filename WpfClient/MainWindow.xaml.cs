@@ -33,6 +33,9 @@ namespace WpfClient
         public ObservableCollection<Autor> Autori { get; set; }
         public ObservableCollection<Knjiga> Knjige { get; set; }
 
+        public ObservableCollection<Izdavac> Izdavaci { get; set; }
+
+
         public ICollectionView PosetiociView { get; set; }
         public ICollectionView AutoriView { get; set; }
         public ICollectionView KnjigeView { get; set; }
@@ -55,6 +58,7 @@ namespace WpfClient
 
             List<Posetilac> sviPosetioci = posetilacDao.GetAll();
             List<Autor> sviAutori = autorDao.GetAll();
+            List<Izdavac> sviIzdavaci = izdavacDao.GetAll();
             var listaIzFajla = knjigaDao.GetAll();
 
 
@@ -74,6 +78,7 @@ namespace WpfClient
             Posetioci = new ObservableCollection<Posetilac>(sviPosetioci);
             Autori = new ObservableCollection<Autor>(sviAutori);
             Knjige = new ObservableCollection<Knjiga>(listaIzFajla);
+            Izdavaci = new ObservableCollection<Izdavac>(sviIzdavaci);
 
             // Kreiramo poglede na osnovu tvojih kolekcija
             PosetiociView = CollectionViewSource.GetDefaultView(Posetioci);
@@ -141,7 +146,7 @@ namespace WpfClient
         // Help - About prozor
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Sajam Knjiga v1.0\n\nAplikacija za kupovinu knjiga u okviru Sajma Knjiga.\n\nAutori: \n- - - - - - - - - - - - -\n[Milos Trisic] - RA 39/2023\n[Boris Stepanovic] - RA 97/2023\n");
+            MessageBox.Show("Sajam Knjiga v1.0\n\nAplikacija za kupovinu knjiga u okviru Sajma Knjiga.\n\nAutori: \n- - - - - - - - - - - - -\n[Miloš Trišić] - RA 39/2023\n[Boris Stepanović] - RA 97/2023\n");
         }
 
         // Zatvaranje aplikacije
@@ -163,6 +168,9 @@ namespace WpfClient
 
                 // 3. ČUVANJE KNJIGA
                 knjigaDao.SaveAll(new List<Knjiga>(Knjige));
+
+                izdavacDao.SaveAll(new List<Izdavac>());
+
 
                 // 4. ČUVANJE SVIH ADRESA (Skupljamo adrese od svih)
                 List<Adresa> sveAdrese = new List<Adresa>();
@@ -202,8 +210,9 @@ namespace WpfClient
                 // ShowDialog() zaustavlja rad u MainWindow dok se ovaj prozor ne zatvori
                 if (dijaloškiProzor.ShowDialog() == true)
                 {
-                    int nextId = posetilacDao.GetAll().Count + 1;  // broj novog posetioca
+                    int nextId = Posetioci.Count + 1;
                     string brClanskeKarte = $"CK-{nextId}";
+
                     // 1. Uzimamo kreiranog posetioca iz dijaloga
                     Posetilac p = dijaloškiProzor.NoviPosetilac;
                     Adresa d = dijaloškiProzor.NoviPosetilac.Adresa;
@@ -382,7 +391,7 @@ namespace WpfClient
                     return;
                 }
 
-                IzmenaPosetioca prozor = new IzmenaPosetioca(selektovan);
+                IzmenaPosetioca prozor = new IzmenaPosetioca(selektovan, new List<Knjiga>(Knjige));
                 prozor.Owner = this;
                 if (prozor.ShowDialog() == true) { PosetiociView.Refresh(); }
 
@@ -602,17 +611,11 @@ namespace WpfClient
 
         private void MenuIzdavaci_Click(object sender, RoutedEventArgs e)
         {
-            // 1. Inicijalizacija
+            // Prosledi listu izdavača prozoru (pretpostavka da si napravio konstruktor koji prima listu)
             IzdavaciProzor popUp = new IzdavaciProzor();
-
-            // 2. Postavljanje vlasnika (da pop-up bude centriran preko glavnog prozora)
             popUp.Owner = this;
-
-            // 3. Povezivanje podataka (ovde pozivaš svoju listu izdavača)
-            // popUp.dgIzdavaci.ItemsSource = tvojDAO.GetAll();
-
-            // 4. Prikaz (ShowDialog znači da ne možeš kliknuti nazad dok ne zatvoriš pop-up)
             popUp.ShowDialog();
+            // Kada se zatvori ovaj prozor, NIŠTA nije upisano u fajl još uvek
         }
     }
 }

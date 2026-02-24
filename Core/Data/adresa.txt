@@ -1,7 +1,11 @@
 CK-1|Vuka Karadzica|Surcin|70|Srbija
 CK-2|Nikole Tesle|Sombor|6|Srbija
+CK-3|Vuka Karadzica|Loznica|16|Srbija
+CK-4|Drinska|Bijeljina|59|BIH
+CK-5|Kolubarska|Valjevo|12|Srbija
 10101965|Nikole Tesle|Kikinda|14|Srbija
 03021970|Kosovska|Novi Sad|26|Srbija
 05041976|Drinska|Loznica|63|Srbija
 10071987|Milunke Savic|Zvornik|76|Srbija
 123456789|Jere Brokfil|Menston|3|UK
+13062000|Tolstojeva|Kikinda|3|Srbija

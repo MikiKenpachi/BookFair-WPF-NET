@@ -68,5 +68,10 @@ namespace Core.DAO
             _storage.Save(listaIzdavac);
         }
 
+        public void SaveAll(List<Izdavac> lista)
+        {
+            _storage.Save(listaIzdavac);
+        }
+
     }
 }

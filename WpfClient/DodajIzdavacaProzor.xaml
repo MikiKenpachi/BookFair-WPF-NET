@@ -2,7 +2,10 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Detalji Izdavača" Height="350" Width="400"
-        WindowStartupLocation="CenterOwner" FontFamily="Kristen ITC">
+        WindowStartupLocation="CenterOwner" FontFamily="Kristen ITC"
+        Icon="Resources/bookshelf.ico">
+    
+    
     <Grid Margin="20">
         <StackPanel>
             <TextBlock Text="Šifra izdavača:" Margin="0,0,0,5"/>

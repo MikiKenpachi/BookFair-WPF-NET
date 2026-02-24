@@ -1,3 +1,4 @@
 111|Kralj Artur|Istorijska|1994|1999|245|111|05041976
 222|Terminator|Triler|2001|1460|108|222|10101965
 333|Lesi se vraća kućiiii|Drama|1940|2100|304|111|123456789
+444|Dervis i smrt|Klasika|2015|1849|432|222|13062000
