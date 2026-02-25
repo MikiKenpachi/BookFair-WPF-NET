@@ -55,6 +55,7 @@ namespace SajamKnjigaProjekat.Core.DAO
 
         public void SaveAll(List<Adresa> lista)
         {
+            listaAdresa = lista;
             _storage.Save(lista);
         }
 

@@ -30,7 +30,8 @@ namespace SajamKnjigaProjekat.Core.DAO
         }
 
         public void SaveAll(List<Posetilac> lista)
-        { 
+        {
+            listaPosetilaca = lista;
             _storage.Save(lista);
         }
 

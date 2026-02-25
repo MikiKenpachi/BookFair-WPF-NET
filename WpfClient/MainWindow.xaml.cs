@@ -70,7 +70,7 @@ namespace WpfClient
             sviPosetiociList = posetilacDao.GetAll();
             sviAutoriList = autorDao.GetAll();
             sveKnjigeList = knjigaDao.GetAll();
-            sviIzdavaciList = izdavacDao.GetAll();
+            sviIzdavaciList = izdavacDao.GetAll();             
             sveKupovineList = kupiliDao.GetAll();
 
             // ----------------------------------------------------------
@@ -198,7 +198,7 @@ namespace WpfClient
                 knjigaDao.SaveAll(sveKnjigeList);
 
                 // Izdavači — snimamo pravu listu, ne praznu!
-                izdavacDao.SaveAll(sviIzdavaciList);
+                izdavacDao.SaveAll(Izdavaci.ToList());
 
                 // Kupovine
                 kupiliDao.Save(); // interno drži listu i snima je
@@ -236,7 +236,13 @@ namespace WpfClient
                     Posetilac p = dijalog.NoviPosetilac;
 
                     // Generiši sledeći ID na osnovu ukupnog broja u master listi
-                    int nextId = sviPosetiociList.Count + 1;
+                    int maxId = sviPosetiociList
+                        .Select(x => {
+                            var deo = x.BrClanskeKarte?.Replace("CK-", "");
+                            return int.TryParse(deo, out int n) ? n : 0;
+                        }).DefaultIfEmpty(0).Max();
+
+                    int nextId = maxId + 1;
                     p.BrClanskeKarte = $"CK-{nextId}";
 
                     if (p.Adresa != null)
@@ -245,6 +251,7 @@ namespace WpfClient
 
                     // 
                     posetilacDao.Add(p);
+                    
                     if (p.Adresa != null)
                         adresaDao.Add(p.Adresa);
 
@@ -280,6 +287,15 @@ namespace WpfClient
                 {
                     Knjiga k = dijalog.NovaKnjiga;
                     knjigaDao.Add(k);
+
+                    // Uspostavi bidirekcione veze
+                    if (k.ListaAutora != null)
+                        foreach (var autor in k.ListaAutora)
+                            autor.DodajSpisakKnjiga(k);
+
+                    if (k.Izdavac != null)
+                        k.Izdavac.DodajKnjigu(k);
+
                     OsveziPrikaz();
                 }
             }
@@ -375,7 +391,7 @@ namespace WpfClient
                 }
 
                 // Prosleđujemo sve knjige da IzmenaPosetioca može da ponudi listu za zelje
-                var prozor = new IzmenaPosetioca(selektovan, sveKnjigeList);
+                var prozor = new IzmenaPosetioca(selektovan, sveKnjigeList, kupiliDao);
                 prozor.Owner = this;
 
                 if (prozor.ShowDialog() == true)
@@ -401,7 +417,7 @@ namespace WpfClient
                     return;
                 }
 
-                var prozor = new IzmenaAutora(selektovan, sveKnjigeList);
+                var prozor = new IzmenaAutora(selektovan, sveKnjigeList, autorDao, knjigaDao);
                 prozor.Owner = this;
 
                 if (prozor.ShowDialog() == true)

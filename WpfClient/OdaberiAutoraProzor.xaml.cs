@@ -23,17 +23,9 @@ namespace WpfClient
 
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
-            if (listAutori.SelectedItem is Autor odabran)
-            {
-                OdabraniAutor = odabran;
-                this.DialogResult = true;
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Molimo odaberite autora iz liste.",
-                    "Obaveštenje", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
+            OdabraniAutor = listAutori.SelectedItem as Autor;
+            this.DialogResult = OdabraniAutor != null;
+            this.Close();
         }
 
         private void BtnOdustani_Click(object sender, RoutedEventArgs e)

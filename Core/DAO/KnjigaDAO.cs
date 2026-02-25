@@ -42,6 +42,7 @@ namespace SajamKnjigaProjekat.Core.DAO
 
         public void SaveAll(List<Knjiga> lista)
         {
+            listaKnjiga = lista; 
             _storage.Save(lista);
         }
         public Knjiga GetByISBN(string isbn)

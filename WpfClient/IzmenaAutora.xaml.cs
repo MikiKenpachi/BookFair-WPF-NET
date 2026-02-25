@@ -35,12 +35,14 @@ namespace WpfClient
         // ================================================================
         /// <param name="autor">Autor koji se menja</param>
         /// <param name="sveKnjige">Sve knjige u sistemu — potrebno za tab Knjige</param>
-        public IzmenaAutora(Autor autor, List<Knjiga> sveKnjige = null)
+        public IzmenaAutora(Autor autor, List<Knjiga> sveKnjige, AutorDAO autorDao, KnjigaDAO knjigaDao)
         {
             InitializeComponent();
 
             SelektovaniAutor = autor;
             _sveKnjige = sveKnjige ?? new List<Knjiga>();
+            //_autorDao = autorDao;
+            //_knjigaDao = knjigaDao;
 
             PopuniPolja();
             UcitajKnjige();

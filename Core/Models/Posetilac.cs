@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Core.Storage.Serialization;
+using System;
 using System.Collections.Generic;
-using Core.Storage.Serialization;
+using System.Globalization;
 
 namespace SajamKnjigaProjekat.Core.Models
 {
@@ -34,7 +35,6 @@ namespace SajamKnjigaProjekat.Core.Models
             BrClanskeKarte = brClanskeKarte;
             GodinaClanstva = godinaClanstva;
             Status = status;
-            //izracunati prosecnu ocenu 
         }
 
         public void DodajKupovinu(Knjiga knjiga)
@@ -63,8 +63,8 @@ namespace SajamKnjigaProjekat.Core.Models
                 BrClanskeKarte,
                 GodinaClanstva.ToString(),
                 Status.ToString(),
-                ProsecnaOcena.ToString()
-               
+                ProsecnaOcena.ToString(CultureInfo.InvariantCulture) //na srpskom separator je zarez a na engleskom tacka
+
             };
         }
 
@@ -81,8 +81,8 @@ namespace SajamKnjigaProjekat.Core.Models
             BrClanskeKarte = values[5];
             GodinaClanstva = int.Parse(values[6]);
             Status = (StatusPosetioca)Enum.Parse(typeof(StatusPosetioca), values[7]);
-            ProsecnaOcena = double.Parse(values[8]);
-            
+            ProsecnaOcena = double.Parse(values[8], CultureInfo.InvariantCulture);  //na srpskom separator je zarez a na engleskom tacka
+
         }
     }
 }

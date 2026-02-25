@@ -24,7 +24,7 @@ namespace WpfClient
         public Posetilac SelektovaniPosetilac { get; private set; }
 
         // ── DAO sloj ────────────────────────────────────────────────────
-        private readonly KupiliDAO _kupiliDao = new KupiliDAO();
+        private readonly KupiliDAO _kupiliDao = new KupiliDAO(); 
 
         // ── Liste za DataGrid-ove ───────────────────────────────────────
         private ObservableCollection<Kupovina> _kupljene;
@@ -34,11 +34,12 @@ namespace WpfClient
         private readonly List<Knjiga> _sveKnjige;
 
         // ─────────────────────────────────────────────────────────────────
-        public IzmenaPosetioca(Posetilac posetilac, List<Knjiga> sveKnjige)
+        public IzmenaPosetioca(Posetilac posetilac, List<Knjiga> sveKnjige, KupiliDAO kupiliDao)
         {
             InitializeComponent();
             SelektovaniPosetilac = posetilac;
             _sveKnjige = sveKnjige ?? new List<Knjiga>();
+            _kupiliDao = kupiliDao;
 
             PopuniPolja();
             UcitajKupljene();

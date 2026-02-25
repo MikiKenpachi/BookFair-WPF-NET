@@ -70,7 +70,8 @@ namespace Core.DAO
 
         public void SaveAll(List<Izdavac> lista)
         {
-            _storage.Save(listaIzdavac);
+            listaIzdavac = lista; 
+            _storage.Save(lista);
         }
 
     }

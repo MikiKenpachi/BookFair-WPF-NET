@@ -3,8 +3,31 @@ CK-2|Nikole Tesle|Sombor|6|Srbija
 CK-3|Vuka Karadzica|Loznica|16|Srbija
 CK-4|Drinska|Bijeljina|59|BIH
 CK-5|Kolubarska|Valjevo|12|Srbija
+CK-6|Kaciceva|Kljajicevo|13|Madjarska
+CK-7|Djure Jaksica|Crvenka|7|Srbija
+CK-8|Save Kovacevica|Subotica|7|Srbija
+CK-9|Solunska|Leskovac|66|Srbija
+CK-10|Pasiceva|Loznica|51|Srbija
+CK-11|Ustanicka|Backa Topola|74|Srbija
+CK-12|Bulevar Evrope|Novi Sad|31|Srbija
+CK-13|Rada Neimara|Beograd|14|Srbija
+CK-14|Banjska|Uzice|87|Srbija
+CK-15|Nikole Tesle|Valjevo|13|Srbija
+CK-16|Bolnicka|Vranje|54|Srbija
+CK-17|Njegoseva|Herceg Novi|4|Srbija
+CK-18|Majska|Loznica|3|Srbija
+CK-19|Vuka Karadzica|Loznica|70|Srbija
+CK-20|Bulevar Oslobodjenja|Budimpesta|103|Madjarska
 10101965|Tolstojeva|Novi Sad|64|Srbija
 04051972|Solunska|Sombor|14|Srbija
 12121992|Danteova|Zrenjanin|13|Srbija
 10061987|Sekspirova|London|66|UK
 02021957|Banjska|Banja Koviljaca|97|Srbija
+05051987|Kolubarska|Sarajevo|15|Srbija
+03051982|Milunke Savic|Prizren|44|Srbija
+06061937|Nusiceva|Trebinje|5|Srbija
+04041987|Uciteljska|Zemun|4|Srbija
+03091994|Dobrovoljacka|Nis|7|Srbija
+27041943|Crvene armije|Moskva|76|Rusija
+05111973|Kosovska|Sankt Peterzburg|2|Rusija
+03112001|Primorska|Madrid|76|Spanija

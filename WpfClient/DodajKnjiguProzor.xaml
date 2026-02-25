@@ -100,6 +100,15 @@
                     Click="BtnUkloniAutora_Click"/>
         </Grid>
 
+        <!-- Lista autora -->
+        <ListBox x:Name="listAutori"
+                 ItemsSource="{Binding OdabraniAutori}"
+                 DisplayMemberPath="ImePrezime"
+                 Width="200"
+                 Height="100"
+                 Margin="10"
+                 Visibility="Collapsed"/>
+
         <!-- Dugmad -->
         <StackPanel Grid.Row="9" Grid.ColumnSpan="2"
                     Orientation="Horizontal"

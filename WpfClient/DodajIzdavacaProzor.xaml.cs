@@ -32,13 +32,15 @@ namespace WpfClient
         public ObservableCollection<Izdavac> ListaIzdavaca { get; set; }
 
         public Izdavac? NoviIzdavac { get; private set; }
-        public DodajIzdavacaProzor(Izdavac postojeciIzdavac = null)
+        public DodajIzdavacaProzor(List<Autor> sviAutori, Izdavac postojeciIzdavac = null)
         {
             InitializeComponent();
 
             // Učitavanje iz fajla preko DAO klase
             var dao = new IzdavacDAO();
-            cbSefovi.ItemsSource = autorDao.GetAll();
+            cbSefovi.ItemsSource = sviAutori;
+            cbSefovi.SelectedItem = sviAutori.FirstOrDefault(a => a.Broj_lk == Izdavac.SefIzdavaca?.Broj_lk); // tražimo po ključu
+
             ListaIzdavaca = new ObservableCollection<Izdavac>(dao.GetAll());
 
 
@@ -51,9 +53,7 @@ namespace WpfClient
                 txtSifra.IsEnabled = false; // Šifru ne damo da menja
                 txtNaziv.Text = Izdavac.Naziv;
 
-                // Postavljamo selektovanog šefa
-                // (Moraš imati ispravno implementiran Equals u klasi Autor ili da se reference poklapaju)
-                //  cbSefovi.SelectedValue = Izdavac.SefIzdavaca.Broj_lk;
+                // Postavljamo selektovanog sefa
                 cbSefovi.SelectedItem = Izdavac.SefIzdavaca;
 
                 this.Title = "Izmena izdavača";

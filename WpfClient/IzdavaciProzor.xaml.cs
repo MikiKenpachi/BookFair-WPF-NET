@@ -2,6 +2,7 @@
 using SajamKnjigaProjekat.Core.DAO;
 using SajamKnjigaProjekat.Core.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -28,7 +29,10 @@ namespace WpfClient
 
         private void BtnDodaj_Click(object sender, RoutedEventArgs e)
         {
-            DodajIzdavacaProzor prozor = new DodajIzdavacaProzor();
+            
+            AutorDAO autorDao = new AutorDAO();
+            List<Autor> sviAutori = autorDao.GetAll();
+            DodajIzdavacaProzor prozor = new DodajIzdavacaProzor(sviAutori, null);
             prozor.Owner = this;
 
             if (prozor.ShowDialog() == true)
@@ -43,13 +47,16 @@ namespace WpfClient
             Izdavac selektovan = (Izdavac)DataGridIzdavaci.SelectedItem;
             if (selektovan != null)
             {
-                DodajIzdavacaProzor prozor = new DodajIzdavacaProzor(selektovan);
+                // You need to provide a List<Autor> as the first argument.
+                AutorDAO autorDao = new AutorDAO();
+                List<Autor> sviAutori = autorDao.GetAll();
+                DodajIzdavacaProzor prozor = new DodajIzdavacaProzor(sviAutori, selektovan);
                 prozor.Owner = this;
 
                 if (prozor.ShowDialog() == true)
                 {
                     DataGridIzdavaci.Items.Refresh();
-                    // Opet, NE zovemo dao.Update()!
+                    // Komentar "NE zovemo dao.Update()!" — izmena se čuva samo u memoriji OC-a
                 }
             }
         }

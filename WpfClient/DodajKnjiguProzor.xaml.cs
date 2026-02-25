@@ -3,6 +3,7 @@ using SajamKnjigaProjekat.Core.DAO;
 using SajamKnjigaProjekat.Core.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,9 +23,9 @@ namespace WpfClient
         // ── Rezultat ─────────────────────────────────────────────────────
         public Knjiga NovaKnjiga { get; private set; }
 
-        // ── Trenutno postavljeni autor (samo jedan, per spec) ────────────
-        // Čuvamo referencu u memoriji; na Potvrdi je upisujemo u NovaKnjiga
-        private Autor _trenutniAutor = null;
+        //private Autor _trenutniAutor = null;   --->  ne koristimo?
+
+        private ObservableCollection<Autor> _odabraniAutori = new ObservableCollection<Autor>();
 
         // ── Sve liste za izbor ───────────────────────────────────────────
         private readonly List<Autor> _sviAutori;
@@ -46,6 +47,8 @@ namespace WpfClient
 
             // Popuni ComboBox za žanr
             PopuniZanrove();
+
+            listAutori.ItemsSource = _odabraniAutori;
 
             if (knjiga != null)
             {
@@ -92,15 +95,19 @@ namespace WpfClient
                 cbIzdavac.SelectedItem = _sviIzdavaci
                     .FirstOrDefault(i => i.Sifra == NovaKnjiga.Izdavac.Sifra);
 
-            // Autor — uzimamo prvog (spec: jedno polje za autora)
-            if (NovaKnjiga.ListaAutora != null && NovaKnjiga.ListaAutora.Count > 0)
+            // Učitaj SVE autore knjige u kolekciju
+            _odabraniAutori.Clear();
+            if (NovaKnjiga.ListaAutora != null)
             {
-                _trenutniAutor = _sviAutori
-                    .FirstOrDefault(a => a.Broj_lk == NovaKnjiga.ListaAutora[0].Broj_lk)
-                    ?? NovaKnjiga.ListaAutora[0];
-
-                txtAutor.Text = _trenutniAutor.ImePrezime;
+                foreach (var stub in NovaKnjiga.ListaAutora)
+                {
+                    // Pronađi pravi objekat iz sviAutori (stub ima samo Broj_lk)
+                    var pravi = _sviAutori.FirstOrDefault(a => a.Broj_lk == stub.Broj_lk);
+                    if (pravi != null && !_odabraniAutori.Contains(pravi))
+                        _odabraniAutori.Add(pravi);
+                }
             }
+            OsveziPrikazAutora(); // Show authors in TextBox
         }
 
         // ================================================================
@@ -113,15 +120,29 @@ namespace WpfClient
         /// </summary>
         private void OsveziDugmadAutora()
         {
-            bool imaAutora = _trenutniAutor != null;
-            btnDodajAutora.IsEnabled = !imaAutora;
-            btnUkloniAutora.IsEnabled = imaAutora;
+            // [+] je aktivan sve dok ima autora koji nisu dodati
+            btnDodajAutora.IsEnabled = _odabraniAutori.Count < _sviAutori.Count;
+
+            // [-] je aktivan samo ako ima barem jedan autor na listi
+            btnUkloniAutora.IsEnabled = _odabraniAutori.Count > 0;
         }
 
         // ── Dugme [+] — dodaj autora ─────────────────────────────────────
         private void BtnDodajAutora_Click(object sender, RoutedEventArgs e)
         {
-            var prozor = new OdaberiAutoraProzor(_sviAutori)
+            // Prikaži samo autore koji NISU već dodati
+            var dostupni = _sviAutori
+                .Where(a => !_odabraniAutori.Any(x => x.Broj_lk == a.Broj_lk))
+                .ToList();
+
+            if (!dostupni.Any())
+            {
+                MessageBox.Show("Svi autori su već dodati knjizi.",
+                    "Informacija", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var prozor = new OdaberiAutoraProzor(dostupni)
             {
                 Owner = this,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
@@ -129,26 +150,36 @@ namespace WpfClient
 
             if (prozor.ShowDialog() == true && prozor.OdabraniAutor != null)
             {
-                _trenutniAutor = prozor.OdabraniAutor;
-                txtAutor.Text = _trenutniAutor.ImePrezime;
+                _odabraniAutori.Add(prozor.OdabraniAutor);
                 OsveziDugmadAutora();
+                OsveziPrikazAutora(); // Update the TextBox
             }
         }
 
         // ── Dugme [-] — ukloni autora ────────────────────────────────────
         private void BtnUkloniAutora_Click(object sender, RoutedEventArgs e)
         {
-            var potvrda = MessageBox.Show(
-                $"Da li ste sigurni da želite da uklonite autora {_trenutniAutor?.ImePrezime} sa knjige?",
-                "Uklanjanje autora",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+            // Prikaži prozor za izbor autora za uklanjanje
+            var prozor = new OdaberiAutoraProzor(_odabraniAutori.ToList())
+            {
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
 
-            if (potvrda != MessageBoxResult.Yes) return;
+            if (prozor.ShowDialog() == true && prozor.OdabraniAutor != null)
+            {
+                var potvrda = MessageBox.Show(
+                    $"Ukloniti autora {prozor.OdabraniAutor.ImePrezime} sa knjige?",
+                    "Uklanjanje autora",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
 
-            _trenutniAutor = null;
-            txtAutor.Text = string.Empty;
-            OsveziDugmadAutora();
+                if (potvrda != MessageBoxResult.Yes) return;
+
+                _odabraniAutori.Remove(prozor.OdabraniAutor);
+                OsveziDugmadAutora();
+                OsveziPrikazAutora();
+            }
         }
 
         // ================================================================
@@ -190,22 +221,29 @@ namespace WpfClient
             // Izdavač
             NovaKnjiga.Izdavac = cbIzdavac.SelectedItem as Izdavac;
 
-            // Autor — postavljamo listu sa jednim autorom (ili praznu)
+            // Postavi sve odabrane autore
             if (NovaKnjiga.ListaAutora == null)
                 NovaKnjiga.ListaAutora = new List<Autor>();
 
-            // Uklonimo prethodnog autora pa dodamo novog (ako postoji)
-            NovaKnjiga.ListaAutora.Clear();
-            if (_trenutniAutor != null)
+            // Ukloni stare autore koji više nisu na listi
+            var uklonjeni = NovaKnjiga.ListaAutora
+                .Where(a => !_odabraniAutori.Any(x => x.Broj_lk == a.Broj_lk))
+                .ToList();
+
+            foreach (var autor in uklonjeni)
+                autor.SpisakKnjiga?.Remove(NovaKnjiga);
+
+            // Postavi novu listu
+            NovaKnjiga.ListaAutora = _odabraniAutori.ToList();
+
+            // Bidirekciona veza — svaki autor dobija referencu na ovu knjigu
+            foreach (var autor in NovaKnjiga.ListaAutora)
             {
-                NovaKnjiga.ListaAutora.Add(_trenutniAutor);
+                if (autor.SpisakKnjiga == null)
+                    autor.SpisakKnjiga = new List<Knjiga>();
 
-                // Bidirekciona veza — dodaj knjigu u spisak autora
-                if (_trenutniAutor.SpisakKnjiga == null)
-                    _trenutniAutor.SpisakKnjiga = new List<Knjiga>();
-
-                if (!_trenutniAutor.SpisakKnjiga.Contains(NovaKnjiga))
-                    _trenutniAutor.SpisakKnjiga.Add(NovaKnjiga);
+                if (!autor.SpisakKnjiga.Contains(NovaKnjiga))
+                    autor.SpisakKnjiga.Add(NovaKnjiga);
             }
 
             this.DialogResult = true;
@@ -216,6 +254,12 @@ namespace WpfClient
         {
             this.DialogResult = false;
             this.Close();
+        }
+
+        // Add or update this method to show all authors separated by comma and space
+        private void OsveziPrikazAutora()
+        {
+            txtAutor.Text = string.Join(", ", _odabraniAutori.Select(a => a.ImePrezime));
         }
     }
 }

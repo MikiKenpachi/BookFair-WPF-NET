@@ -44,6 +44,7 @@ namespace SajamKnjigaProjekat.Core.DAO
 
         public void SaveAll(List<Autor> lista)
         {
+            listaAutora = lista;
             _storage.Save(lista);
         }
         public void Update(Autor a)
