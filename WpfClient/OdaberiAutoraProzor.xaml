@@ -1,0 +1,51 @@
+﻿<Window x:Class="WpfClient.OdaberiAutoraProzor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Izaberi autora"
+        Height="380" Width="460"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Icon="/Resources/bookshelf.ico">
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Odaberite autora koji se dodaje knjizi:"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,8"/>
+
+        <ListBox x:Name="listAutori"
+                 Grid.Row="1"
+                 Margin="0,0,0,12"
+                 BorderBrush="#CCCCCC"
+                 BorderThickness="1">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding ImePrezime}" Width="180" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding Broj_lk}" Width="100" Foreground="Gray"/>
+                        <TextBlock Text="{Binding Email}" Foreground="Gray"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Odustani"
+                    Width="90" Height="30"
+                    Margin="0,0,8,0"
+                    Click="BtnOdustani_Click"/>
+            <Button Content="Potvrdi"
+                    Width="90" Height="30"
+                    IsDefault="True"
+                    Click="BtnPotvrdi_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

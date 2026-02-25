@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.DAO;
+using Core.Storage;
 using Core.Storage.Serialization;
 using SajamKnjigaProjekat.Core.DAO;
 using SajamKnjigaProjekat.Core.Models;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,514 +23,438 @@ using System.Windows.Threading;
 
 namespace WpfClient
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    
-
     public partial class MainWindow : Window
     {
-
+        // ── ObservableCollection-e prikaz u DataGrid-u ──────────────────
         public ObservableCollection<Posetilac> Posetioci { get; set; }
         public ObservableCollection<Autor> Autori { get; set; }
         public ObservableCollection<Knjiga> Knjige { get; set; }
-
         public ObservableCollection<Izdavac> Izdavaci { get; set; }
 
-
+        // ── Views za filtriranje/sortiranje ─────────────────────────────
         public ICollectionView PosetiociView { get; set; }
         public ICollectionView AutoriView { get; set; }
         public ICollectionView KnjigeView { get; set; }
 
-        KnjigaDAO knjigaDao = new KnjigaDAO();
-        AutorDAO autorDao = new AutorDAO();
-        AdresaDAO adresaDao = new AdresaDAO();
-        IzdavacDAO izdavacDao = new IzdavacDAO();
-        PosetilacDAO posetilacDao = new PosetilacDAO();
+        // ── DAO sloj ────────────────────────────────────────────────────
+        private readonly KnjigaDAO knjigaDao = new KnjigaDAO();
+        private readonly AutorDAO autorDao = new AutorDAO();
+        private readonly AdresaDAO adresaDao = new AdresaDAO();
+        private readonly IzdavacDAO izdavacDao = new IzdavacDAO();
+        private readonly PosetilacDAO posetilacDao = new PosetilacDAO();
+        private readonly KupiliDAO kupiliDao = new KupiliDAO();
 
-        private int trenutnaStranica = 1;
-        private const int velicinaStranice = 16;
-
-        // Liste koje čuvaju SVE podatke iz fajla (da bismo mogli da vadimo parčiće)
+        // ── Master liste — sadrže SVE entitete (osnova za paginaciju) ───
+        // VAŽNO: ovo su ISTE instance koje DataBinding poveže međusobno.
+        // Nikad ih ne zamenjuj novim listama — samo dodaj/ukloni elemente.
         private List<Posetilac> sviPosetiociList;
         private List<Autor> sviAutoriList;
         private List<Knjiga> sveKnjigeList;
+        private List<Izdavac> sviIzdavaciList;
+        private List<Kupovina> sveKupovineList;
+
+        // ── Paginacija ──────────────────────────────────────────────────
+        private int trenutnaStranica = 1;
+        private const int velicinaStranice = 16;
+
+        // ================================================================
+        // Konstruktor
+        // ================================================================
         public MainWindow()
         {
+            InitializeComponent();
 
-            InitializeComponent(); // Prvo inicijalizuj komponente
+            // ----------------------------------------------------------
+            // KORAK 1: Učitaj sve entitete iz fajlova (samo jednom!)
+            // ----------------------------------------------------------
             sviPosetiociList = posetilacDao.GetAll();
             sviAutoriList = autorDao.GetAll();
             sveKnjigeList = knjigaDao.GetAll();
+            sviIzdavaciList = izdavacDao.GetAll();
+            sveKupovineList = kupiliDao.GetAll();
 
-            // Podešavanje tajmera za sat
-            DispatcherTimer timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(1);
-            timer.Tick += timer_Tick;
-            timer.Start();
-
-            List<Posetilac> sviPosetioci = posetilacDao.GetAll();
-            List<Autor> sviAutori = autorDao.GetAll();
-            List<Izdavac> sviIzdavaci = izdavacDao.GetAll();
-            var listaIzFajla = knjigaDao.GetAll();
-
-
-            foreach (var p in sviPosetioci)
-            {
-                // Koristimo BrClanskeKarte kao ID vlasnika (ili BrLicneKarte, proveri šta ti je ID)
+            // ----------------------------------------------------------
+            // KORAK 2: Poveži adrese (poseban fajl, ID je ključ veze)
+            // ----------------------------------------------------------
+            foreach (var p in sviPosetiociList)
                 p.Adresa = adresaDao.GetByVlasnikID(p.BrClanskeKarte);
-            }
 
-            foreach (var p in sviAutori)
-            {
-                // Koristimo BrClanskeKarte kao ID vlasnika (ili BrLicneKarte, proveri šta ti je ID)
-                p.Adresa = adresaDao.GetByVlasnikID(p.Broj_lk);
-            }
+            foreach (var a in sviAutoriList)
+                a.Adresa = adresaDao.GetByVlasnikID(a.Broj_lk);
 
-            // 4. Sada napuni ObservableCollection uparenim podacima
-            Posetioci = new ObservableCollection<Posetilac>(sviPosetioci);
-            Autori = new ObservableCollection<Autor>(sviAutori);
-            Knjige = new ObservableCollection<Knjiga>(listaIzFajla);
-            Izdavaci = new ObservableCollection<Izdavac>(sviIzdavaci);
+            // ----------------------------------------------------------
+            // KORAK 3: DataBinding
+            // ----------------------------------------------------------
+            DataBinding.PoveziSve(
+                sviPosetiociList,
+                sveKnjigeList,
+                sviAutoriList,
+                sviIzdavaciList,
+                sveKupovineList);
 
-            // Kreiramo poglede na osnovu tvojih kolekcija
+            // ----------------------------------------------------------
+            // KORAK 4: Napravi ObservableCollection-e i ICollectionView-e
+            // ObservableCollection počinje prazna — OsveziPrikaz() je puni
+            // ----------------------------------------------------------
+            Posetioci = new ObservableCollection<Posetilac>();
+            Autori = new ObservableCollection<Autor>();
+            Knjige = new ObservableCollection<Knjiga>();
+            Izdavaci = new ObservableCollection<Izdavac>(sviIzdavaciList);
+
             PosetiociView = CollectionViewSource.GetDefaultView(Posetioci);
             AutoriView = CollectionViewSource.GetDefaultView(Autori);
             KnjigeView = CollectionViewSource.GetDefaultView(Knjige);
 
-            // Povezujemo DataGrid sa View-om umesto direktno sa kolekcijom
-            //DataGridPosetioci.ItemsSource = PosetiociView;
-            // Ako imaš i ostale DataGrid-ove:
-            // DataGridAutori.ItemsSource = AutoriView;
-            // DataGridKnjige.ItemsSource = KnjigeView;
+            // ----------------------------------------------------------
+            // KORAK 5: Poveži DataGrid-ove sa View-ovima
+            // ----------------------------------------------------------
+            DataGridPosetioci.ItemsSource = PosetiociView;
+            DataGridAutori.ItemsSource = AutoriView;
+            DataGridKnjige.ItemsSource = KnjigeView;
 
-
-            // 5. Poveži sa DataGrid-om
-            DataGridPosetioci.ItemsSource = Posetioci;
+            // ----------------------------------------------------------
+            // KORAK 6: Popuni prvi prikaz (stranica 1)
+            // ----------------------------------------------------------
             OsveziPrikaz();
+
             this.DataContext = this;
+
+            // ----------------------------------------------------------
+            // Tajmer za sat u status baru
+            // ----------------------------------------------------------
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(1);
+            timer.Tick += timer_Tick;
+            timer.Start();
         }
 
-        // Prebacivanje na tab Posetioci
-        private void MenuPosetioci_Click(object sender, RoutedEventArgs e)
-        {
-            MainTabControl.SelectedIndex = 0;
-        }
+        // ================================================================
+        // Paginacija
+        // ================================================================
+
+        /// <summary>
+        /// Puni ObservableCollection-e podacima za trenutnu stranicu.
+        /// Radi sa master listama — DataBinding veze su već uspostavljene.
+        /// </summary>
         private void OsveziPrikaz()
         {
             int preskoci = (trenutnaStranica - 1) * velicinaStranice;
 
-            // 1. Paginacija Posetilaca
+            // Posetioci
             Posetioci.Clear();
-            var pagedPosetioci = sviPosetiociList.Skip(preskoci).Take(velicinaStranice).ToList();
-            foreach (var p in pagedPosetioci) Posetioci.Add(p);
-            txtStranaInfo.Text = $"Stranica {trenutnaStranica}"; // Labela na prvom tabu
+            foreach (var p in sviPosetiociList.Skip(preskoci).Take(velicinaStranice))
+                Posetioci.Add(p);
+            if (txtStranaInfo != null)
+                txtStranaInfo.Text = $"Stranica {trenutnaStranica}";
 
-            // 2. Paginacija Autora
+            // Autori
             Autori.Clear();
-            var pagedAutori = sviAutoriList.Skip(preskoci).Take(velicinaStranice).ToList();
-            foreach (var a in pagedAutori) Autori.Add(a);
-            txtStranaInfoAutori.Text = $"Stranica {trenutnaStranica}"; // Labela na drugom tabu
+            foreach (var a in sviAutoriList.Skip(preskoci).Take(velicinaStranice))
+                Autori.Add(a);
+            if (txtStranaInfoAutori != null)
+                txtStranaInfoAutori.Text = $"Stranica {trenutnaStranica}";
 
-            // 3. Paginacija Knjiga
+            // Knjige
             Knjige.Clear();
-            var pagedKnjige = sveKnjigeList.Skip(preskoci).Take(velicinaStranice).ToList();
-            foreach (var k in pagedKnjige) Knjige.Add(k);
-            txtStranaInfoKnjige.Text = $"Stranica {trenutnaStranica}"; // Labela na trećem tabu
+            foreach (var k in sveKnjigeList.Skip(preskoci).Take(velicinaStranice))
+                Knjige.Add(k);
+            if (txtStranaInfoKnjige != null)
+                txtStranaInfoKnjige.Text = $"Stranica {trenutnaStranica}";
         }
+
         private void btnPrethodna_Click(object sender, RoutedEventArgs e)
         {
             if (trenutnaStranica > 1)
             {
                 trenutnaStranica--;
-                OsveziPrikaz(); // Ova metoda mora da ažurira labelu!
+                OsveziPrikaz();
             }
         }
 
         private void btnSledeca_Click(object sender, RoutedEventArgs e)
         {
-            // Provera da li ima još podataka za sledeću stranu
-            if (trenutnaStranica * velicinaStranice < sviPosetiociList.Count)
+            // Koristi najveću od tri liste kao osnov za max stranicu
+            int maxBroj = Math.Max(sviPosetiociList.Count,
+                          Math.Max(sviAutoriList.Count, sveKnjigeList.Count));
+
+            if (trenutnaStranica * velicinaStranice < maxBroj)
             {
                 trenutnaStranica++;
                 OsveziPrikaz();
             }
         }
-        // Prebacivanje na tab Autori
-        private void MenuAutori_Click(object sender, RoutedEventArgs e)
-        {
-            MainTabControl.SelectedIndex = 1;
-        }
 
-        // Prebacivanje na tab Knjige
-        private void MenuKnjige_Click(object sender, RoutedEventArgs e)
-        {
-            MainTabControl.SelectedIndex = 2;
-        }
-
-        // Otvaranje novog prozora za Izdavače
-        private void Window_KeyDown(object sender, KeyEventArgs e)
-        {
-            // Provera da li je pritisnut Control taster
-            bool isCtrlDown = Keyboard.Modifiers == ModifierKeys.Control;
-
-            // Ctrl + N za New
-            if (isCtrlDown && e.Key == Key.N)
-            {
-                BtnDodaj_Click(sender, null);
-                e.Handled = true; // Sprečava dalje širenje događaja
-            }
-
-            // Ctrl + S za Save
-            if (isCtrlDown && e.Key == Key.S)
-            {
-                BtnSave_Click(sender, null);
-                e.Handled = true;
-            }
-
-            // Escape za izlaz (opciono, ali korisno)
-            if (e.Key == Key.Escape)
-            {
-                MenuClose_Click(sender, null);
-                e.Handled = true;
-            }
-        }
-
-        // Help - About prozor
-        private void MenuAbout_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Sajam Knjiga v1.0\n\nAplikacija za kupovinu knjiga u okviru Sajma Knjiga.\n\nAutori: \n- - - - - - - - - - - - -\n[Miloš Trišić] - RA 39/2023\n[Boris Stepanović] - RA 97/2023\n");
-        }
-
-        // Zatvaranje aplikacije
-        private void MenuClose_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        // Save (za sada samo potvrda)
+        // ================================================================
+        // Save — snima SVE entitete u fajlove
+        // ================================================================
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // 1. ČUVANJE POSETILACA
-                posetilacDao.SaveAll(new List<Posetilac>(Posetioci));
+                // Snimamo master liste (ne ObservableCollection koje mogu biti
+                // nepotpune zbog paginacije!)
+                posetilacDao.SaveAll(sviPosetiociList);
+                autorDao.SaveAll(sviAutoriList);
+                knjigaDao.SaveAll(sveKnjigeList);
 
-                // 2. ČUVANJE AUTORA
-                autorDao.SaveAll(new List<Autor>(Autori));
+                // Izdavači — snimamo pravu listu, ne praznu!
+                izdavacDao.SaveAll(sviIzdavaciList);
 
-                // 3. ČUVANJE KNJIGA
-                knjigaDao.SaveAll(new List<Knjiga>(Knjige));
+                // Kupovine
+                kupiliDao.Save(); // interno drži listu i snima je
 
-                izdavacDao.SaveAll(new List<Izdavac>());
-
-
-                // 4. ČUVANJE SVIH ADRESA (Skupljamo adrese od svih)
-                List<Adresa> sveAdrese = new List<Adresa>();
-                foreach (var p in Posetioci) if (p.Adresa != null) sveAdrese.Add(p.Adresa);
-                foreach (var a in Autori) if (a.Adresa != null) sveAdrese.Add(a.Adresa);
-
+                // Adrese — skupi od svih posetilaca i autora
+                var sveAdrese = new List<Adresa>();
+                foreach (var p in sviPosetiociList)
+                    if (p.Adresa != null) sveAdrese.Add(p.Adresa);
+                foreach (var a in sviAutoriList)
+                    if (a.Adresa != null) sveAdrese.Add(a.Adresa);
                 adresaDao.SaveAll(sveAdrese);
 
-                MessageBox.Show("Sve izmene su uspešno sačuvane!", "Status", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Sve izmene su uspešno sačuvane!",
+                    "Status", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Došlo je do greške pri čuvanju: {ex.Message}");
+                MessageBox.Show($"Greška pri čuvanju: {ex.Message}",
+                    "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            this.Width = SystemParameters.PrimaryScreenWidth * 0.75;
-            this.Height = SystemParameters.PrimaryScreenHeight * 0.75;
-
-        }
-
+        // ================================================================
+        // Dodavanje entiteta
+        // ================================================================
         private void BtnDodaj_Click(object sender, RoutedEventArgs e)
         {
-            // Proveravamo da li je korisnik na tabu "Posetioci"
-            if (MainTabControl.SelectedIndex == 0)
+            if (MainTabControl.SelectedIndex == 0) // Posetioci
             {
-                // Kreiramo instancu novog prozora
-                DodajPosetiocaProzor dijaloškiProzor = new DodajPosetiocaProzor();
+                var dijalog = new DodajPosetiocaProzor();
+                dijalog.Owner = this;
 
-                // Postavljamo MainWindow kao vlasnika (da bi iskočio tačno ispred njega)
-                dijaloškiProzor.Owner = this;
-
-
-                // ShowDialog() zaustavlja rad u MainWindow dok se ovaj prozor ne zatvori
-                if (dijaloškiProzor.ShowDialog() == true)
+                if (dijalog.ShowDialog() == true)
                 {
-                    int nextId = Posetioci.Count + 1;
-                    string brClanskeKarte = $"CK-{nextId}";
+                    Posetilac p = dijalog.NoviPosetilac;
 
-                    // 1. Uzimamo kreiranog posetioca iz dijaloga
-                    Posetilac p = dijaloškiProzor.NoviPosetilac;
-                    Adresa d = dijaloškiProzor.NoviPosetilac.Adresa;
-                    dijaloškiProzor.NoviPosetilac.Adresa.VlasnikID = brClanskeKarte;
+                    // Generiši sledeći ID na osnovu ukupnog broja u master listi
+                    int nextId = sviPosetiociList.Count + 1;
+                    p.BrClanskeKarte = $"CK-{nextId}";
 
-                    p.BrClanskeKarte = brClanskeKarte;
+                    if (p.Adresa != null)
+                        p.Adresa.VlasnikID = p.BrClanskeKarte;
 
-                    if (p != null)
-                    {
-                        // 2. Dodajemo ga u DAO (da se upiše u fajl)
-                        //posetilacDao.Add(p);
-                        //adresaDao.Add(d);
 
-                        // 3. Dodajemo ga u ObservableCollection (da se odmah pojavi u Gridu)
-                        Posetioci.Add(p);
-                    }
+                    // 
+                    posetilacDao.Add(p);
+                    if (p.Adresa != null)
+                        adresaDao.Add(p.Adresa);
+
+                    OsveziPrikaz();
                 }
             }
-            if (MainTabControl.SelectedIndex == 1)
+            else if (MainTabControl.SelectedIndex == 1) // Autori
             {
-                // Kreiramo instancu novog prozora
-                DodajAutoraProzor dijaloškiProzor = new DodajAutoraProzor();
+                var dijalog = new DodajAutoraProzor();
+                dijalog.Owner = this;
 
-                // Postavljamo MainWindow kao vlasnika (da bi iskočio tačno ispred njega)
-                dijaloškiProzor.Owner = this;
-
-
-                // ShowDialog() zaustavlja rad u MainWindow dok se ovaj prozor ne zatvori
-                if (dijaloškiProzor.ShowDialog() == true)
+                if (dijalog.ShowDialog() == true)
                 {
-                   
-                    // 1. Uzimamo kreiranog posetioca iz dijaloga
-                    Autor a = dijaloškiProzor.NoviAutor;
-                    Adresa d = dijaloškiProzor.NoviAutor.Adresa;
-                    dijaloškiProzor.NoviAutor.Adresa.VlasnikID=dijaloškiProzor.NoviAutor.Broj_lk;
+                    Autor a = dijalog.NoviAutor;
 
-                    
+                    if (a.Adresa != null)
+                        a.Adresa.VlasnikID = a.Broj_lk;
 
-                    if (a != null)
-                    {
-                        // 2. Dodajemo ga u DAO (da se upiše u fajl)
-                        //autorDao.Add(a);
-                        //adresaDao.Add(d);
 
-                        // 3. Dodajemo ga u ObservableCollection (da se odmah pojavi u Gridu)
-                        Autori.Add(a);
-                    }
+                    autorDao.Add(a);
+                    if (a.Adresa != null)
+                        adresaDao.Add(a.Adresa);
+
+                    OsveziPrikaz();
                 }
             }
-            if (MainTabControl.SelectedIndex == 2)
+            else if (MainTabControl.SelectedIndex == 2) // Knjige
             {
-          
-                DodajKnjiguProzor dijaloškiProzor = new DodajKnjiguProzor();
+                var dijalog = new DodajKnjiguProzor();
+                dijalog.Owner = this;
 
-                dijaloškiProzor.Owner = this;
-
-                if (dijaloškiProzor.ShowDialog() == true)
+                if (dijalog.ShowDialog() == true)
                 {
-                    Knjiga a = dijaloškiProzor.NovaKnjiga;
-              
-                    if (a != null)
-                    {
-                        //knjigaDao.Add(a);
-                        Knjige.Add(a);
-                    }
+                    Knjiga k = dijalog.NovaKnjiga;
+                    knjigaDao.Add(k);
+                    OsveziPrikaz();
                 }
             }
-
         }
 
+        // ================================================================
+        // Brisanje entiteta
+        // ================================================================
         private void BtnObrisi_Click(object sender, RoutedEventArgs e)
         {
-
             int aktivniTab = MainTabControl.SelectedIndex;
 
-            if (aktivniTab == 2) // Ako je selektovan tab "Knjige"
+            if (aktivniTab == 0) // Posetioci
             {
-                // 2. Uzimamo selektovani red i "kastujemo" ga u klasu Knjiga
-                Knjiga selektovanaKnjiga = (Knjiga)DataGridKnjige.SelectedItem;
-
-                // 3. Proveravamo da li je korisnik uopšte išta kliknuo
-                if (selektovanaKnjiga != null)
+                var selektovan = DataGridPosetioci.SelectedItem as Posetilac;
+                if (selektovan == null)
                 {
-                    // Potvrda brisanja (opciono, ali preporučljivo)
-                    var result = MessageBox.Show("Da li ste sigurni da želite da obrišete knjigu?", "Brisanje knjige", MessageBoxButton.YesNo);
-
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        // A) Brišemo iz memorijske liste (ObservableCollection) 
-                        // Ovo odmah sklanja red sa ekrana!
-                        Knjige.Remove(selektovanaKnjiga);
-
-
-                        // B) Brišemo iz fajla preko DAO
-                       
-                        knjigaDao.Remove(selektovanaKnjiga);
-
-                    }
+                    MessageBox.Show("Prvo selektujte posetioca u tabeli!");
+                    return;
                 }
-                else
+
+                var result = MessageBox.Show(
+                    $"Da li ste sigurni da želite da obrišete posetioca {selektovan.Ime} {selektovan.Prezime}?",
+                    "Brisanje posetioca", MessageBoxButton.YesNo);
+
+                if (result == MessageBoxResult.Yes)
                 {
-                    MessageBox.Show("Prvo selektujte red u tabeli koji želite da obrišete!");
+                    sviPosetiociList.Remove(selektovan);
+                    posetilacDao.Remove(selektovan);
+                    if (selektovan.Adresa != null)
+                        adresaDao.Remove(selektovan.BrClanskeKarte);
+                    OsveziPrikaz();
                 }
             }
-
-            if (aktivniTab == 1) // Ako je selektovan tab "Autor"
+            else if (aktivniTab == 1) // Autori
             {
-
-                Autor selektovanAutor = (Autor)DataGridAutori.SelectedItem;
-
-                // 3. Proveravamo da li je korisnik uopšte išta kliknuo
-                if (selektovanAutor != null)
+                var selektovan = DataGridAutori.SelectedItem as Autor;
+                if (selektovan == null)
                 {
-                    // Potvrda brisanja (opciono, ali preporučljivo)
-                    var result = MessageBox.Show("Da li ste sigurni da želite da obrišete autora?", "Brisanje autora", MessageBoxButton.YesNo);
-
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        // A) Brišemo iz memorijske liste (ObservableCollection) 
-                        // Ovo odmah sklanja red sa ekrana!
-                        Autori.Remove(selektovanAutor);
-
-                        // B) Brišemo iz fajla preko DAO
-                       // adresaDao.Remove(selektovanAutor.Broj_lk);
-                       // autorDao.Remove(selektovanAutor);
-                    }
+                    MessageBox.Show("Prvo selektujte autora u tabeli!");
+                    return;
                 }
-                else
+
+                var result = MessageBox.Show(
+                    $"Da li ste sigurni da želite da obrišete autora {selektovan.Ime} {selektovan.Prezime}?",
+                    "Brisanje autora", MessageBoxButton.YesNo);
+
+                if (result == MessageBoxResult.Yes)
                 {
-                    MessageBox.Show("Prvo selektujte red u tabeli koji želite da obrišete!");
+                    sviAutoriList.Remove(selektovan);
+                    autorDao.Remove(selektovan);
+                    if (selektovan.Adresa != null)
+                        adresaDao.Remove(selektovan.Broj_lk);
+                    OsveziPrikaz();
                 }
             }
-
-            if (aktivniTab == 0) // Ako je selektovan tab "Posetioci"
+            else if (aktivniTab == 2) // Knjige
             {
-                // 2. Uzimamo selektovani red i "kastujemo" ga u klasu Knjiga
-                Posetilac selektovanPosetilac = (Posetilac)DataGridPosetioci.SelectedItem;
-
-                // 3. Proveravamo da li je korisnik uopšte išta kliknuo
-                if (selektovanPosetilac != null)
+                var selektovana = DataGridKnjige.SelectedItem as Knjiga;
+                if (selektovana == null)
                 {
-                    // Potvrda brisanja (opciono, ali preporučljivo)
-                    var result = MessageBox.Show("Da li ste sigurni da želite da obrišete posetioca?", "Brisanje posetioca", MessageBoxButton.YesNo);
-
-                    if (result == MessageBoxResult.Yes)
-                    {
-                        // A) Brišemo iz memorijske liste (ObservableCollection) 
-                        // Ovo odmah sklanja red sa ekrana!
-                        Posetioci.Remove(selektovanPosetilac);
-
-                        // B) Brišemo iz fajla preko DAO
-                        adresaDao.Remove(selektovanPosetilac.BrClanskeKarte);
-                        //posetilacDao.Remove(selektovanPosetilac);
-                    }
+                    MessageBox.Show("Prvo selektujte knjigu u tabeli!");
+                    return;
                 }
-                else
+
+                var result = MessageBox.Show(
+                    $"Da li ste sigurni da želite da obrišete knjigu \"{selektovana.Naziv}\"?",
+                    "Brisanje knjige", MessageBoxButton.YesNo);
+
+                if (result == MessageBoxResult.Yes)
                 {
-                    MessageBox.Show("Prvo selektujte red u tabeli koji želite da obrišete!");
+                    sveKnjigeList.Remove(selektovana);
+                    knjigaDao.Remove(selektovana);
+                    OsveziPrikaz();
                 }
             }
         }
 
+        // ================================================================
+        // Izmena entiteta
+        // ================================================================
         private void BtnIzmeni_Click(object sender, RoutedEventArgs e)
         {
             int aktivniTab = MainTabControl.SelectedIndex;
 
-            if (aktivniTab == 0) // POSJETIOCI
+            if (aktivniTab == 0) // Posetioci
             {
-                // Uzmi šta je trenutno selektovano
                 var selektovan = DataGridPosetioci.SelectedItem as Posetilac;
-
-                // KLJUČNA PROVERA: Ako je null ili ako korisnik nije zapravo kliknuo na red
                 if (selektovan == null)
                 {
                     MessageBox.Show("Morate prvo selektovati posetioca u tabeli!", "Obaveštenje");
                     return;
                 }
 
-                IzmenaPosetioca prozor = new IzmenaPosetioca(selektovan, new List<Knjiga>(Knjige));
+                // Prosleđujemo sve knjige da IzmenaPosetioca može da ponudi listu za zelje
+                var prozor = new IzmenaPosetioca(selektovan, sveKnjigeList);
                 prozor.Owner = this;
-                if (prozor.ShowDialog() == true) { PosetiociView.Refresh(); }
 
-                // OPCIONO: Odselektuj nakon zatvaranja prozora da "isprazniš" bafer
+                if (prozor.ShowDialog() == true)
+                {
+                    // Snimi izmene adrese
+                    if (selektovan.Adresa != null)
+                        adresaDao.Update(selektovan.Adresa);
+
+                    // Snimi izmene posetioca
+                    posetilacDao.Update(selektovan);
+
+                    PosetiociView.Refresh();
+                }
+
                 DataGridPosetioci.SelectedItem = null;
             }
-            else if (aktivniTab == 1) // AUTORI
+            else if (aktivniTab == 1) // Autori
             {
                 var selektovan = DataGridAutori.SelectedItem as Autor;
-
                 if (selektovan == null)
                 {
                     MessageBox.Show("Morate prvo selektovati autora u tabeli!", "Obaveštenje");
                     return;
                 }
 
-                IzmenaAutora prozor = new IzmenaAutora(selektovan);
+                var prozor = new IzmenaAutora(selektovan, sveKnjigeList);
                 prozor.Owner = this;
-                if (prozor.ShowDialog() == true) { AutoriView.Refresh(); }
+
+                if (prozor.ShowDialog() == true)
+                {
+                    if (selektovan.Adresa != null)
+                        adresaDao.Update(selektovan.Adresa);
+
+                    autorDao.Update(selektovan);
+                    AutoriView.Refresh();
+                }
 
                 DataGridAutori.SelectedItem = null;
             }
-            else if (aktivniTab == 2) // KNJIGE
+            else if (aktivniTab == 2) // Knjige
             {
-                var selektovan = DataGridKnjige.SelectedItem as Knjiga;
-
-                if (selektovan == null)
+                var selektovana = DataGridKnjige.SelectedItem as Knjiga;
+                if (selektovana == null)
                 {
                     MessageBox.Show("Morate prvo selektovati knjigu u tabeli!", "Obaveštenje");
                     return;
                 }
 
-                DodajKnjiguProzor prozor = new DodajKnjiguProzor(selektovan);
+                // Prosleđujemo sve autore za izbor autora knjige
+                var prozor = new DodajKnjiguProzor(selektovana);
                 prozor.Owner = this;
-                if (prozor.ShowDialog() == true) { KnjigeView.Refresh(); }
+
+                if (prozor.ShowDialog() == true)
+                {
+                    knjigaDao.Save();
+                    KnjigeView.Refresh();
+                }
 
                 DataGridKnjige.SelectedItem = null;
             }
         }
 
-        private void DataGridPosetioci_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
-
-
-        private void timer_Tick(object? sender, EventArgs e)
-        {
-            // Uzimamo trenutno vreme i datum
-            DateTime now = DateTime.Now;
-
-            // Vreme format (npr. 22:45:10)
-            lblTime.Text = now.ToString("HH:mm:ss");
-
-            // Datum format (npr. 09.02.2026.)
-            lblDate.Text = now.ToString("dd.MM.yyyy.");
-        }
-
+        // ================================================================
+        // Pretraga
+        // ================================================================
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string filter = txtPretraga.Text.ToLower();
 
-            // Proveravamo po indexu koji je tab trenutno otvoren
-            if (MainTabControl.SelectedIndex == 0) // Posetioci
-            {
+            if (MainTabControl.SelectedIndex == 0)
                 FiltrirajPosetioce(filter);
-            }
-            else if (MainTabControl.SelectedIndex == 1) // Autori
-            {
+            else if (MainTabControl.SelectedIndex == 1)
                 FiltrirajAutore(filter);
-            }
-            else if (MainTabControl.SelectedIndex == 2) // Knjige
-            {
+            else if (MainTabControl.SelectedIndex == 2)
                 FiltrirajKnjige(filter);
-            }
-
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void FiltrirajPosetioce(string upit)
         {
-          
-        }
-
-            private void FiltrirajPosetioce(string upit)
-            {
-
             if (PosetiociView == null) return;
 
             if (string.IsNullOrWhiteSpace(upit))
@@ -537,8 +463,6 @@ namespace WpfClient
             }
             else
             {
-                // 1. Parsiranje: Razdvajamo upit po zarezu i čistimo razmake
-                // Primer: "Petrovic, Petar" -> ["petrovic", "petar"]
                 string[] delovi = upit.ToLower().Split(',');
                 for (int i = 0; i < delovi.Length; i++) delovi[i] = delovi[i].Trim();
 
@@ -547,35 +471,23 @@ namespace WpfClient
                     var p = obj as Posetilac;
                     if (p == null) return false;
 
-                    // Uzimamo podatke posetioca u malim slovima radi case-insensitive poređenja
-                    string prezime = p.Prezime.ToLower();
-                    string ime = p.Ime.ToLower();
-                    string karta = p.BrClanskeKarte.ToLower();
+                    string prezime = p.Prezime?.ToLower() ?? "";
+                    string ime = p.Ime?.ToLower() ?? "";
+                    string karta = p.BrClanskeKarte?.ToLower() ?? "";
 
-                    // Pravila na osnovu broja reči:
                     if (delovi.Length == 1)
-                    {
-                        // JEDNA REČ -> Preзиме sadrži reč
                         return prezime.Contains(delovi[0]);
-                    }
                     else if (delovi.Length == 2)
-                    {
-                        // DVE REČI -> Prva u prezimenu, druga u imenu
                         return prezime.Contains(delovi[0]) && ime.Contains(delovi[1]);
-                    }
                     else if (delovi.Length >= 3)
-                    {
-                        // TRI REČI -> Prva u broju karte, druga u imenu, treća u prezimenu
-                        return karta.Contains(delovi[0]) &&
-                               ime.Contains(delovi[1]) &&
-                               prezime.Contains(delovi[2]);
-                    }
+                        return karta.Contains(delovi[0]) && ime.Contains(delovi[1]) && prezime.Contains(delovi[2]);
 
                     return false;
                 };
             }
-            PosetiociView.Refresh(); // Osveži prikaz u DataGrid-u
-            }
+
+            PosetiociView.Refresh();
+        }
 
         private void FiltrirajAutore(string upit)
         {
@@ -587,7 +499,6 @@ namespace WpfClient
             }
             else
             {
-                // Razdvajamo po zarezu i brišemo razmake
                 string[] delovi = upit.ToLower().Split(',');
                 for (int i = 0; i < delovi.Length; i++) delovi[i] = delovi[i].Trim();
 
@@ -596,23 +507,18 @@ namespace WpfClient
                     var a = obj as Autor;
                     if (a == null) return false;
 
-                    string prezime = a.Prezime.ToLower();
-                    string ime = a.Ime.ToLower();
+                    string prezime = a.Prezime?.ToLower() ?? "";
+                    string ime = a.Ime?.ToLower() ?? "";
 
                     if (delovi.Length == 1)
-                    {
-                        // JEDNA REČ -> Preзиме садржи реч
                         return prezime.Contains(delovi[0]);
-                    }
                     else if (delovi.Length >= 2)
-                    {
-                        // DVE REČI -> Prva u prezimenu, druga u imenu
                         return prezime.Contains(delovi[0]) && ime.Contains(delovi[1]);
-                    }
 
                     return false;
                 };
             }
+
             AutoriView.Refresh();
         }
 
@@ -632,22 +538,91 @@ namespace WpfClient
                 {
                     var k = obj as Knjiga;
                     if (k == null) return false;
-
-                    // Pretraga: Deo naziva ILI deo ISBN broja
-                    return k.Naziv.ToLower().Contains(f) ||
-                           k.ISBN.ToLower().Contains(f);
+                    return (k.Naziv?.ToLower().Contains(f) == true) ||
+                           (k.ISBN?.ToLower().Contains(f) == true);
                 };
             }
+
             KnjigeView.Refresh();
         }
 
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e) { }
+
+        // ================================================================
+        // Menu Bar handlers
+        // ================================================================
+        private void MenuPosetioci_Click(object sender, RoutedEventArgs e) =>
+            MainTabControl.SelectedIndex = 0;
+
+        private void MenuAutori_Click(object sender, RoutedEventArgs e) =>
+            MainTabControl.SelectedIndex = 1;
+
+        private void MenuKnjige_Click(object sender, RoutedEventArgs e) =>
+            MainTabControl.SelectedIndex = 2;
+
         private void MenuIzdavaci_Click(object sender, RoutedEventArgs e)
         {
-            // Prosledi listu izdavača prozoru (pretpostavka da si napravio konstruktor koji prima listu)
-            IzdavaciProzor popUp = new IzdavaciProzor();
+            // Prosleđujemo referencu na listu koju MainWindow već ima
+            IzdavaciProzor popUp = new IzdavaciProzor(this.Izdavaci);
             popUp.Owner = this;
             popUp.ShowDialog();
-            // Kada se zatvori ovaj prozor, NIŠTA nije upisano u fajl još uvek
+        }
+
+        private void MenuAbout_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(
+                "Sajam Knjiga v1.0\n\n" +
+                "Aplikacija za kupovinu knjiga u okviru Sajma Knjiga.\n\n" +
+                "Autori:\n" +
+                "- - - - - - - - - - - - -\n" +
+                "[Miloš Trišić] - RA 39/2023\n" +
+                "[Boris Stepanović] - RA 97/2023\n",
+                "O aplikaciji");
+        }
+
+        private void MenuClose_Click(object sender, RoutedEventArgs e) =>
+            this.Close();
+
+        // ================================================================
+        // Keyboard shortcuts
+        // ================================================================
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            bool isCtrl = Keyboard.Modifiers == ModifierKeys.Control;
+
+            if (isCtrl && e.Key == Key.N)
+            {
+                BtnDodaj_Click(sender, null);
+                e.Handled = true;
+            }
+            else if (isCtrl && e.Key == Key.S)
+            {
+                BtnSave_Click(sender, null);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                MenuClose_Click(sender, null);
+                e.Handled = true;
+            }
+        }
+
+        // ================================================================
+        // Ostalo
+        // ================================================================
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Width = SystemParameters.PrimaryScreenWidth * 0.75;
+            this.Height = SystemParameters.PrimaryScreenHeight * 0.75;
+        }
+
+        private void DataGridPosetioci_SelectionChanged(object sender, SelectionChangedEventArgs e) { }
+
+        private void timer_Tick(object? sender, EventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            lblTime.Text = now.ToString("HH:mm:ss");
+            lblDate.Text = now.ToString("dd.MM.yyyy.");
         }
     }
 }

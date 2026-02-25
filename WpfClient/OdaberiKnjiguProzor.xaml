@@ -1,0 +1,52 @@
+﻿<Window x:Class="WpfClient.OdaberiKnjiguProzor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Dodaj knjigu"
+        Height="400" Width="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Icon="/Resources/bookshelf.ico">
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Text="Odaberite knjigu koju želite da dodate autoru:"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,8"/>
+
+        <ListBox x:Name="listKnjige"
+                 Grid.Row="1"
+                 Margin="0,0,0,12"
+                 BorderBrush="#CCCCCC"
+                 BorderThickness="1">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding ISBN}" Width="80" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding Naziv}" Width="200"/>
+                        <TextBlock Text="{Binding Zanr}" Width="100" Foreground="Gray"/>
+                        <TextBlock Text="{Binding Godina_izdanja}" Foreground="Gray"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Odustani"
+                    Width="90" Height="30"
+                    Margin="0,0,8,0"
+                    Click="BtnOdustani_Click"/>
+            <Button Content="Potvrdi"
+                    Width="90" Height="30"
+                    IsDefault="True"
+                    Click="BtnPotvrdi_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

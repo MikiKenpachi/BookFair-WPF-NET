@@ -13,9 +13,11 @@
         </Grid.RowDefinitions>
 
         <TabControl Grid.Row="0">
+            
+            <!--INFORMACIJE-->
             <TabItem Header="Informacije">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <Grid Margin="10">
+                    <Grid Margin="12">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -69,6 +71,54 @@
                     </Grid>
                 </ScrollViewer>
             </TabItem>
+            
+            <!--KNJIGE-->
+            <TabItem Header="Knjige">
+                <Grid Margin="8">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+                        <Button Content="Dodaj knjigu"
+                                Width="110" Height="30" Margin="0,0,8,0"
+                                Click="BtnDodajKnjigu_Click"
+                                ToolTip="Dodaj novu knjigu autoru"/>
+                        <Button Content="Ukloni knjigu"
+                                Width="110" Height="30"
+                                Click="BtnUkloniKnjigu_Click"
+                                ToolTip="Ukloni selektovanu knjigu iz spiska"/>
+                    </StackPanel>
+
+                    <DataGrid x:Name="dgKnjige"
+                              Grid.Row="1"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              SelectionMode="Single"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              GridLinesVisibility="Horizontal"
+                              AlternatingRowBackground="#F9F9F9">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ISBN"
+                                               Binding="{Binding ISBN}"
+                                               Width="80"/>
+                            <DataGridTextColumn Header="Naziv"
+                                               Binding="{Binding Naziv}"
+                                               Width="*"/>
+                            <DataGridTextColumn Header="Godina izdanja"
+                                               Binding="{Binding Godina_izdanja}"
+                                               Width="110"/>
+                            <DataGridTextColumn Header="Žanr"
+                                               Binding="{Binding Zanr}"
+                                               Width="110"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+
         </TabControl>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,5">

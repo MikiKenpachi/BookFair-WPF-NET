@@ -1,6 +1,5 @@
-Nebojsa|Ralevic|1965-10-10|0633223632|nralevic@uns.ac.rs|33|10101965|
-Ljuba|Budinski|1970-03-02|0622778898|ljuba@uns.ac.rs|27|03021970|
-Srdjan|Popov|1976-05-04|0677453223|popov@uns.ac.rs|26|05041976|
-Vladimir|Dimitrieski|1987-10-07|0665748965|dimitrieski@uns.ac.rs|21|10071987|
-Erik|Najt|1897-04-10|0691231232|eriknajt@gmail.com|39|123456789|
-Stefan|Radic|2000-06-13|0633332223|radic@uns.ac.rs|14|13062000|
+Nebojsa|Ralevic|1965-10-10|0633255789|nralevic@uns.ac.rs|32|10101965
+Ljuba|Budinski|1972-04-05|0699874478|ljuba.rs|17|04051972
+Srdjan|Popov|1992-12-12|0631279345|popov@uns.ac.rs|4|12121992
+Erik|Najt|1987-10-06|0632567865|erik@uns.ac.rs|14|10061987
+Biljana|Marcelja|1957-02-02|0632568741|marcelja@uns.ac.rs|44|02021957

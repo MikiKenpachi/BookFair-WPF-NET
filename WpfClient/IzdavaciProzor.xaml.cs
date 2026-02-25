@@ -14,81 +14,62 @@ namespace WpfClient
 
     public partial class IzdavaciProzor : Window
     {
+        // Koristimo referencu na listu iz MainWindow
         public ObservableCollection<Izdavac> ListaIzdavaca { get; set; }
 
-        public Izdavac? NoviIzdavac { get; private set; }
-        public IzdavaciProzor()
+        public IzdavaciProzor(ObservableCollection<Izdavac> listaIzGlavnog)
         {
             InitializeComponent();
 
-            // Učitavanje iz fajla preko DAO klase
-            var dao = new IzdavacDAO();
-            ListaIzdavaca = new ObservableCollection<Izdavac>(dao.GetAll());
-
-            // Povezivanje sa DataGrid-om (u XAML-u ti se zove DataGridIzdavaci)
+            // Povezujemo se na istu listu koju koristi MainWindow
+            ListaIzdavaca = listaIzGlavnog;
             DataGridIzdavaci.ItemsSource = ListaIzdavaca;
         }
 
         private void BtnDodaj_Click(object sender, RoutedEventArgs e)
         {
-            // OTVARAMO NOVI PROZOR (DodajIzdavacaProzor), a ne IzdavaciProzor!
             DodajIzdavacaProzor prozor = new DodajIzdavacaProzor();
             prozor.Owner = this;
 
             if (prozor.ShowDialog() == true)
             {
-                // Dodajemo u listu da se vidi u tabeli
+                // SAMO dodajemo u listu. NE zovemo dao.Add()!
                 ListaIzdavaca.Add(prozor.Izdavac);
-
-                // Snimamo u fajl
-                IzdavacDAO dao = new IzdavacDAO();
-                dao.Add(prozor.Izdavac);
             }
         }
 
         private void BtnIzmeni_Click(object sender, RoutedEventArgs e)
         {
             Izdavac selektovan = (Izdavac)DataGridIzdavaci.SelectedItem;
-
             if (selektovan != null)
             {
-                // Šaljemo selektovanog izdavača u prozor za izmenu
                 DodajIzdavacaProzor prozor = new DodajIzdavacaProzor(selektovan);
                 prozor.Owner = this;
 
                 if (prozor.ShowDialog() == true)
                 {
-                    // Osvežavamo prikaz u DataGrid-u (jer su se podaci promenili u memoriji)
                     DataGridIzdavaci.Items.Refresh();
-
-                    // Snimamo izmene u fajl
-                    IzdavacDAO dao = new IzdavacDAO();
-                    dao.Update(selektovan);
+                    // Opet, NE zovemo dao.Update()!
                 }
-            }
-            else
-            {
-                MessageBox.Show("Morate prvo selektovati izdavača u tabeli!.", "Obaveštenje");
             }
         }
 
         private void BtnObrisi_Click(object sender, RoutedEventArgs e)
         {
             Izdavac selektovan = (Izdavac)DataGridIzdavaci.SelectedItem;
-
             if (selektovan != null)
             {
-                var rezultat = MessageBox.Show($"Da li želite da obrišete izdavača {selektovan.Naziv}?", "Brisanje izdavača", MessageBoxButton.YesNo);
-                if (rezultat == MessageBoxResult.Yes)
+                if (MessageBox.Show($"Obrisati?", "Potvrda", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
+                    // SAMO uklanjamo iz liste
                     ListaIzdavaca.Remove(selektovan);
-
-                    IzdavacDAO dao = new IzdavacDAO();
-                    dao.Remove(selektovan); 
                 }
             }
         }
 
-        private void BtnZatvori_Click(object sender, RoutedEventArgs e) => this.Close();
+        private void BtnZatvori_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
