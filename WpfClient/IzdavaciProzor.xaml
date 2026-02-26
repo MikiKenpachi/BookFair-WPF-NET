@@ -37,6 +37,13 @@
                 <Button Width="35" Height="35" Margin="5,0" ToolTip="Obriši selektovanog" Click="BtnObrisi_Click">
                     <TextBlock Text="🗑" FontSize="16"/>
                 </Button>
+                <Button x:Name="btnPrikaziAutore" 
+Content="Prikaži autore" 
+Width="120" Height="30" 
+Margin="5" 
+Click="BtnPrikaziAutore_Click" 
+Background="#FFD1E1FB" 
+FontWeight="Bold"/>
             </StackPanel>
 
             <Button Content="Zatvori" Width="80" Height="35" HorizontalAlignment="Right" 
