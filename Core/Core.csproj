@@ -47,6 +47,7 @@
     <Compile Include="DAO\KnjigaDAO.cs" />
     <Compile Include="DAO\KupiliDAO.cs" />
     <Compile Include="DAO\PosetilacDAO.cs" />
+    <Compile Include="DTO\IzdavacDTO.cs" />
     <Compile Include="Models\Adresa.cs" />
     <Compile Include="Models\Autor.cs" />
     <Compile Include="Models\Izdavac.cs" />

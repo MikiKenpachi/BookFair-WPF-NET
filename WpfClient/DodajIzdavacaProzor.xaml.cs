@@ -1,4 +1,5 @@
 ﻿using Core.DAO;
+using Core.DTO;
 using SajamKnjigaProjekat.Core.DAO;
 using SajamKnjigaProjekat.Core.Models;
 using System;
@@ -12,7 +13,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using SajamKnjigaProjekat.Core.DAO;
 using System.Windows.Shapes;
 
 namespace WpfClient
@@ -20,77 +20,74 @@ namespace WpfClient
     /// <summary>
     /// Interaction logic for DodajIzdavacaProzor.xaml
     /// </summary>
-    
+
     public partial class DodajIzdavacaProzor : Window
     {
-        public Izdavac Izdavac { get; set; }
+        public IzdavacDTO MojDTo { get; set; }
+        public List<Autor> SviAutori { get; set; }
 
-        AutorDAO autorDao = new AutorDAO();
+        // 1. DODAJ OVO: Ovo svojstvo omogućava glavnom prozoru da "izvuče" rezultat
+        public Izdavac NoviIzdavac { get; private set; }
 
-        // Konstruktor prima parametar (ako je null, znači dodajemo novog)
-
-        public ObservableCollection<Izdavac> ListaIzdavaca { get; set; }
-
-        public Izdavac? NoviIzdavac { get; private set; }
         public DodajIzdavacaProzor(List<Autor> sviAutori, Izdavac postojeciIzdavac = null)
         {
             InitializeComponent();
-
-            // Učitavanje iz fajla preko DAO klase
-            var dao = new IzdavacDAO();
-            cbSefovi.ItemsSource = sviAutori;
-            cbSefovi.SelectedItem = sviAutori.FirstOrDefault(a => a.Broj_lk == Izdavac.SefIzdavaca?.Broj_lk); // tražimo po ključu
-
-            ListaIzdavaca = new ObservableCollection<Izdavac>(dao.GetAll());
-
-
+            SviAutori = sviAutori;
+            cbSefovi.ItemsSource = SviAutori; // Prvo postavi izvor podataka
 
             if (postojeciIzdavac != null)
             {
-                // REŽIM IZMENE
-                Izdavac = postojeciIzdavac;
-                txtSifra.Text = Izdavac.Sifra;
-                txtSifra.IsEnabled = false; // Šifru ne damo da menja
-                txtNaziv.Text = Izdavac.Naziv;
+                // Pronalazimo referencu na autora iz liste koji ima isti ID kao šef izdavača
+                var selektovaniSef = SviAutori.FirstOrDefault(a => a.Broj_lk == postojeciIzdavac.SefIzdavaca?.Broj_lk);
 
-                // Postavljamo selektovanog sefa
-                cbSefovi.SelectedItem = Izdavac.SefIzdavaca;
-
+                MojDTo = new IzdavacDTO
+                {
+                    Sifra = postojeciIzdavac.Sifra,
+                    Naziv = postojeciIzdavac.Naziv,
+                    SefIzdavaca = selektovaniSef, // DODELJUJEMO OBJEKAT IZ LISTE
+                    ListaAutora = postojeciIzdavac.ListaAutora,
+                    ListaKnjiga = postojeciIzdavac.ListaKnjiga
+                };
                 this.Title = "Izmena izdavača";
+                txtSifra.IsEnabled = false;
             }
             else
             {
-                // REŽIM DODAVANJA
-                Izdavac = new Izdavac();
+                MojDTo = new IzdavacDTO();
                 this.Title = "Dodaj novog izdavača";
             }
+
+            this.DataContext = MojDTo;
         }
 
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtSifra.Text) || string.IsNullOrWhiteSpace(txtNaziv.Text))
+            // Validacija preko DTO-a
+            if (!string.IsNullOrEmpty(MojDTo["Sifra"]) ||
+                !string.IsNullOrEmpty(MojDTo["Naziv"]) ||
+                !string.IsNullOrEmpty(MojDTo["SefIzdavaca"]))
             {
-                MessageBox.Show("Popunite sva polja!", "Greška");
+               MessageBox.Show("Molimo ispravite greške označene crvenom bojom!", "Validacija");
                 return;
             }
 
-            if (cbSefovi.SelectedItem == null)
+            // 2. MAPIRANJE: Popunjavamo javno svojstvo klase podacima iz DTO-a
+            NoviIzdavac = new Izdavac
             {
-                MessageBox.Show("Morate izabrati šefa!", "Greška");
-                return;
-            }
+                Sifra = MojDTo.Sifra,
+                Naziv = MojDTo.Naziv,
+                SefIzdavaca = MojDTo.SefIzdavaca,
+                ListaAutora = MojDTo.ListaAutora,
+                ListaKnjiga = MojDTo.ListaKnjiga
+            };
 
-            // Popunjavanje objekta podacima sa forme
-            Izdavac.Sifra = txtSifra.Text;
-            Izdavac.Naziv = txtNaziv.Text;
-            Izdavac.SefIzdavaca = (Autor)cbSefovi.SelectedItem;
-
-            this.DialogResult = true; // Ovo zatvara prozor i vraća 'true' u glavni prozor
+            this.DialogResult = true;
         }
 
         private void BtnOdustani_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
+            this.Close();
         }
     }
 }

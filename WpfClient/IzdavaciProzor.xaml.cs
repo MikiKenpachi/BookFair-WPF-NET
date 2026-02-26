@@ -38,7 +38,7 @@ namespace WpfClient
             if (prozor.ShowDialog() == true)
             {
                 // SAMO dodajemo u listu. NE zovemo dao.Add()!
-                ListaIzdavaca.Add(prozor.Izdavac);
+                ListaIzdavaca.Add(prozor.NoviIzdavac);
             }
         }
 

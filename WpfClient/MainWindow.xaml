@@ -132,130 +132,125 @@
         </StatusBar>
 
         <TabControl x:Name="MainTabControl">
-            <TabItem Header="Posetioci">
-                <Grid Margin="5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+           
+                <TabItem Header="Posetioci">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                    <DataGrid x:Name="DataGridPosetioci" 
-                  Grid.Row="0"
-                              RowHeight="28"
-                  ItemsSource="{Binding Posetioci}"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserDeleteRows="False"
-                  IsReadOnly="True"
-                  SelectionMode="Single" 
-                  Background="#FF95B5EB" 
-                  SelectionChanged="DataGridPosetioci_SelectionChanged" 
-                  Opacity="0.9" 
-                  FontWeight="Bold">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Broj članske karte" Binding="{Binding BrClanskeKarte}" Width="*" />
-                            <DataGridTextColumn Header="Ime" Binding="{Binding Ime}" Width="*" />
-                            <DataGridTextColumn Header="Prezime" Binding="{Binding Prezime}" Width="*" />
-                            <DataGridTextColumn Header="Adresa" Width="3*">
-                                <DataGridTextColumn.Binding>
-                                    <MultiBinding StringFormat="{}{0} {1}, {2}, {3}">
-                                        <Binding Path="Adresa.Ulica" />
-                                        <Binding Path="Adresa.Broj" />
-                                        <Binding Path="Adresa.Grad" />
-                                        <Binding Path="Adresa.Drzava" />
-                                    </MultiBinding>
-                                </DataGridTextColumn.Binding>
-                            </DataGridTextColumn>
-                            <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="0.5*" />
-                        </DataGrid.Columns>
-                    </DataGrid>
+                        <DataGrid x:Name="DataGridPosetioci" 
+                      Grid.Row="0"
+                      RowHeight="28"
+                      ItemsSource="{Binding Posetioci}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      IsReadOnly="True"
+                      SelectionMode="Single" 
+                      Background="#FF95B5EB" 
+                      SelectionChanged="DataGridPosetioci_SelectionChanged" 
+                      Opacity="0.9" 
+                      FontWeight="Bold">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Broj članske karte" Binding="{Binding BrClanskeKarte}" Width="*" />
+                                <DataGridTextColumn Header="Ime" Binding="{Binding Ime}" Width="*" />
+                                <DataGridTextColumn Header="Prezime" Binding="{Binding Prezime}" Width="*" />
+                                <DataGridTextColumn Header="Adresa" Width="3*">
+                                    <DataGridTextColumn.Binding>
+                                        <MultiBinding StringFormat="{}{0} {1}, {2}, {3}">
+                                            <Binding Path="Adresa.Ulica" />
+                                            <Binding Path="Adresa.Broj" />
+                                            <Binding Path="Adresa.Grad" />
+                                            <Binding Path="Adresa.Drzava" />
+                                        </MultiBinding>
+                                    </DataGridTextColumn.Binding>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="0.5*" />
+                            </DataGrid.Columns>
+                        </DataGrid>
 
-                    <StackPanel Grid.Row="1" 
-                    Orientation="Horizontal" 
-                    HorizontalAlignment="Center" 
-                    Margin="0,10,0,5">
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5">
+                            <Button x:Name="btnPrethodna" Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" Background="#FFD1E1FB" FontWeight="Bold" Margin="5,0"/>
+                            <TextBlock x:Name="txtStranaInfo" Text="Stranica 1" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
+                            <Button x:Name="btnSledeca" Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" Background="#FFD1E1FB" FontWeight="Bold" Margin="5,0"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
 
-                        <Button x:Name="btnPrethodna" 
-                    Content="&lt;" 
-                    Width="40" 
-                    Height="30" 
-                    Click="btnPrethodna_Click" 
-                    Background="#FFD1E1FB" 
-                    FontWeight="Bold"
-                    Margin="5,0"/>
+                <TabItem Header="Autori">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                        <TextBlock x:Name="txtStranaInfo" 
-                       Text="Stranica 1" 
-                       VerticalAlignment="Center" 
-                       FontSize="14" 
-                       FontWeight="Bold" 
-                       Margin="15,0"/>
+                        <DataGrid x:Name="DataGridAutori" 
+                      Grid.Row="0" 
+                      RowHeight="28"
+                      ItemsSource="{Binding Autori}" 
+                      CanUserDeleteRows="False" 
+                      IsReadOnly="True" 
+                      AutoGenerateColumns="False" 
+                      CanUserAddRows="False" 
+                      SelectionMode="Single"
+                      Background="#FF95B5EB" 
+                      Opacity="0.9" 
+                      FontWeight="Bold">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Ime" Binding="{Binding Ime}" Width="*"/>
+                                <DataGridTextColumn Header="Prezime" Binding="{Binding Prezime}" Width="*"/>
+                                <DataGridTextColumn Header="Br. lične karte" Binding="{Binding Broj_lk}" Width="*"/>
+                                <DataGridTextColumn Header="Datum rođenja" Binding="{Binding Datum_rodjenja, StringFormat=\{0:dd.MM.yyyy\}}" Width="*"/>
+                                <DataGridTextColumn Header="E-mail" Binding="{Binding Email}" Width="1.5*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
 
-                        <Button x:Name="btnSledeca" 
-                    Content="&gt;" 
-                    Width="40" 
-                    Height="30" 
-                    Click="btnSledeca_Click" 
-                    Background="#FFD1E1FB" 
-                    FontWeight="Bold"
-                    Margin="5,0"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5">
+                            <Button Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" Background="#FFD1E1FB" FontWeight="Bold" Margin="5,0"/>
+                            <TextBlock x:Name="txtStranaInfoAutori" Text="Stranica 1" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
+                            <Button Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" Background="#FFD1E1FB" FontWeight="Bold" Margin="5,0"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
 
-            <TabItem Header="Autori">
-                <Grid Margin="5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                <TabItem Header="Knjige">
+                    <Grid Margin="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                    <DataGrid x:Name="DataGridAutori" Grid.Row="0" ItemsSource="{Binding Autori}" 
-                  CanUserDeleteRows="False" IsReadOnly="True" AutoGenerateColumns="False" 
-                  CanUserAddRows="False" SelectionMode="Single">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Ime" Binding="{Binding Ime}" Width="*"/>
-                            <DataGridTextColumn Header="Prezime" Binding="{Binding Prezime}" Width="*"/>
-                            <DataGridTextColumn Header="Br. lične karte" Binding="{Binding Broj_lk}" Width="*"/>
-                            <DataGridTextColumn Header="Datum rođenja" Binding="{Binding Datum_rodjenja, StringFormat=\{0:dd.MM.yyyy\}}" Width="*"/>
-                            <DataGridTextColumn Header="E-mail" Binding="{Binding Email}" Width="1.5*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                        <DataGrid x:Name="DataGridKnjige" 
+                      Grid.Row="0" 
+                      RowHeight="28"
+                      ItemsSource="{Binding Knjige}" 
+                      CanUserDeleteRows="False" 
+                      IsReadOnly="True" 
+                      AutoGenerateColumns="False" 
+                      CanUserAddRows="False" 
+                      SelectionMode="Single"
+                      Background="#FF95B5EB" 
+                      Opacity="0.9" 
+                      FontWeight="Bold">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="*"/>
+                                <DataGridTextColumn Header="Naziv" Binding="{Binding Naziv}" Width="2*"/>
+                                <DataGridTextColumn Header="Cena" Binding="{Binding Cena}" Width="*"/>
+                                <DataGridTextColumn Header="Godina izdanja" Binding="{Binding Godina_izdanja}" Width="*"/>
+                                <DataGridTextColumn Header="Žanr" Binding="{Binding Zanr}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
 
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5">
-                        <Button Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" Margin="5,0"/>
-                        <TextBlock x:Name="txtStranaInfoAutori" Text="Stranica 1" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
-                        <Button Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" Margin="5,0"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-
-            <TabItem Header="Knjige">
-                <Grid Margin="5">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <DataGrid x:Name="DataGridKnjige" Grid.Row="0" ItemsSource="{Binding Knjige}" 
-                  CanUserDeleteRows="False" IsReadOnly="True" AutoGenerateColumns="False" 
-                  CanUserAddRows="False" SelectionMode="Single">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="*"/>
-                            <DataGridTextColumn Header="Naziv" Binding="{Binding Naziv}" Width="2*"/>
-                            <DataGridTextColumn Header="Cena" Binding="{Binding Cena}" Width="*"/>
-                            <DataGridTextColumn Header="Godina izdanja" Binding="{Binding Godina_izdanja}" Width="*"/>
-                            <DataGridTextColumn Header="Žanr" Binding="{Binding Zanr}" Width="*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5">
-                        <Button Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" Margin="5,0"/>
-                        <TextBlock x:Name="txtStranaInfoKnjige" Text="Stranica 1" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
-                        <Button Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" Margin="5,0"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5">
+                            <Button Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" Background="#FFD1E1FB" FontWeight="Bold" Margin="5,0"/>
+                            <TextBlock x:Name="txtStranaInfoKnjige" Text="Stranica 1" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
+                            <Button Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" Background="#FFD1E1FB" FontWeight="Bold" Margin="5,0"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+          
         </TabControl>
 
     </DockPanel>
