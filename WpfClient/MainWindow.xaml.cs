@@ -140,26 +140,29 @@ namespace WpfClient
         {
             int preskoci = (trenutnaStranica - 1) * velicinaStranice;
 
+            // Dobavljanje prevoda reči "Stranica" iz resursa
+            string recStranica = Application.Current.FindResource("lblStranica").ToString();
+
             // Posetioci
             Posetioci.Clear();
             foreach (var p in sviPosetiociList.Skip(preskoci).Take(velicinaStranice))
                 Posetioci.Add(p);
             if (txtStranaInfo != null)
-                txtStranaInfo.Text = $"Stranica {trenutnaStranica}";
+                txtStranaInfo.Text = $"{recStranica} {trenutnaStranica}";
 
             // Autori
             Autori.Clear();
             foreach (var a in sviAutoriList.Skip(preskoci).Take(velicinaStranice))
                 Autori.Add(a);
             if (txtStranaInfoAutori != null)
-                txtStranaInfoAutori.Text = $"Stranica {trenutnaStranica}";
+                txtStranaInfoAutori.Text = $"{recStranica} {trenutnaStranica}";
 
             // Knjige
             Knjige.Clear();
             foreach (var k in sveKnjigeList.Skip(preskoci).Take(velicinaStranice))
                 Knjige.Add(k);
             if (txtStranaInfoKnjige != null)
-                txtStranaInfoKnjige.Text = $"Stranica {trenutnaStranica}";
+                txtStranaInfoKnjige.Text = $"{recStranica} {trenutnaStranica}";
         }
 
         private void btnPrethodna_Click(object sender, RoutedEventArgs e)
@@ -191,19 +194,18 @@ namespace WpfClient
         {
             try
             {
-                // Snimamo master liste (ne ObservableCollection koje mogu biti
-                // nepotpune zbog paginacije!)
+                // Snimamo master liste
                 posetilacDao.SaveAll(sviPosetiociList);
                 autorDao.SaveAll(sviAutoriList);
                 knjigaDao.SaveAll(sveKnjigeList);
 
-                // Izdavači — snimamo pravu listu, ne praznu!
+                // Izdavači
                 izdavacDao.SaveAll(Izdavaci.ToList());
 
                 // Kupovine
-                kupiliDao.Save(); // interno drži listu i snima je
+                kupiliDao.Save();
 
-                // Adrese — skupi od svih posetilaca i autora
+                // Adrese
                 var sveAdrese = new List<Adresa>();
                 foreach (var p in sviPosetiociList)
                     if (p.Adresa != null) sveAdrese.Add(p.Adresa);
@@ -211,13 +213,19 @@ namespace WpfClient
                     if (a.Adresa != null) sveAdrese.Add(a.Adresa);
                 adresaDao.SaveAll(sveAdrese);
 
-                MessageBox.Show("Sve izmene su uspešno sačuvane!",
-                    "Status", MessageBoxButton.OK, MessageBoxImage.Information);
+                // --- LOKALIZACIJA PORUKE O USPEHU ---
+                string porukaUspeh = Application.Current.FindResource("msgSaveSuccess").ToString();
+                string naslovStatus = Application.Current.FindResource("statusTitle").ToString();
+
+                MessageBox.Show(porukaUspeh, naslovStatus, MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Greška pri čuvanju: {ex.Message}",
-                    "Greška", MessageBoxButton.OK, MessageBoxImage.Error);
+                // --- LOKALIZACIJA PORUKE O GREŠCI ---
+                string porukaGreska = Application.Current.FindResource("msgSaveError").ToString();
+                string naslovGreska = Application.Current.FindResource("errorTitle").ToString();
+
+                MessageBox.Show($"{porukaGreska} {ex.Message}", naslovGreska, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -313,13 +321,14 @@ namespace WpfClient
                 var selektovan = DataGridPosetioci.SelectedItem as Posetilac;
                 if (selektovan == null)
                 {
-                    MessageBox.Show("Prvo selektujte posetioca u tabeli!");
+                    MessageBox.Show(Application.Current.FindResource("msgSelektujPosetioca").ToString());
                     return;
                 }
 
-                var result = MessageBox.Show(
-                    $"Da li ste sigurni da želite da obrišete posetioca {selektovan.Ime} {selektovan.Prezime}?",
-                    "Brisanje posetioca", MessageBoxButton.YesNo);
+                string pitanje = $"{Application.Current.FindResource("msgConfirmDeletePosetilac")} {selektovan.Ime} {selektovan.Prezime}?";
+                string naslov = Application.Current.FindResource("titleDeletePosetilac").ToString();
+
+                var result = MessageBox.Show(pitanje, naslov, MessageBoxButton.YesNo);
 
                 if (result == MessageBoxResult.Yes)
                 {
@@ -335,13 +344,14 @@ namespace WpfClient
                 var selektovan = DataGridAutori.SelectedItem as Autor;
                 if (selektovan == null)
                 {
-                    MessageBox.Show("Prvo selektujte autora u tabeli!");
+                    MessageBox.Show(Application.Current.FindResource("msgSelektujAutora").ToString());
                     return;
                 }
 
-                var result = MessageBox.Show(
-                    $"Da li ste sigurni da želite da obrišete autora {selektovan.Ime} {selektovan.Prezime}?",
-                    "Brisanje autora", MessageBoxButton.YesNo);
+                string pitanje = $"{Application.Current.FindResource("msgConfirmDeleteAutor")} {selektovan.Ime} {selektovan.Prezime}?";
+                string naslov = Application.Current.FindResource("titleDeleteAutor").ToString();
+
+                var result = MessageBox.Show(pitanje, naslov, MessageBoxButton.YesNo);
 
                 if (result == MessageBoxResult.Yes)
                 {
@@ -357,13 +367,14 @@ namespace WpfClient
                 var selektovana = DataGridKnjige.SelectedItem as Knjiga;
                 if (selektovana == null)
                 {
-                    MessageBox.Show("Prvo selektujte knjigu u tabeli!");
+                    MessageBox.Show(Application.Current.FindResource("msgSelektujKnjigu").ToString());
                     return;
                 }
 
-                var result = MessageBox.Show(
-                    $"Da li ste sigurni da želite da obrišete knjigu \"{selektovana.Naziv}\"?",
-                    "Brisanje knjige", MessageBoxButton.YesNo);
+                string pitanje = $"{Application.Current.FindResource("msgConfirmDeleteKnjiga")} \"{selektovana.Naziv}\"?";
+                string naslov = Application.Current.FindResource("titleDeleteKnjiga").ToString();
+
+                var result = MessageBox.Show(pitanje, naslov, MessageBoxButton.YesNo);
 
                 if (result == MessageBoxResult.Yes)
                 {
@@ -380,29 +391,26 @@ namespace WpfClient
         private void BtnIzmeni_Click(object sender, RoutedEventArgs e)
         {
             int aktivniTab = MainTabControl.SelectedIndex;
+            string naslovObavestenja = Application.Current.FindResource("titleNotice").ToString();
 
             if (aktivniTab == 0) // Posetioci
             {
                 var selektovan = DataGridPosetioci.SelectedItem as Posetilac;
                 if (selektovan == null)
                 {
-                    MessageBox.Show("Morate prvo selektovati posetioca u tabeli!", "Obaveštenje");
+                    MessageBox.Show(Application.Current.FindResource("msgSelectVisitorEdit").ToString(), naslovObavestenja);
                     return;
                 }
 
-                // Prosleđujemo sve knjige da IzmenaPosetioca može da ponudi listu za zelje
                 var prozor = new IzmenaPosetioca(selektovan, sveKnjigeList, kupiliDao);
                 prozor.Owner = this;
 
                 if (prozor.ShowDialog() == true)
                 {
-                    // Snimi izmene adrese
                     if (selektovan.Adresa != null)
                         adresaDao.Update(selektovan.Adresa);
 
-                    // Snimi izmene posetioca
                     posetilacDao.Update(selektovan);
-
                     PosetiociView.Refresh();
                 }
 
@@ -413,7 +421,7 @@ namespace WpfClient
                 var selektovan = DataGridAutori.SelectedItem as Autor;
                 if (selektovan == null)
                 {
-                    MessageBox.Show("Morate prvo selektovati autora u tabeli!", "Obaveštenje");
+                    MessageBox.Show(Application.Current.FindResource("msgSelectAuthorEdit").ToString(), naslovObavestenja);
                     return;
                 }
 
@@ -436,11 +444,10 @@ namespace WpfClient
                 var selektovana = DataGridKnjige.SelectedItem as Knjiga;
                 if (selektovana == null)
                 {
-                    MessageBox.Show("Morate prvo selektovati knjigu u tabeli!", "Obaveštenje");
+                    MessageBox.Show(Application.Current.FindResource("msgSelectBookEdit").ToString(), naslovObavestenja);
                     return;
                 }
 
-                // Prosleđujemo sve autore za izbor autora knjige
                 var prozor = new DodajKnjiguProzor(selektovana);
                 prozor.Owner = this;
 
@@ -453,7 +460,6 @@ namespace WpfClient
                 DataGridKnjige.SelectedItem = null;
             }
         }
-
         // ================================================================
         // Pretraga
         // ================================================================
@@ -586,14 +592,10 @@ namespace WpfClient
 
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(
-                "Sajam Knjiga v1.0\n\n" +
-                "Aplikacija za kupovinu knjiga u okviru Sajma Knjiga.\n\n" +
-                "Autori:\n" +
-                "- - - - - - - - - - - - -\n" +
-                "[Miloš Trišić] - RA 39/2023\n" +
-                "[Boris Stepanović] - RA 97/2023\n",
-                "O aplikaciji");
+            string poruka = Application.Current.FindResource("aboutMessage").ToString();
+            string naslov = Application.Current.FindResource("aboutTitle").ToString();
+
+            MessageBox.Show(poruka, naslov);
         }
 
         private void MenuClose_Click(object sender, RoutedEventArgs e) =>
@@ -622,6 +624,72 @@ namespace WpfClient
                 e.Handled = true;
             }
         }
+        // ================================================================
+        // Lokalizacija
+        // ================================================================
+        private void OsveziNaziveKolona()
+        {
+            // POSETIOCI
+            if (DataGridPosetioci != null && DataGridPosetioci.Columns.Count > 0)
+            {
+                DataGridPosetioci.Columns[0].Header = Application.Current.FindResource("colClanskaKarta");
+                DataGridPosetioci.Columns[1].Header = Application.Current.FindResource("colIme");
+                DataGridPosetioci.Columns[2].Header = Application.Current.FindResource("colPrezime");
+                DataGridPosetioci.Columns[3].Header = Application.Current.FindResource("colAdresa");
+                DataGridPosetioci.Columns[4].Header = Application.Current.FindResource("colStatus");
+            }
+
+            // AUTORI
+            if (DataGridAutori != null && DataGridAutori.Columns.Count > 0)
+            {
+                DataGridAutori.Columns[0].Header = Application.Current.FindResource("colIme");
+                DataGridAutori.Columns[1].Header = Application.Current.FindResource("colPrezime");
+                DataGridAutori.Columns[2].Header = Application.Current.FindResource("colLK");
+                DataGridAutori.Columns[3].Header = Application.Current.FindResource("colDatumRodjenja");
+                DataGridAutori.Columns[4].Header = Application.Current.FindResource("colEmail");
+            }
+
+            // KNJIGE
+            if (DataGridKnjige != null && DataGridKnjige.Columns.Count > 0)
+            {
+                DataGridKnjige.Columns[0].Header = Application.Current.FindResource("colISBN");
+                DataGridKnjige.Columns[1].Header = Application.Current.FindResource("colNaziv");
+                DataGridKnjige.Columns[2].Header = Application.Current.FindResource("colCena");
+                DataGridKnjige.Columns[3].Header = Application.Current.FindResource("colGodina");
+                DataGridKnjige.Columns[4].Header = Application.Current.FindResource("colZanr");
+            }
+        }
+        private void BtnSrpski_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current is App app)
+            {
+                app.ChangeLanguage("sr");
+
+                // DODAJ OVE DVE LINIJE:
+                OsveziNaziveKolona();
+                OsveziPrikaz();
+
+                string poruka = Application.Current.FindResource("msgJezikPromenjen").ToString();
+                MessageBox.Show(poruka);
+            }
+        }
+
+        private void BtnEngleski_Click(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current is App app)
+            {
+                app.ChangeLanguage("en");
+
+                // DODAJ OVE DVE LINIJE:
+                OsveziNaziveKolona();
+                OsveziPrikaz();
+
+                string poruka = Application.Current.FindResource("msgJezikPromenjen").ToString();
+                MessageBox.Show(poruka);
+            }
+        }
+
+
 
         // ================================================================
         // Ostalo
@@ -632,7 +700,7 @@ namespace WpfClient
             this.Height = SystemParameters.PrimaryScreenHeight * 0.75;
         }
 
-        private void DataGridPosetioci_SelectionChanged(object sender, SelectionChangedEventArgs e) { }
+      
 
         private void timer_Tick(object? sender, EventArgs e)
         {
@@ -640,5 +708,7 @@ namespace WpfClient
             lblTime.Text = now.ToString("HH:mm:ss");
             lblDate.Text = now.ToString("dd.MM.yyyy.");
         }
+
+
     }
 }

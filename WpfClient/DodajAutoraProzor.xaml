@@ -1,15 +1,10 @@
 ﻿<Window x:Class="WpfClient.DodajAutoraProzor"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfClient"
-        mc:Ignorable="d"
-        Title="DodajAutoraProzor" Height="450" Width="350"
+        Title="{DynamicResource titleDodajAutora}" Height="450" Width="350"
         WindowStartupLocation="CenterOwner"
         Icon="Resources/bookshelf.ico">
-    
-    
+
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -31,42 +26,42 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Label Content="Ime" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource colIme}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtIme" Grid.Row="0" Grid.Column="1" Margin="5" />
 
-        <Label Content="Prezime" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource colPrezime}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtPrezime" Grid.Row="1" Grid.Column="1" Margin="5" />
 
-        <Label Content="Datum rođenja" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource colDatumRodjenja}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
         <DatePicker x:Name="dpDatum" Grid.Row="2" Grid.Column="1" Margin="5" />
 
-        <Label Content="Telefon" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource colTelefon}" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtTelefon" Grid.Row="3" Grid.Column="1" Margin="5" />
 
-        <Label Content="Email" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource colEmail}" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtEmail" Grid.Row="4" Grid.Column="1" Margin="5" />
 
-        <Label Content="Ulica" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource lblUlica}" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtUlica" Grid.Row="5" Grid.Column="1" Margin="5" />
 
-        <Label Content="Broj" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource lblBroj}" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtBroj" Grid.Row="6" Grid.Column="1" Margin="5" />
 
-        <Label Content="Grad" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource lblGrad}" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtGrad" Grid.Row="7" Grid.Column="1" Margin="5" />
 
-        <Label Content="Država" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource lblDrzava}" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtDrzava" Grid.Row="8" Grid.Column="1" Margin="5" />
 
-        <Label Content="Iskustvo (god)" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource lblIskustvo}" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtIskustvo" Grid.Row="9" Grid.Column="1" Margin="5" />
 
-        <Label Content="Broj LK" Grid.Row="10" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource lblBrojLK}" Grid.Row="10" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtBrojLk" Grid.Row="10" Grid.Column="1" Margin="5" />
 
         <StackPanel Orientation="Horizontal" Grid.Row="11" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,15,0,0">
-            <Button Content="Odustani" Width="80" Margin="5" Click="BtnOdustani_Click" IsCancel="True"/>
-            <Button Content="Potvrdi" Width="80" Margin="5" Background="CornflowerBlue" Click="BtnPotvrdi_Click"/>
+            <Button Content="{DynamicResource btnOdustani}" Width="80" Margin="5" Click="BtnOdustani_Click" IsCancel="True"/>
+            <Button Content="{DynamicResource btnPotvrdi}" Width="80" Margin="5" Background="CornflowerBlue" Click="BtnPotvrdi_Click"/>
         </StackPanel>
     </Grid>
 </Window>

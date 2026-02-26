@@ -35,18 +35,14 @@ namespace WpfClient
 
             if (postojeciIzdavac != null)
             {
-                // 1. Uzimamo sve knjige izdavaca -> iz svake knjige uzimamo LISTU autora -> spajamo u jednu listu
-                // 'SelectMany' ide kroz svaku knjigu i "skuplja" autore u jedan veliki niz
                 var autoriKojiRadeZaIzdavaca = postojeciIzdavac.ListaKnjiga
                     .SelectMany(k => k.ListaAutora)
-                    .GroupBy(a => a.Broj_lk) // Grupišemo po ID-u da izbegnemo duplikate ako autor ima više knjiga
+                    .GroupBy(a => a.Broj_lk)
                     .Select(g => g.First())
                     .ToList();
 
                 cbSefovi.ItemsSource = autoriKojiRadeZaIzdavaca;
 
-                // 2. Sada tražimo šefa unutar te filtrirane liste
-                // 'a' je ovde JEDAN autor, pa 'a.Broj_lk' sada radi!
                 var selektovaniSef = autoriKojiRadeZaIzdavaca
                     .FirstOrDefault(a => a.Broj_lk == postojeciIzdavac.SefIzdavaca?.Broj_lk);
 
@@ -59,15 +55,16 @@ namespace WpfClient
                     ListaKnjiga = postojeciIzdavac.ListaKnjiga
                 };
 
-                this.Title = "Izmena izdavača";
+                // LOKALIZACIJA NASLOVA
+                this.Title = Application.Current.FindResource("titleIzmenaIzdavaca").ToString();
                 txtSifra.IsEnabled = false;
             }
             else
             {
-                // Za novog izdavača nudimo sve autore jer još nema svojih knjiga
                 cbSefovi.ItemsSource = sviAutori;
                 MojDTo = new IzdavacDTO();
-                this.Title = "Dodaj novog izdavača";
+                // LOKALIZACIJA NASLOVA
+                this.Title = Application.Current.FindResource("titleDodajIzdavaca").ToString();
             }
 
             this.DataContext = MojDTo;
@@ -75,16 +72,18 @@ namespace WpfClient
 
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
-            // Validacija preko DTO-a
+            // Validacija preko DTO-a sa lokalizovanim porukama
             if (!string.IsNullOrEmpty(MojDTo["Sifra"]) ||
                 !string.IsNullOrEmpty(MojDTo["Naziv"]) ||
                 !string.IsNullOrEmpty(MojDTo["SefIzdavaca"]))
             {
-               MessageBox.Show("Molimo ispravite greške označene crvenom bojom!", "Validacija");
+                string poruka = Application.Current.FindResource("msgIspraviGreske").ToString();
+                string naslov = Application.Current.FindResource("titleValidacija").ToString();
+
+                MessageBox.Show(poruka, naslov, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // 2. MAPIRANJE: Popunjavamo javno svojstvo klase podacima iz DTO-a
             NoviIzdavac = new Izdavac
             {
                 Sifra = MojDTo.Sifra,

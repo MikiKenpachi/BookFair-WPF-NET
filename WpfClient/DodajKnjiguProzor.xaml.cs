@@ -37,33 +37,19 @@ namespace WpfClient
         public DodajKnjiguProzor(Knjiga knjiga = null)
         {
             InitializeComponent();
-
-            // Učitaj autore i izdavače
-            _sviAutori = _autorDao.GetAll();
-            _sviIzdavaci = _izdavacDao.GetAll();
-
-            // Popuni ComboBox za izdavače
-            cbIzdavac.ItemsSource = _sviIzdavaci;
-
-            // Popuni ComboBox za žanr
-            PopuniZanrove();
-
-            listAutori.ItemsSource = _odabraniAutori;
+            // ... (vaš postojeći kod za učitavanje)
 
             if (knjiga != null)
             {
-                // REŽIM IZMENE
                 NovaKnjiga = knjiga;
                 PopuniPolja();
-                this.Title = "Izmeni knjigu";
+                this.Title = Application.Current.FindResource("titleIzmeniKnjigu").ToString();
             }
             else
             {
-                // REŽIM DODAVANJA
                 NovaKnjiga = null;
-                this.Title = "Dodaj novu knjigu";
+                this.Title = Application.Current.FindResource("titleDodajKnjigu").ToString();
             }
-
             OsveziDugmadAutora();
         }
 
@@ -130,49 +116,42 @@ namespace WpfClient
         // ── Dugme [+] — dodaj autora ─────────────────────────────────────
         private void BtnDodajAutora_Click(object sender, RoutedEventArgs e)
         {
-            // Prikaži samo autore koji NISU već dodati
             var dostupni = _sviAutori
                 .Where(a => !_odabraniAutori.Any(x => x.Broj_lk == a.Broj_lk))
                 .ToList();
 
             if (!dostupni.Any())
             {
-                MessageBox.Show("Svi autori su već dodati knjizi.",
-                    "Informacija", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(Application.Current.FindResource("msgSviAutoriDodati").ToString(),
+                    Application.Current.FindResource("titleInfo").ToString(),
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            var prozor = new OdaberiAutoraProzor(dostupni)
-            {
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner
-            };
+            var prozor = new OdaberiAutoraProzor(dostupni) { Owner = this };
 
             if (prozor.ShowDialog() == true && prozor.OdabraniAutor != null)
             {
                 _odabraniAutori.Add(prozor.OdabraniAutor);
                 OsveziDugmadAutora();
-                OsveziPrikazAutora(); // Update the TextBox
+                OsveziPrikazAutora();
             }
         }
 
         // ── Dugme [-] — ukloni autora ────────────────────────────────────
         private void BtnUkloniAutora_Click(object sender, RoutedEventArgs e)
         {
-            // Prikaži prozor za izbor autora za uklanjanje
-            var prozor = new OdaberiAutoraProzor(_odabraniAutori.ToList())
-            {
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner
-            };
+            var prozor = new OdaberiAutoraProzor(_odabraniAutori.ToList()) { Owner = this };
 
             if (prozor.ShowDialog() == true && prozor.OdabraniAutor != null)
             {
-                var potvrda = MessageBox.Show(
-                    $"Ukloniti autora {prozor.OdabraniAutor.ImePrezime} sa knjige?",
-                    "Uklanjanje autora",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Question);
+                // Sastavljanje poruke: "Ukloniti autora [Ime] sa knjige?"
+                string porukaStart = Application.Current.FindResource("msgUklonitiAutora").ToString();
+                string porukaKraj = Application.Current.FindResource("msgUklonitiAutoraPitanje").ToString();
+                string naslov = Application.Current.FindResource("titleUklanjanjeAutora").ToString();
+
+                var potvrda = MessageBox.Show($"{porukaStart}{prozor.OdabraniAutor.ImePrezime}{porukaKraj}",
+                    naslov, MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (potvrda != MessageBoxResult.Yes) return;
 
@@ -189,20 +168,22 @@ namespace WpfClient
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
             // Validacija obaveznih polja
+            string naslovGreska = Application.Current.FindResource("errorTitle").ToString();
+
             if (string.IsNullOrWhiteSpace(txtISBN.Text) ||
                 string.IsNullOrWhiteSpace(txtNaziv.Text) ||
                 string.IsNullOrWhiteSpace(txtCena.Text) ||
                 string.IsNullOrWhiteSpace(txtGodinaIzdanja.Text))
             {
-                MessageBox.Show("Molimo popunite sva obavezna polja (ISBN, Naziv, Cena, Godina).",
-                    "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(Application.Current.FindResource("msgPopuniteSvaPolja").ToString(),
+                    naslovGreska, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (cbZanr.SelectedItem == null)
             {
-                MessageBox.Show("Molimo odaberite žanr.", "Greška",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(Application.Current.FindResource("msgOdaberiteZanr").ToString(),
+                    naslovGreska, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 

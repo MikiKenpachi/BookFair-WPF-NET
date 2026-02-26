@@ -1,0 +1,122 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="mFile">_Fajl</system:String>
+    <system:String x:Key="mNew">_Novo</system:String>
+    <system:String x:Key="mSave">_Sačuvaj</system:String>
+    <system:String x:Key="mOpen">_Otvori</system:String>
+    <system:String x:Key="mClose">_Zatvori</system:String>
+    <system:String x:Key="mEdit">_Izmeni</system:String>
+    <system:String x:Key="mDelete">_Obriši</system:String>
+    <system:String x:Key="mLanguage">_Jezik</system:String>
+    <system:String x:Key="mHelp">_Pomoć</system:String>
+    <system:String x:Key="mAbout">_O programu</system:String>
+
+    <system:String x:Key="tabPosetioci">Posetioci</system:String>
+    <system:String x:Key="tabAutori">Autori</system:String>
+    <system:String x:Key="tabKnjige">Knjige</system:String>
+    <system:String x:Key="tabIzdavaci">Izdavači</system:String>
+
+    <system:String x:Key="colClanskaKarta">Broj članske karte</system:String>
+    <system:String x:Key="colIme">Ime</system:String>
+    <system:String x:Key="colPrezime">Prezime</system:String>
+    <system:String x:Key="colAdresa">Adresa</system:String>
+    <system:String x:Key="colStatus">Status</system:String>
+    <system:String x:Key="colLK">Br. lične karte</system:String>
+    <system:String x:Key="colDatumRodjenja">Datum rođenja</system:String>
+    <system:String x:Key="colEmail">E-mail</system:String>
+    <system:String x:Key="colISBN">ISBN</system:String>
+    <system:String x:Key="colNaziv">Naziv</system:String>
+    <system:String x:Key="colCena">Cena</system:String>
+    <system:String x:Key="colGodina">Godina izdanja</system:String>
+    <system:String x:Key="colZanr">Žanr</system:String>
+
+    <system:String x:Key="tipDodaj">Dodaj</system:String>
+    <system:String x:Key="tipIzmeni">Izmeni</system:String>
+    <system:String x:Key="tipObrisi">Obriši</system:String>
+    <system:String x:Key="txtStranica">Stranica</system:String>
+    <system:String x:Key="statusNaslov">Sajam knjiga - </system:String>
+
+	<system:String x:Key="lblStranica">Stranica</system:String>
+	<system:String x:Key="msgJezikPromenjen">Jezik je promenjen na Srpski.</system:String>
+	<system:String x:Key="msgSaveSuccess">Sve izmene su uspešno sačuvane!</system:String>
+	<system:String x:Key="msgSaveError">Greška pri čuvanju:</system:String>
+	<system:String x:Key="statusTitle">Status</system:String>
+	<system:String x:Key="errorTitle">Greška</system:String>
+
+	<system:String x:Key="msgSelektujPosetioca">Prvo selektujte posetioca u tabeli!</system:String>
+	<system:String x:Key="msgSelektujAutora">Prvo selektujte autora u tabeli!</system:String>
+	<system:String x:Key="msgSelektujKnjigu">Prvo selektujte knjigu u tabeli!</system:String>
+
+	<system:String x:Key="msgConfirmDeletePosetilac">Da li ste sigurni da želite da obrišete posetioca</system:String>
+	<system:String x:Key="msgConfirmDeleteAutor">Da li ste sigurni da želite da obrišete autora</system:String>
+	<system:String x:Key="msgConfirmDeleteKnjiga">Da li ste sigurni da želite da obrišete knjigu</system:String>
+
+	<system:String x:Key="titleDeletePosetilac">Brisanje posetioca</system:String>
+	<system:String x:Key="titleDeleteAutor">Brisanje autora</system:String>
+	<system:String x:Key="titleDeleteKnjiga">Brisanje knjige</system:String>
+	<system:String x:Key="msgSelectVisitorEdit">Morate prvo selektovati posetioca u tabeli!</system:String>
+	<system:String x:Key="msgSelectAuthorEdit">Morate prvo selektovati autora u tabeli!</system:String>
+	<system:String x:Key="msgSelectBookEdit">Morate prvo selektovati knjigu u tabeli!</system:String>
+	<system:String x:Key="titleNotice">Obaveštenje</system:String>
+	<system:String x:Key="aboutTitle">O aplikaciji</system:String>
+	<system:String x:Key="aboutMessage">Sajam Knjiga v1.0&#x0a;&#x0a;Aplikacija za kupovinu knjiga u okviru Sajma Knjiga.&#x0a;&#x0a;Autori:&#x0a;- - - - - - - - - - - - -&#x0a;[Miloš Trišić] - RA 39/2023&#x0a;[Boris Stepanović] - RA 97/2023</system:String>
+
+	<system:String x:Key="titleAutoriIzdavaca">Autori Izdavača</system:String>
+	<system:String x:Key="lblAutoriIzdavacaNaslov">Autori Izdavača: </system:String>
+	<system:String x:Key="tipPretraziAutore">Pretraži autore</system:String>
+	<system:String x:Key="btnZatvori">Zatvori</system:String>
+	<system:String x:Key="colTelefon">Telefon</system:String>
+
+	<system:String x:Key="titleDodajAutora">Dodaj autora</system:String>
+	<system:String x:Key="lblUlica">Ulica</system:String>
+	<system:String x:Key="lblBroj">Broj</system:String>
+	<system:String x:Key="lblGrad">Grad</system:String>
+	<system:String x:Key="lblDrzava">Država</system:String>
+	<system:String x:Key="lblIskustvo">Iskustvo (god)</system:String>
+	<system:String x:Key="lblBrojLK">Broj LK</system:String>
+	<system:String x:Key="btnOdustani">Odustani</system:String>
+	<system:String x:Key="btnPotvrdi">Potvrdi</system:String>
+
+	<system:String x:Key="titleDodajNovogAutora">Dodaj novog autora</system:String>
+	<system:String x:Key="titleIzmeniAutora">Izmeni autora</system:String>
+	<system:String x:Key="msgUnesiteImePrezime">Molimo unesite ime i prezime.</system:String>
+	<system:String x:Key="msgIspravnoIskustvo">Molimo unesite ispravan broj za godine iskustva.</system:String>
+	<system:String x:Key="titleDetaljiIzdavaca">Detalji Izdavača</system:String>
+	<system:String x:Key="lblSifraIzdavaca">Šifra izdavača:</system:String>
+	<system:String x:Key="lblNazivIzdavaca">Naziv izdavača:</system:String>
+	<system:String x:Key="lblSefAutor">Šef (Autor):</system:String>
+
+	<system:String x:Key="titleIzmenaIzdavaca">Izmena izdavača</system:String>
+	<system:String x:Key="titleDodajIzdavaca">Dodaj novog izdavača</system:String>
+	<system:String x:Key="msgIspraviGreske">Molimo ispravite greške označene crvenom bojom!</system:String>
+	<system:String x:Key="titleValidacija">Validacija</system:String>
+
+	<system:String x:Key="errSifraObavezna">Šifra izdavača je obavezna.</system:String>
+	<system:String x:Key="errNazivPrazan">Naziv ne sme biti prazan.</system:String>
+	<system:String x:Key="errNazivKratak">Naziv mora imati bar 3 karaktera.</system:String>
+	<system:String x:Key="errSefObavezan">Morate dodeliti šefa izdavača.</system:String>
+	<system:String x:Key="errSefIskustvo">Šef mora imati više od 5 godina iskustva (Trenutno: </system:String>
+
+	<system:String x:Key="titleDodajKnjigu">Dodaj novu knjigu</system:String>
+	<system:String x:Key="lblISBN">ISBN *</system:String>
+	<system:String x:Key="lblNazivKnjige">Naziv *</system:String>
+	<system:String x:Key="lblCena">Cena *</system:String>
+	<system:String x:Key="lblGodinaIzdanja">Godina izdanja *</system:String>
+	<system:String x:Key="lblBrojStrana">Broj strana</system:String>
+	<system:String x:Key="lblZanr">Žanr *</system:String>
+	<system:String x:Key="lblIzdavac">Izdavač</system:String>
+	<system:String x:Key="lblAutor">Autor *</system:String>
+	<system:String x:Key="tipDodajAutora">Dodaj autora</system:String>
+	<system:String x:Key="tipUkloniAutora">Ukloni autora</system:String>
+
+	<system:String x:Key="titleIzmeniKnjigu">Izmeni knjigu</system:String>
+	<system:String x:Key="msgSviAutoriDodati">Svi autori su već dodati knjizi.</system:String>
+	<system:String x:Key="msgUklonitiAutora">Ukloniti autora </system:String>
+	<system:String x:Key="msgUklonitiAutoraPitanje"> sa knjige?</system:String>
+	<system:String x:Key="titleUklanjanjeAutora">Uklanjanje autora</system:String>
+	<system:String x:Key="msgPopuniteSvaPolja">Molimo popunite sva obavezna polja (ISBN, Naziv, Cena, Godina).</system:String>
+	<system:String x:Key="msgOdaberiteZanr">Molimo odaberite žanr.</system:String>
+
+</ResourceDictionary>

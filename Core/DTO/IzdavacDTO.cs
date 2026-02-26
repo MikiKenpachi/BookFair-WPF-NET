@@ -32,25 +32,26 @@ namespace Core.DTO
                 {
                     case nameof(Sifra):
                         if (string.IsNullOrWhiteSpace(Sifra))
-                            rezultat = "Šifra izdavaca je obavezna.";
+                            // Pozivamo Translator koji će "pitati" WPF za pravi string
+                            rezultat = Core.Languages.Translator.Prevedi("errSifraObavezna");
                         break;
 
                     case nameof(Naziv):
                         if (string.IsNullOrWhiteSpace(Naziv))
-                            rezultat = "Naziv ne sme biti prazan.";
+                            rezultat = Languages.Translator.Prevedi("errNazivPrazan");
                         else if (Naziv.Length < 3)
-                            rezultat = "Naziv mora imati bar 3 karaktera.";
+                            rezultat = Languages.Translator.Prevedi("errNazivKratak");
                         break;
 
                     case nameof(SefIzdavaca):
                         if (SefIzdavaca == null)
                         {
-                            rezultat = "Morate dodeliti šefa izdavača.";
+                            rezultat = Languages.Translator.Prevedi("errSefObavezan");
                         }
-                        // Ovde proveravamo tvoj uslov za > 5 godina iskustva
                         else if (SefIzdavaca.Godine_iskustva <= 5)
                         {
-                            rezultat = $"Šef mora imati više od 5 godina iskustva (Trenutno: {SefIzdavaca.Godine_iskustva}).";
+                            string poruka = Languages.Translator.Prevedi("errSefIskustvo");
+                            rezultat = $"{poruka}{SefIzdavaca.Godine_iskustva}).";
                         }
                         break;
                 }

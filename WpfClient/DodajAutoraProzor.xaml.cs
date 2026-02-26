@@ -24,15 +24,18 @@ namespace WpfClient
         public DodajAutoraProzor(Autor a = null)
         {
             InitializeComponent();
+
             if (a != null)
             {
                 NoviAutor = a;
                 PopuniPolja();
-                this.Title = "Izmeni autora"; // Promenimo naslov prozora
+                // Dinamički naslov iz resursa za izmenu
+                this.Title = Application.Current.FindResource("titleIzmeniAutora").ToString();
             }
             else
             {
-                this.Title = "Dodaj novog autora";
+                // Dinamički naslov iz resursa za dodavanje
+                this.Title = Application.Current.FindResource("titleDodajNovogAutora").ToString();
             }
         }
         private void PopuniPolja()
@@ -64,22 +67,23 @@ namespace WpfClient
         }
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
+            // Naslov za MessageBox (koristimo onaj "errorTitle" ili "titleNotice" što smo već napravili)
+            string naslovGreska = Application.Current.FindResource("errorTitle").ToString();
+
             if (string.IsNullOrWhiteSpace(txtIme.Text) || string.IsNullOrWhiteSpace(txtPrezime.Text))
             {
-                MessageBox.Show("Molimo unesite ime i prezime.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                string poruka = Application.Current.FindResource("msgUnesiteImePrezime").ToString();
+                MessageBox.Show(poruka, naslovGreska, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // 2. Ako NoviPosetilac ne postoji (dodavanje novog), kreiraj novu instancu
-            // Ako postoji (izmena), samo ćemo mu ažurirati property-je
             if (NoviAutor == null)
             {
                 NoviAutor = new Autor();
-                // Ako tvoja klasa Posetilac ima i instancu klase Adresa unutar sebe:
                 NoviAutor.Adresa = new Adresa();
             }
 
-            // 3. Mapiranje podataka iz UI kontrola u objekat
+            // Mapiranje osnovnih podataka
             NoviAutor.Ime = txtIme.Text;
             NoviAutor.Prezime = txtPrezime.Text;
             NoviAutor.Datum_rodjenja = dpDatum.SelectedDate ?? DateTime.Now;
@@ -87,14 +91,16 @@ namespace WpfClient
             NoviAutor.Email = txtEmail.Text;
             NoviAutor.Broj_lk = txtBrojLk.Text;
 
-            // 2. Parsiranje godina iskustva (iz stringa u int)
+            // Provera i parsiranje iskustva
             if (!int.TryParse(txtIskustvo.Text, out int godineIskustva))
             {
-                MessageBox.Show("Molimo unesite ispravan broj za godine iskustva.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                string porukaIskustvo = Application.Current.FindResource("msgIspravnoIskustvo").ToString();
+                MessageBox.Show(porukaIskustvo, naslovGreska, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
             NoviAutor.Godine_iskustva = godineIskustva;
 
+            // Adresa
             NoviAutor.Adresa.Ulica = txtUlica.Text;
             NoviAutor.Adresa.Broj = txtBroj.Text;
             NoviAutor.Adresa.Grad = txtGrad.Text;

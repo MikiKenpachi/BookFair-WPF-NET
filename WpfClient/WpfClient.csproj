@@ -12,6 +12,11 @@
     <None Remove="Resources\bookshelf.ico" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Page Remove="Resources\Dictionary-en.xaml" />
+    <Page Remove="Resources\Dictionary-sr.xaml" />
+  </ItemGroup>
+
   
 
   <ItemGroup>
@@ -31,6 +36,8 @@
     <None Include="obj\project.nuget.cache" />
     <None Include="obj\WpfClient.csproj.nuget.g.props" />
     <None Include="obj\WpfClient.csproj.nuget.g.targets" />
+    <None Include="Resources\Dictionary-en.xaml" />
+    <None Include="Resources\Dictionary-sr.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +46,12 @@
 
   <ItemGroup>
     <Resource Include="Resources\bookshelf.ico" />
+    <Resource Include="Resources\Dictionary-en.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
+    <Resource Include="Resources\Dictionary-sr.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
   </ItemGroup>
 
 </Project>
