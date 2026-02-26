@@ -32,18 +32,25 @@ namespace WpfClient
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
             // Validacija ocene
+            // Validacija ocene
             if (!int.TryParse(txtOcena.Text, out int ocena) || ocena < 1 || ocena > 5)
             {
-                MessageBox.Show("Ocena mora biti broj između 1 i 5.", "Greška",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                // Povlačimo lokalizovane tekstove iz rečnika
+                string poruka = Application.Current.FindResource("msgNevalidnaOcena").ToString();
+                string naslov = Application.Current.FindResource("titleGreska").ToString();
+
+                MessageBox.Show(poruka, naslov, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             // Validacija datuma
             if (!dpDatumKupovine.SelectedDate.HasValue)
             {
-                MessageBox.Show("Molimo unesite datum kupovine.", "Greška",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                // Dodajemo novi ključ "msgUnesiteDatum" u rečnike
+                string poruka = Application.Current.FindResource("msgUnesiteDatum").ToString();
+                string naslov = Application.Current.FindResource("titleGreska").ToString();
+
+                MessageBox.Show(poruka, naslov, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 

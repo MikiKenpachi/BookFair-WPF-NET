@@ -76,10 +76,13 @@ namespace WpfClient
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtIme.Text) ||
-                string.IsNullOrWhiteSpace(txtPrezime.Text))
+          string.IsNullOrWhiteSpace(txtPrezime.Text) ||
+          string.IsNullOrWhiteSpace(txtEmail.Text))
             {
-                MessageBox.Show("Ime i prezime su obavezni.", "Greška",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                string poruka = Application.Current.FindResource("msgPopuniteSvaPolja").ToString();
+                string naslov = Application.Current.FindResource("errorTitle").ToString();
+
+                MessageBox.Show(poruka, naslov, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -136,12 +139,12 @@ namespace WpfClient
             var dostupne = _sveKnjige
                 .Where(k => !autoroveISBN.Contains(k.ISBN))
                 .ToList();
-
             if (!dostupne.Any())
             {
-                MessageBox.Show(
-                    "Ne postoje knjige koje možete dodati ovom autoru.",
-                    "Informacija", MessageBoxButton.OK, MessageBoxImage.Information);
+                string poruka = Application.Current.FindResource("msgNemaKnjigaZaDodavanje").ToString();
+                string naslov = Application.Current.FindResource("titleInfo").ToString();
+
+                MessageBox.Show(poruka, naslov, MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -184,30 +187,35 @@ namespace WpfClient
             if (dgKnjige.SelectedItem is not Knjiga odabrana)
             {
                 MessageBox.Show(
-                    "Najpre odaberite knjigu iz tabele.",
-                    "Obaveštenje", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Application.Current.FindResource("msgOdaberiKnjiguIzTabele").ToString(),
+                    Application.Current.FindResource("titleObavestenje").ToString(),
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            var potvrda = MessageBox.Show(
-                $"Da li ste sigurni da želite da uklonite knjigu \"{odabrana.Naziv}\" " +
-                $"iz spiska knjiga autora {SelektovaniAutor.ImePrezime}?",
-                "Uklanjanje knjige",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+            // Sastavljanje dinamičke poruke iz delova
+            string start = Application.Current.FindResource("msgPotvrdaUklanjanjaStart").ToString();
+            string sredina = Application.Current.FindResource("msgPotvrdaUklanjanjaSredina").ToString();
+            string kraj = Application.Current.FindResource("msgPotvrdaUklanjanjaKraj").ToString();
+            string naslov = Application.Current.FindResource("titleUklanjanjeKnjige").ToString();
+
+            // Formiranje finalnog teksta: "Da li ste sigurni... " + "Naziv Knjige" + " iz spiska... " + "Ime Autora" + "?"
+            string punaPoruka = $"{start}{odabrana.Naziv}{sredina}{SelektovaniAutor.ImePrezime}{kraj}";
+
+            var potvrda = MessageBox.Show(punaPoruka, naslov, MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (potvrda != MessageBoxResult.Yes) return;
 
-            // 1. Ukloni iz DataGrid-a
+            // 1. Ukloni iz DataGrid-a (ObservableCollection)
             _knjige.Remove(odabrana);
 
             // 2. Ukloni iz memorijskog spiska autora
             SelektovaniAutor.SpisakKnjiga?.Remove(odabrana);
 
-            // 3. Bidirekciona veza — ukloni autora iz ListaAutora knjige
+            // 3. Bidirekciona veza
             odabrana.ListaAutora?.Remove(SelektovaniAutor);
 
-            // 4. Snimi u fajlove
+            // 4. Snimi promene
             _autorDao.Update(SelektovaniAutor);
             _knjigaDao.Save();
         }

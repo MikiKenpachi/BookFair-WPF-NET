@@ -3,37 +3,19 @@ using SajamKnjigaProjekat.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
+using System.Linq; // Ne zaboravi Linq za Any, Sum, Average
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace WpfClient
 {
-    /// <summary>
-    /// Interaction logic for IzmenaPosetioca.xaml
-    /// </summary>
     public partial class IzmenaPosetioca : Window
     {
-        // ── Selektovani posetilac ────────────────────────────────────────
         public Posetilac SelektovaniPosetilac { get; private set; }
-
-        // ── DAO sloj ────────────────────────────────────────────────────
-        private readonly KupiliDAO _kupiliDao = new KupiliDAO(); 
-
-        // ── Liste za DataGrid-ove ───────────────────────────────────────
+        private readonly KupiliDAO _kupiliDao;
         private ObservableCollection<Kupovina> _kupljene;
         private ObservableCollection<Knjiga> _zelje;
-
-        // ── Sve knjige u sistemu (za dijalog dodavanja zelje) ───────────
         private readonly List<Knjiga> _sveKnjige;
 
-        // ─────────────────────────────────────────────────────────────────
         public IzmenaPosetioca(Posetilac posetilac, List<Knjiga> sveKnjige, KupiliDAO kupiliDao)
         {
             InitializeComponent();
@@ -46,9 +28,8 @@ namespace WpfClient
             UcitajZelje();
         }
 
-        // ─────────────────────────────────────────────────────────────────
-        // Tab 1 – Informacije
-        // ─────────────────────────────────────────────────────────────────
+        // --- POMOĆNA METODA ZA RAD SA RESURSIMA ---
+        private string GetResource(string key) => Application.Current.FindResource(key)?.ToString() ?? key;
 
         private void PopuniPolja()
         {
@@ -72,22 +53,20 @@ namespace WpfClient
 
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtIme.Text) ||
-                string.IsNullOrWhiteSpace(txtPrezime.Text))
+            if (string.IsNullOrWhiteSpace(txtIme.Text) || string.IsNullOrWhiteSpace(txtPrezime.Text))
             {
-                MessageBox.Show("Ime i prezime su obavezni.", "Greška",
+                // Lokalizovana poruka o grešci
+                MessageBox.Show(GetResource("msgObaveznaPolja"), GetResource("titleGreska"),
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             SelektovaniPosetilac.Ime = txtIme.Text.Trim();
             SelektovaniPosetilac.Prezime = txtPrezime.Text.Trim();
-            SelektovaniPosetilac.DatumRodjenja =
-                dpDatumRodjenja.SelectedDate ?? SelektovaniPosetilac.DatumRodjenja;
+            SelektovaniPosetilac.DatumRodjenja = dpDatumRodjenja.SelectedDate ?? SelektovaniPosetilac.DatumRodjenja;
             SelektovaniPosetilac.Telefon = txtTelefon.Text.Trim();
             SelektovaniPosetilac.Email = txtEmail.Text.Trim();
-            SelektovaniPosetilac.Status =
-                cmbStatus.SelectedIndex == 0 ? StatusPosetioca.R : StatusPosetioca.V;
+            SelektovaniPosetilac.Status = cmbStatus.SelectedIndex == 0 ? StatusPosetioca.R : StatusPosetioca.V;
 
             if (SelektovaniPosetilac.Adresa != null)
             {
@@ -107,16 +86,11 @@ namespace WpfClient
             this.Close();
         }
 
-        // ─────────────────────────────────────────────────────────────────
-        // Tab 2 – Kupljene
-        // ─────────────────────────────────────────────────────────────────
+        // --- TAB: KUPLJENE ---
 
         private void UcitajKupljene()
         {
-            // Ucitavamo sve kupovine za ovog posetioca iz DAO
             var lista = _kupiliDao.GetByPosetilac(SelektovaniPosetilac.BrClanskeKarte);
-
-            // Povezujemo Knjiga objekte sa stvarnim objektima iz _sveKnjige
             foreach (var k in lista)
             {
                 if (k.Knjiga != null)
@@ -125,34 +99,32 @@ namespace WpfClient
                     if (prava != null) k.Knjiga = prava;
                 }
             }
-
             _kupljene = new ObservableCollection<Kupovina>(lista);
             dgKupljene.ItemsSource = _kupljene;
-
             OsveziStatistiku();
         }
 
         private void OsveziStatistiku()
         {
+            string labelaProsek = GetResource("statProsek"); // "Prosečna ocena: "
+            string labelaPotroseno = GetResource("statPotroseno"); // "Potrošeno: "
+
             if (!_kupljene.Any())
             {
-                lblProsecnaOcena.Text = "Prosečna ocena: —";
-                lblUkupnoPotroseno.Text = "Potrošeno: — RSD";
+                lblProsecnaOcena.Text = $"{labelaProsek} —";
+                lblUkupnoPotroseno.Text = $"{labelaPotroseno} — RSD";
                 return;
             }
 
             double prosek = _kupljene.Average(k => k.Ocena);
-            double ukupno = _kupljene.Sum(k =>
-            {
-                if (k.Knjiga != null && double.TryParse(k.Knjiga.Cena, out double c))
-                    return c;
+            double ukupno = _kupljene.Sum(k => {
+                if (k.Knjiga != null && double.TryParse(k.Knjiga.Cena, out double c)) return c;
                 return 0;
             });
 
-            lblProsecnaOcena.Text = $"Prosečna ocena: {prosek:F1}";
-            lblUkupnoPotroseno.Text = $"Potrošeno: {ukupno} RSD";
+            lblProsecnaOcena.Text = $"{labelaProsek} {prosek:F1}";
+            lblUkupnoPotroseno.Text = $"{labelaPotroseno} {ukupno} RSD";
 
-            // Azuriramo prosecnu ocenu i na samom posetiocu
             SelektovaniPosetilac.ProsecnaOcena = prosek;
         }
 
@@ -160,33 +132,21 @@ namespace WpfClient
         {
             if (dgKupljene.SelectedItem is not Kupovina odabrana)
             {
-                MessageBox.Show("Najpre odaberite kupovinu iz tabele.", "Obaveštenje",
+                MessageBox.Show(GetResource("msgOdaberiStavku"), GetResource("titleObavestenje"),
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            var potvrda = MessageBox.Show(
-                "Da li ste sigurni da želite da poništite kupovinu?",
-                "Poništavanje kupovine",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+            var potvrda = MessageBox.Show(GetResource("msgPotvrdaPonistiKupovinu"), GetResource("titlePonistavanje"),
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (potvrda != MessageBoxResult.Yes) return;
 
-            // 1. Ukloni iz DAO (fajl)
-            _kupiliDao.Remove(
-                SelektovaniPosetilac.BrClanskeKarte,
-                odabrana.Knjiga.ISBN);
-
-            // 2. Ukloni iz liste posetioca u memoriji
+            _kupiliDao.Remove(SelektovaniPosetilac.BrClanskeKarte, odabrana.Knjiga.ISBN);
             SelektovaniPosetilac.ListaKupovina.Remove(odabrana.Knjiga);
-
-            // 3. Ukloni iz DataGrid-a
             _kupljene.Remove(odabrana);
 
-            // 4. Prebaci na listu zelja (ako vec nije tamo)
-            if (odabrana.Knjiga != null &&
-                !SelektovaniPosetilac.ListaZelja.Any(k => k.ISBN == odabrana.Knjiga.ISBN))
+            if (odabrana.Knjiga != null && !SelektovaniPosetilac.ListaZelja.Any(k => k.ISBN == odabrana.Knjiga.ISBN))
             {
                 SelektovaniPosetilac.DodajNaListuZelja(odabrana.Knjiga);
                 _zelje.Add(odabrana.Knjiga);
@@ -195,18 +155,14 @@ namespace WpfClient
             OsveziStatistiku();
         }
 
-        // ─────────────────────────────────────────────────────────────────
-        // Tab 3 – Zelje
-        // ─────────────────────────────────────────────────────────────────
+        // --- TAB: ŽELJE ---
 
         private void UcitajZelje()
         {
-            _zelje = new ObservableCollection<Knjiga>(
-                SelektovaniPosetilac.ListaZelja);
+            _zelje = new ObservableCollection<Knjiga>(SelektovaniPosetilac.ListaZelja);
             dgZelje.ItemsSource = _zelje;
         }
 
-        // Dugme "Dodaj" — otvori dijalog za izbor knjige
         private void BtnDodajNaListuZelja_Click(object sender, RoutedEventArgs e)
         {
             var prozor = new DodajNaListuZeljaProzor(SelektovaniPosetilac, _sveKnjige)
@@ -223,21 +179,17 @@ namespace WpfClient
             }
         }
 
-        // Dugme "Obriši" — ukloni sa liste zelja
         private void BtnUkloniSaListeZelja_Click(object sender, RoutedEventArgs e)
         {
             if (dgZelje.SelectedItem is not Knjiga odabrana)
             {
-                MessageBox.Show("Najpre odaberite knjigu iz tabele.", "Obaveštenje",
+                MessageBox.Show(GetResource("msgOdaberiKnjigu"), GetResource("titleObavestenje"),
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            var potvrda = MessageBox.Show(
-                "Da li ste sigurni da želite da uklonite knjigu sa liste želja?",
-                "Uklanjanje knjige",
-                MessageBoxButton.YesNo,
-                MessageBoxImage.Question);
+            var potvrda = MessageBox.Show(GetResource("msgPotvrdaUkloniZelju"), GetResource("titleUklanjanje"),
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (potvrda != MessageBoxResult.Yes) return;
 
@@ -245,12 +197,11 @@ namespace WpfClient
             _zelje.Remove(odabrana);
         }
 
-        // Dugme "Kupovina" — upiši kupovinu i premesti iz zelja u kupljene
         private void BtnUpisKupovine_Click(object sender, RoutedEventArgs e)
         {
             if (dgZelje.SelectedItem is not Knjiga odabrana)
             {
-                MessageBox.Show("Najpre odaberite knjigu iz tabele.", "Obaveštenje",
+                MessageBox.Show(GetResource("msgOdaberiKnjigu"), GetResource("titleObavestenje"),
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
@@ -264,17 +215,9 @@ namespace WpfClient
             if (prozor.ShowDialog() == true && prozor.NovaKupovina != null)
             {
                 var kupovina = prozor.NovaKupovina;
-
-                // 1. Sacuvaj u DAO (fajl)
                 _kupiliDao.Add(kupovina);
-
-                // 2. Dodaj u listu kupovina posetioca (u memoriji)
                 SelektovaniPosetilac.DodajKupovinu(odabrana);
-
-                // 3. Dodaj u DataGrid kupljenih
                 _kupljene.Add(kupovina);
-
-                // 4. Ukloni sa liste zelja
                 SelektovaniPosetilac.ListaZelja.Remove(odabrana);
                 _zelje.Remove(odabrana);
 

@@ -23,8 +23,22 @@ namespace WpfClient
 
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
+            // 1. Pokušaj kasta
             OdabraniAutor = listAutori.SelectedItem as Autor;
-            this.DialogResult = OdabraniAutor != null;
+
+            // 2. Provera selekcije
+            if (OdabraniAutor == null)
+            {
+                // Izvlačenje lokalizovanih tekstova
+                string poruka = Application.Current.FindResource("msgOdaberiAutora").ToString();
+                string naslov = Application.Current.FindResource("titleObavestenje").ToString();
+
+                MessageBox.Show(poruka, naslov, MessageBoxButton.OK, MessageBoxImage.Warning);
+                return; // Prekidamo metodu, prozor ostaje otvoren
+            }
+
+            // 3. Ako je sve OK
+            this.DialogResult = true;
             this.Close();
         }
 

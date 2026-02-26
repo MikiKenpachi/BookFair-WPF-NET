@@ -1,24 +1,32 @@
 ﻿<Window x:Class="WpfClient.OdaberiAutoraProzor"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Odaberi autora"
+        Title="{DynamicResource titleOdaberiAutora}"
         Height="250" Width="350"
         WindowStartupLocation="CenterOwner"
         Icon="/Resources/bookshelf.ico">
-    
-    
+
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+
         <ListBox x:Name="listAutori"
                  DisplayMemberPath="ImePrezime"
                  Grid.Row="0"
-                 Height="120"/>
+                 Height="120"
+                 Margin="0,0,0,10"/>
+
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Odustani" Width="80" Margin="0,0,8,0" Click="BtnOdustani_Click"/>
-            <Button Content="Potvrdi" Width="80" Click="BtnPotvrdi_Click"/>
+            <Button Content="{DynamicResource btnOdustani}" 
+                    Width="80" Margin="0,0,8,0" 
+                    Click="BtnOdustani_Click"/>
+
+            <Button Content="{DynamicResource btnPotvrdi}" 
+                    Width="80" 
+                    Click="BtnPotvrdi_Click"
+                    IsDefault="True"/>
         </StackPanel>
     </Grid>
 </Window>

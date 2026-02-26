@@ -1,7 +1,7 @@
 ﻿<Window x:Class="WpfClient.OdaberiKnjiguProzor"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Dodaj knjigu"
+        Title="{DynamicResource titleDodajKnjigu}"
         Height="400" Width="500"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
-                   Text="Odaberite knjigu koju želite da dodate autoru:"
+                   Text="{DynamicResource lblUputstvoDodajKnjigu}"
                    FontWeight="SemiBold"
                    Margin="0,0,0,8"/>
 
@@ -39,11 +39,11 @@
         <StackPanel Grid.Row="2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right">
-            <Button Content="Odustani"
+            <Button Content="{DynamicResource btnOdustani}"
                     Width="90" Height="30"
                     Margin="0,0,8,0"
                     Click="BtnOdustani_Click"/>
-            <Button Content="Potvrdi"
+            <Button Content="{DynamicResource btnPotvrdi}"
                     Width="90" Height="30"
                     IsDefault="True"
                     Click="BtnPotvrdi_Click"/>

@@ -1,11 +1,10 @@
 ﻿<Window x:Class="WpfClient.IzdavaciProzor"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Upravljanje Izdavačima" Height="450" Width="600"
+        Title="{DynamicResource titleUpravljanjeIzdavacima}" Height="450" Width="600"
         WindowStartupLocation="CenterOwner" FontFamily="Kristen ITC"
         Icon="Resources/bookshelf.ico">
-    
-    
+
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,41 +12,44 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Registrovani Izdavači" FontSize="20" FontWeight="Bold" 
+        <TextBlock Text="{DynamicResource lblRegistrovaniIzdavaci}" FontSize="20" FontWeight="Bold" 
                    HorizontalAlignment="Center" Margin="0,0,0,15"/>
 
         <DataGrid x:Name="DataGridIzdavaci" Grid.Row="1" AutoGenerateColumns="False" 
                   CanUserAddRows="False" IsReadOnly="True" SelectionMode="Single"
                   AlternatingRowBackground="#F0F0F0" BorderBrush="#DDDDDD">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Šifra" Binding="{Binding Sifra}" Width="80"/>
-                <DataGridTextColumn Header="Naziv Izdavača" Binding="{Binding Naziv}" Width="2*"/>
-                <DataGridTextColumn Header="Šef (ID)" Binding="{Binding SefIzdavaca.Broj_lk}" Width="*"/>
+                <DataGridTextColumn Header="{DynamicResource colSifra}" Binding="{Binding Sifra}" Width="80"/>
+                <DataGridTextColumn Header="{DynamicResource colNazivIzdavaca}" Binding="{Binding Naziv}" Width="2*"/>
+                <DataGridTextColumn Header="{DynamicResource colSefID}" Binding="{Binding SefIzdavaca.Broj_lk}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
 
         <DockPanel Grid.Row="2" Margin="0,15,0,0">
             <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
-                <Button Width="35" Height="35" Margin="0,0,5,0" ToolTip="Dodaj novog" Click="BtnDodaj_Click">
+                <Button Width="35" Height="35" Margin="0,0,5,0" 
+                        ToolTip="{DynamicResource tipDodajNovog}" Click="BtnDodaj_Click">
                     <TextBlock Text="➕" FontSize="16"/>
                 </Button>
-                <Button Width="35" Height="35" Margin="5,0" ToolTip="Izmeni selektovanog" Click="BtnIzmeni_Click">
+                <Button Width="35" Height="35" Margin="5,0" 
+                        ToolTip="{DynamicResource tipIzmeniSelektovanog}" Click="BtnIzmeni_Click">
                     <TextBlock Text="✎" FontSize="16"/>
                 </Button>
-                <Button Width="35" Height="35" Margin="5,0" ToolTip="Obriši selektovanog" Click="BtnObrisi_Click">
+                <Button Width="35" Height="35" Margin="5,0" 
+                        ToolTip="{DynamicResource tipObrisiSelektovanog}" Click="BtnObrisi_Click">
                     <TextBlock Text="🗑" FontSize="16"/>
                 </Button>
                 <Button x:Name="btnPrikaziAutore" 
-Content="Prikaži autore" 
-Width="120" Height="30" 
-Margin="5" 
-Click="BtnPrikaziAutore_Click" 
-Background="#FFD1E1FB" 
-FontWeight="Bold"/>
+                        Content="{DynamicResource btnPrikaziAutore}" 
+                        Width="120" Height="30" 
+                        Margin="5" 
+                        Click="BtnPrikaziAutore_Click" 
+                        Background="#FFD1E1FB" 
+                        FontWeight="Bold"/>
             </StackPanel>
 
-            <Button Content="Zatvori" Width="80" Height="35" HorizontalAlignment="Right" 
-                    IsCancel="True" Click="BtnZatvori_Click"/>
+            <Button Content="{DynamicResource btnZatvori}" Width="80" Height="35" 
+                    HorizontalAlignment="Right" IsCancel="True" Click="BtnZatvori_Click"/>
         </DockPanel>
     </Grid>
 </Window>

@@ -36,9 +36,11 @@ namespace WpfClient
             }
             else
             {
-                MessageBox.Show(
-                    "Molimo odaberite knjigu iz liste.",
-                    "Obaveštenje", MessageBoxButton.OK, MessageBoxImage.Information);
+                // Izvlačimo prevode iz Dictionary-ja
+                string poruka = Application.Current.FindResource("msgOdaberiKnjiguUpozorenje").ToString();
+                string naslov = Application.Current.FindResource("titleObavestenje").ToString();
+
+                MessageBox.Show(poruka, naslov, MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 

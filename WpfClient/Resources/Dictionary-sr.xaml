@@ -119,4 +119,94 @@
 	<system:String x:Key="msgPopuniteSvaPolja">Molimo popunite sva obavezna polja (ISBN, Naziv, Cena, Godina).</system:String>
 	<system:String x:Key="msgOdaberiteZanr">Molimo odaberite žanr.</system:String>
 
+	<system:String x:Key="titleDodajNaListuZelja">Dodavanje na listu želja</system:String>
+	<system:String x:Key="btnDodajNaListu">Dodaj</system:String>
+	<system:String x:Key="msgOdaberiKnjigu">Molimo odaberite knjigu sa liste.</system:String>
+
+	<system:String x:Key="titleObavestenje">Obaveštenje</system:String>
+
+	<system:String x:Key="titleDodajPosetioca">Dodaj Posetioca</system:String>
+	<system:String x:Key="lblIme">Ime</system:String>
+	<system:String x:Key="lblPrezime">Prezime</system:String>
+	<system:String x:Key="lblDatumRodjenja">Datum rođenja</system:String>
+	<system:String x:Key="lblTelefon">Kontakt telefon</system:String>
+	<system:String x:Key="lblEmail">Email</system:String>
+	<system:String x:Key="lblStatus">Status</system:String>
+	<system:String x:Key="statusRedovan">Redovan</system:String>
+	<system:String x:Key="statusVIP">V.I.P.</system:String>
+
+	<system:String x:Key="titleIzmeniPosetioca">Izmeni posetioca</system:String>
+	
+	<system:String x:Key="titleUpravljanjeIzdavacima">Upravljanje Izdavačima</system:String>
+	<system:String x:Key="lblRegistrovaniIzdavaci">Registrovani Izdavači</system:String>
+	<system:String x:Key="colSifra">Šifra</system:String>
+	<system:String x:Key="colNazivIzdavaca">Naziv Izdavača</system:String>
+	<system:String x:Key="colSefID">Šef (ID)</system:String>
+	<system:String x:Key="tipDodajNovog">Dodaj novog</system:String>
+	<system:String x:Key="tipIzmeniSelektovanog">Izmeni selektovanog</system:String>
+	<system:String x:Key="tipObrisiSelektovanog">Obriši selektovanog</system:String>
+	<system:String x:Key="btnPrikaziAutore">Prikaži autore</system:String>
+
+	<system:String x:Key="msgPotvrdaBrisanjaIzdavaca">Da li ste sigurni da želite da obrišete izabranog izdavača?</system:String>
+	<system:String x:Key="titlePotvrda">Potvrda</system:String>
+	<system:String x:Key="msgNisteSelektovaliIzdavaca">Molimo selektujte izdavača iz tabele.</system:String>
+
+	<system:String x:Key="titleIzmenaAutora">Izmena autora</system:String>
+	<system:String x:Key="tabInformacije">Informacije</system:String>
+	
+	<system:String x:Key="btnDodajKnjiguAutoru">Dodaj knjigu</system:String>
+	<system:String x:Key="btnUkloniKnjiguAutoru">Ukloni knjigu</system:String>
+	<system:String x:Key="tipDodajKnjiguAutoru">Dodaj novu knjigu autoru</system:String>
+	<system:String x:Key="tipUkloniKnjiguAutoru">Ukloni selektovanu knjigu iz spiska</system:String>
+	<system:String x:Key="colGodinaIzdanja">Godina izdanja</system:String>
+
+	<system:String x:Key="msgNemaKnjigaZaDodavanje">Ne postoje knjige koje možete dodati ovom autoru.</system:String>
+	<system:String x:Key="msgPotvrdaUklanjanjaKnjige">Da li ste sigurni da želite da uklonite selektovanu knjigu sa spiska ovog autora?</system:String>
+
+	<system:String x:Key="msgOdaberiKnjiguIzTabele">Najpre odaberite knjigu iz tabele.</system:String>
+	<system:String x:Key="msgPotvrdaUklanjanjaStart">Da li ste sigurni da želite da uklonite knjigu "</system:String>
+	<system:String x:Key="msgPotvrdaUklanjanjaSredina">" iz spiska knjiga autora </system:String>
+	<system:String x:Key="msgPotvrdaUklanjanjaKraj">?</system:String>
+	<system:String x:Key="titleUklanjanjeKnjige">Uklanjanje knjige</system:String>
+
+	<system:String x:Key="tabKupljene">Kupljene knjige</system:String>
+	<system:String x:Key="tabZelje">Lista želja</system:String>
+	<system:String x:Key="lblBrClanske">Broj članske karte *</system:String>
+	<system:String x:Key="btnPonistiKupovinu">Poništi kupovinu</system:String>
+	<system:String x:Key="btnKupovina">Kupovina</system:String>
+	<system:String x:Key="colDatum">Datum</system:String>
+	<system:String x:Key="colOcena">Ocena</system:String>
+	<system:String x:Key="statProsek">Prosečna ocena: </system:String>
+	<system:String x:Key="statPotroseno">Potrošeno: </system:String>
+	<system:String x:Key="btnDodaj">Dodaj </system:String>
+	<system:String x:Key="btnObrisi">Obrisi </system:String>
+
+	<system:String x:Key="titleGreska">Greška</system:String>
+
+	<system:String x:Key="titlePonistavanje">Poništavanje kupovine</system:String>
+	<system:String x:Key="titleUklanjanje">Uklanjanje sa liste</system:String>
+
+	<system:String x:Key="msgObaveznaPolja">Ime i prezime su obavezni.</system:String>
+	<system:String x:Key="msgOdaberiStavku">Najpre odaberite stavku iz tabele.</system:String>
+
+	<system:String x:Key="msgPotvrdaPonistiKupovinu">Da li ste sigurni da želite da poništite kupovinu?</system:String>
+	<system:String x:Key="msgPotvrdaUkloniZelju">Da li ste sigurni da želite da uklonite knjigu sa liste želja?</system:String>
+	<system:String x:Key="titleOdaberiAutora">Odaberite Autora:</system:String>
+
+	<system:String x:Key="lblUputstvoDodajKnjigu">Odaberite knjigu koju želite da dodate autoru:</system:String>
+	<system:String x:Key="msgOdaberiKnjiguUpozorenje">Molimo izaberite knjigu iz liste.</system:String>
+
+	<system:String x:Key="titleUpisKupovine">Kupovina knjige</system:String>
+	<system:String x:Key="lblOcena">Ocena (1–5) *</system:String>
+	<system:String x:Key="lblDatumKupovine">Datum kupovine *</system:String>
+	<system:String x:Key="lblKomentar">Komentar</system:String>
+	<system:String x:Key="msgNevalidnaOcena">Ocena mora biti broj između 1 i 5.</system:String>
+	<system:String x:Key="msgUnesiteDatum">Molimo unesite datum kupovine.</system:String>
+
+	<system:String x:Key="titleGlavniProzor">Sajam knjiga</system:String>
+
+
+	
+
+
 </ResourceDictionary>

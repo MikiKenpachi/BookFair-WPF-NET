@@ -4,7 +4,7 @@
         xmlns:av="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         mc:Ignorable="av" x:Class="WpfClient.MainWindow"
-        Title="Sajam knjiga"
+        Title="{DynamicResource titleGlavniProzor}"
         WindowStartupLocation="CenterScreen"
         SizeToContent="Manual"
         Loaded="Window_Loaded" av:DesignHeight="378.3" av:DesignWidth="574.75" 

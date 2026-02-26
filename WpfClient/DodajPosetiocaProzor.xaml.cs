@@ -20,7 +20,7 @@ namespace WpfClient
     public partial class DodajPosetiocaProzor : Window
     {
         public Posetilac? NoviPosetilac { get; private set; }
-        public DodajPosetiocaProzor(Posetilac p = null) // Konstruktor prima opcionog posetioca
+        public DodajPosetiocaProzor(Posetilac p = null)
         {
             InitializeComponent();
 
@@ -28,11 +28,13 @@ namespace WpfClient
             {
                 NoviPosetilac = p;
                 PopuniPolja();
-                this.Title = "Izmeni posetioca"; // Promenimo naslov prozora
+                // Lokalizovan naslov za izmenu
+                this.Title = Application.Current.FindResource("titleIzmeniPosetioca").ToString();
             }
             else
             {
-                this.Title = "Dodaj novog posetioca";
+                // Lokalizovan naslov za dodavanje
+                this.Title = Application.Current.FindResource("titleDodajPosetioca").ToString();
             }
         }
 
@@ -62,7 +64,10 @@ namespace WpfClient
         {
             if (string.IsNullOrWhiteSpace(txtIme.Text) || string.IsNullOrWhiteSpace(txtPrezime.Text))
             {
-                MessageBox.Show("Molimo unesite ime i prezime.", "Greška", MessageBoxButton.OK, MessageBoxImage.Warning);
+                string poruka = Application.Current.FindResource("msgUnesiteImePrezime").ToString();
+                string naslov = Application.Current.FindResource("errorTitle").ToString();
+
+                MessageBox.Show(poruka, naslov, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 

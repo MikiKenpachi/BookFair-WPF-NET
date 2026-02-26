@@ -90,13 +90,26 @@ namespace WpfClient
         private void BtnObrisi_Click(object sender, RoutedEventArgs e)
         {
             Izdavac selektovan = (Izdavac)DataGridIzdavaci.SelectedItem;
+
             if (selektovan != null)
             {
-                if (MessageBox.Show($"Obrisati?", "Potvrda", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                // Izvlačimo lokalizovane tekstove
+                string poruka = Application.Current.FindResource("msgPotvrdaBrisanjaIzdavaca").ToString();
+                string naslov = Application.Current.FindResource("titlePotvrda").ToString();
+
+                if (MessageBox.Show(poruka, naslov, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    // SAMO uklanjamo iz liste
+                    // Uklanjamo iz liste
                     ListaIzdavaca.Remove(selektovan);
                 }
+            }
+            else
+            {
+                // Opciono: poruka ako ništa nije selektovano
+                string porukaGreska = Application.Current.FindResource("msgNisteSelektovaliIzdavaca").ToString();
+                string naslovObavestenje = Application.Current.FindResource("titleObavestenje").ToString();
+
+                MessageBox.Show(porukaGreska, naslovObavestenje, MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
