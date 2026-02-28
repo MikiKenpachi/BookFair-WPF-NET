@@ -31,4 +31,4 @@ CK-20|Bulevar Oslobodjenja|Budimpesta|103|Madjarska
 27041943|Crvene armije|Moskva|76|Rusija
 05111973|Kosovska|Sankt Peterzburg|2|Rusija
 03112001|Primorska|Madrid|76|Spanija
-1234567899876|d|dd|24|sasd
+12121984|Jevrejska|Podgorica|44|Crna Gora

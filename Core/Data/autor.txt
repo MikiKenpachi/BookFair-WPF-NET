@@ -11,4 +11,4 @@ Dobrica|Cosic|1994-03-09|0668932567|cosic@uns.ac.rs|3|03091994
 Fjodor|Dostojevski|1943-04-27|0638475698|fdostojevsky@uns.ac.rs|44|27041943
 Lav|Tolstoj|1973-11-05|06698889631|tolstoj@uns.ac.rs|17|05111973
 Gabriel|Garcia Marquez|2001-11-03|0697441254|gabriel.rs|9|03112001
-koasd|sfsfsf|2026-02-05|24|d|2|1234567899876
+Zoran|Jelicic|1984-12-12|0669987124|jelicic@uns.ac.rs|4|12121984

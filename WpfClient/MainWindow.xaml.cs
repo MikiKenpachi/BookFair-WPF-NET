@@ -43,6 +43,7 @@ namespace WpfClient
         private readonly IzdavacDAO izdavacDao = new IzdavacDAO();
         private readonly PosetilacDAO posetilacDao = new PosetilacDAO();
         private readonly KupiliDAO kupiliDao = new KupiliDAO();
+        private readonly ZeljaDAO zeljaDao = new ZeljaDAO();
 
         // ── Master liste — sadrže SVE entitete (osnova za paginaciju) ───
         // VAŽNO: ovo su ISTE instance koje DataBinding poveže međusobno.
@@ -52,6 +53,7 @@ namespace WpfClient
         private List<Knjiga> sveKnjigeList;
         private List<Izdavac> sviIzdavaciList;
         private List<Kupovina> sveKupovineList;
+        private List<Zelja> sveZeljeList;
 
         // ── Paginacija ──────────────────────────────────────────────────
         private int trenutnaStranica = 1;
@@ -72,6 +74,7 @@ namespace WpfClient
             sveKnjigeList = knjigaDao.GetAll();
             sviIzdavaciList = izdavacDao.GetAll();             
             sveKupovineList = kupiliDao.GetAll();
+            sveZeljeList = zeljaDao.GetAll();
 
             // ----------------------------------------------------------
             // KORAK 2: Poveži adrese (poseban fajl, ID je ključ veze)
@@ -90,7 +93,8 @@ namespace WpfClient
                 sveKnjigeList,
                 sviAutoriList,
                 sviIzdavaciList,
-                sveKupovineList);
+                sveKupovineList,
+                sveZeljeList);
 
             // ----------------------------------------------------------
             // KORAK 4: Napravi ObservableCollection-e i ICollectionView-e
@@ -198,6 +202,7 @@ namespace WpfClient
                 posetilacDao.SaveAll(sviPosetiociList);
                 autorDao.SaveAll(sviAutoriList);
                 knjigaDao.SaveAll(sveKnjigeList);
+                zeljaDao.Save();
 
                 // Izdavači
                 izdavacDao.SaveAll(Izdavaci.ToList());
@@ -334,6 +339,7 @@ namespace WpfClient
                 {
                     sviPosetiociList.Remove(selektovan);
                     posetilacDao.Remove(selektovan);
+                    zeljaDao.RemoveByPosetilac(selektovan.BrClanskeKarte);
                     if (selektovan.Adresa != null)
                         adresaDao.Remove(selektovan.BrClanskeKarte);
                     OsveziPrikaz();
@@ -402,7 +408,7 @@ namespace WpfClient
                     return;
                 }
 
-                var prozor = new IzmenaPosetioca(selektovan, sveKnjigeList, kupiliDao);
+                var prozor = new IzmenaPosetioca(selektovan, sveKnjigeList, kupiliDao, zeljaDao);
                 prozor.Owner = this;
 
                 if (prozor.ShowDialog() == true)
@@ -460,6 +466,68 @@ namespace WpfClient
                 DataGridKnjige.SelectedItem = null;
             }
         }
+
+
+        private void BtnPosetiociAutora_Click(object sender, RoutedEventArgs e)
+        {
+            // Funkcionalnost dostupna samo na tabu Autori
+            if (MainTabControl.SelectedIndex != 1)
+            {
+                MessageBox.Show(
+                    Application.Current.FindResource("msgSelektujAutora").ToString(),
+                    Application.Current.FindResource("titleNotice").ToString());
+                return;
+            }
+
+            var selektovani = DataGridAutori.SelectedItem as Autor;
+            if (selektovani == null)
+            {
+                MessageBox.Show(
+                    Application.Current.FindResource("msgSelektujAutora").ToString(),
+                    Application.Current.FindResource("titleNotice").ToString());
+                return;
+            }
+
+            // Filtriramo: posetioci koji na listi zelja imaju barem jednu
+            // knjigu izabranog autora (bez duplikata — lista je Vec<Posetilac>)
+            var posetioci = sviPosetiociList
+                .Where(p => p.ListaZelja
+                    .Any(k => k.ListaAutora
+                        .Any(a => a.Broj_lk == selektovani.Broj_lk)))
+                .ToList();
+
+            var prozor = new Posetiociautoraprozor(posetioci, selektovani.ImePrezime);
+            prozor.Owner = this;
+            prozor.ShowDialog();
+        }
+
+
+        private void BtnAutoriPosetioca_Click(object sender, RoutedEventArgs e)
+        {
+            var selektovani = DataGridPosetioci.SelectedItem as Posetilac;
+            if (selektovani == null)
+            {
+                MessageBox.Show(
+                    Application.Current.FindResource("msgSelektujPosetioca").ToString(),
+                    Application.Current.FindResource("titleNotice").ToString());
+                return;
+            }
+
+            // Svi autori čije knjige se nalaze na listi želja posjetioca
+            // .SelectMany() razvija sve knjige sa liste želja u jedan niz autora
+            // .GroupBy() + .Select(g => g.First()) eliminiše duplikate
+            var autori = selektovani.ListaZelja
+                .SelectMany(k => k.ListaAutora)
+                .GroupBy(a => a.Broj_lk)
+                .Select(g => g.First())
+                .ToList();
+
+            var prozor = new Autoriposetilacaprozor(autori, $"{selektovani.Ime} {selektovani.Prezime}");
+            prozor.Owner = this;
+            prozor.ShowDialog();
+        }
+
+
         // ================================================================
         // Pretraga
         // ================================================================
@@ -698,9 +766,28 @@ namespace WpfClient
         {
             this.Width = SystemParameters.PrimaryScreenWidth * 0.75;
             this.Height = SystemParameters.PrimaryScreenHeight * 0.75;
+
         }
 
-      
+
+        private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            OsveziVidljivostDugmadi();
+        }
+
+        private void OsveziVidljivostDugmadi()
+        {
+            if (btnPosetiociAutora == null || btnAutoriPosetioca == null) return;
+
+            btnAutoriPosetioca.Visibility = MainTabControl.SelectedIndex == 0
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+
+            btnPosetiociAutora.Visibility = MainTabControl.SelectedIndex == 1
+                ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+
 
         private void timer_Tick(object? sender, EventArgs e)
         {

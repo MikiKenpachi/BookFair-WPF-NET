@@ -15,13 +15,15 @@ namespace WpfClient
         private ObservableCollection<Kupovina> _kupljene;
         private ObservableCollection<Knjiga> _zelje;
         private readonly List<Knjiga> _sveKnjige;
+        private readonly ZeljaDAO _zeljaDao;    
 
-        public IzmenaPosetioca(Posetilac posetilac, List<Knjiga> sveKnjige, KupiliDAO kupiliDao)
+        public IzmenaPosetioca(Posetilac posetilac, List<Knjiga> sveKnjige, KupiliDAO kupiliDao, ZeljaDAO zeljaDao)
         {
             InitializeComponent();
             SelektovaniPosetilac = posetilac;
             _sveKnjige = sveKnjige ?? new List<Knjiga>();
             _kupiliDao = kupiliDao;
+            _zeljaDao = zeljaDao;
 
             PopuniPolja();
             UcitajKupljene();
@@ -150,6 +152,7 @@ namespace WpfClient
             {
                 SelektovaniPosetilac.DodajNaListuZelja(odabrana.Knjiga);
                 _zelje.Add(odabrana.Knjiga);
+                _zeljaDao.Add(new Zelja(SelektovaniPosetilac, odabrana.Knjiga));
             }
 
             OsveziStatistiku();
@@ -176,6 +179,9 @@ namespace WpfClient
                 var knjiga = prozor.OdabranaKnjiga;
                 SelektovaniPosetilac.DodajNaListuZelja(knjiga);
                 _zelje.Add(knjiga);
+
+                // NOVO — snimi u zelje.txt odmah
+                _zeljaDao.Add(new Zelja(SelektovaniPosetilac, knjiga));
             }
         }
 
@@ -195,6 +201,7 @@ namespace WpfClient
 
             SelektovaniPosetilac.ListaZelja.Remove(odabrana);
             _zelje.Remove(odabrana);
+            _zeljaDao.Remove(SelektovaniPosetilac.BrClanskeKarte, odabrana.ISBN);
         }
 
         private void BtnUpisKupovine_Click(object sender, RoutedEventArgs e)
@@ -218,6 +225,7 @@ namespace WpfClient
                 _kupiliDao.Add(kupovina);
                 SelektovaniPosetilac.DodajKupovinu(odabrana);
                 _kupljene.Add(kupovina);
+                _zeljaDao.Remove(SelektovaniPosetilac.BrClanskeKarte, odabrana.ISBN);
                 SelektovaniPosetilac.ListaZelja.Remove(odabrana);
                 _zelje.Remove(odabrana);
 

@@ -2,7 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{DynamicResource titleAutoriIzdavaca}" Height="450" Width="800"
-        WindowStartupLocation="CenterOwner" FontFamily="Kristen ITC">
+        WindowStartupLocation="CenterOwner" FontFamily="Kristen ITC"
+        Icon="/Resources/bookshelf.ico">
+    
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

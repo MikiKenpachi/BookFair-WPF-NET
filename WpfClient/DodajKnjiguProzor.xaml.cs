@@ -39,6 +39,9 @@ namespace WpfClient
             InitializeComponent();
             // ... (vaš postojeći kod za učitavanje)
 
+            _sviIzdavaci = _izdavacDao.GetAll().ToList();
+            _sviAutori = _autorDao.GetAll().ToList();
+
             if (knjiga != null)
             {
                 NovaKnjiga = knjiga;
@@ -78,8 +81,7 @@ namespace WpfClient
 
             // Izdavač
             if (NovaKnjiga.Izdavac != null)
-                cbIzdavac.SelectedItem = _sviIzdavaci
-                    .FirstOrDefault(i => i.Sifra == NovaKnjiga.Izdavac.Sifra);
+                   cbIzdavac.SelectedItem = _sviIzdavaci.FirstOrDefault(i => i.Sifra == NovaKnjiga.Izdavac.Sifra);
 
             // Učitaj SVE autore knjige u kolekciju
             _odabraniAutori.Clear();
@@ -206,7 +208,7 @@ namespace WpfClient
             if (NovaKnjiga.ListaAutora == null)
                 NovaKnjiga.ListaAutora = new List<Autor>();
 
-            // Ukloni stare autore koji više nisu na listi
+            // Ukloni stareautore koji više nisu na listi
             var uklonjeni = NovaKnjiga.ListaAutora
                 .Where(a => !_odabraniAutori.Any(x => x.Broj_lk == a.Broj_lk))
                 .ToList();

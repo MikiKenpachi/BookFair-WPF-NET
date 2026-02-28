@@ -14,12 +14,14 @@ namespace Core.Storage
             List<Knjiga> knjige,
             List<Autor> autori,
             List<Izdavac> izdavaci,
-            List<Kupovina> kupovine)
+            List<Kupovina> kupovine,
+            List<Zelja> zelje)
         {
             PoveziKnjigeIAutore(knjige, autori);
             PoveziKnjigeIIzdavace(knjige, izdavaci);
             PoveziKupovine(posetioci, knjige, kupovine);
             PoveziIzdavace(izdavaci, autori, knjige);
+            PoveziZelje(posetioci, knjige, zelje);
         }
 
         // -----------------------------
@@ -112,6 +114,31 @@ namespace Core.Storage
                     .Where(a => a.SpisakKnjiga.Any(k => k.Izdavac == izdavac))
                     .Distinct()
                     .ToList();
+            }
+        }
+
+        private static void PoveziZelje(
+            List<Posetilac> posetioci,
+            List<Knjiga> knjige,
+            List<Zelja> zelje)
+        {
+            foreach (var zelja in zelje)
+            {
+                var posetilac = posetioci
+                    .FirstOrDefault(p => p.BrClanskeKarte == zelja.Posetilac.BrClanskeKarte);
+
+                var knjiga = knjige
+                    .FirstOrDefault(k => k.ISBN == zelja.Knjiga.ISBN);
+
+                if (posetilac == null || knjiga == null)
+                    continue;
+
+                zelja.Posetilac = posetilac;
+                zelja.Knjiga = knjiga;
+
+                // Popuni ListaZelja na posetiocu i Na_listi_zelja na knjizi
+                posetilac.DodajNaListuZelja(knjiga);
+                knjiga.DodajuListuZelja(posetilac);
             }
         }
     }
