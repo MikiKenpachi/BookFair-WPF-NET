@@ -31,86 +31,103 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.Row="0" Grid.Column="0" 
-           Text="{DynamicResource lblBrClanske}" 
-           VerticalAlignment="Center" Margin="0,5"/>
-                    <TextBox x:Name="txtBrClanske" Grid.Row="0" Grid.Column="1" 
-         Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center" 
-         IsReadOnly="True" Background="#F0F0F0"/>
-
+                        Text="{DynamicResource lblBrClanske}" 
+                        VerticalAlignment="Center" Margin="0,5"/>
+                            <TextBox x:Name="txtBrClanske" Grid.Row="0" Grid.Column="1" 
+                            Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center" 
+                            IsReadOnly="True" Background="#F0F0F0"/>
+                    
                     <TextBlock Grid.Row="1" Grid.Column="0" 
-           Text="{DynamicResource lblIme}" 
-           VerticalAlignment="Center" Margin="0,5"/>
+                        Text="{DynamicResource lblIme}" 
+                        VerticalAlignment="Center" Margin="0,5"/>
+                    
                     <TextBox x:Name="txtIme" Grid.Row="1" Grid.Column="1" 
-         Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
 
                     <TextBlock Grid.Row="2" Grid.Column="0" 
-           Text="{DynamicResource lblPrezime}" 
-           VerticalAlignment="Center" Margin="0,5"/>
+                        Text="{DynamicResource lblPrezime}" 
+                        VerticalAlignment="Center" Margin="0,5"/>
+                    
                     <TextBox x:Name="txtPrezime" Grid.Row="2" Grid.Column="1" 
-         Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
 
                     <TextBlock Grid.Row="3" Grid.Column="0" 
-           Text="{DynamicResource lblDatumRodjenja}" 
-           VerticalAlignment="Center" Margin="0,5"/>
+                        Text="{DynamicResource lblDatumRodjenja}" 
+                        VerticalAlignment="Center" Margin="0,5"/>
+                    
                     <DatePicker x:Name="dpDatumRodjenja" Grid.Row="3" Grid.Column="1" 
-            Margin="10,5,0,5" Height="25"/>
+                        Margin="10,5,0,5" Height="25"/>
 
                     <TextBlock Grid.Row="4" Grid.Column="0" 
-           Text="{DynamicResource lblTelefon}" 
-           VerticalAlignment="Center" Margin="0,5"/>
+                        Text="{DynamicResource lblTelefon}" 
+                        VerticalAlignment="Center" Margin="0,5"/>
+                    
                     <TextBox x:Name="txtTelefon" Grid.Row="4" Grid.Column="1" 
-         Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
 
                     <TextBlock Grid.Row="5" Grid.Column="0" 
-           Text="{DynamicResource lblEmail}" 
-           VerticalAlignment="Center" Margin="0,5"/>
+                        Text="{DynamicResource lblEmail}" 
+                        VerticalAlignment="Center" Margin="0,5"/>
+                    
                     <TextBox x:Name="txtEmail" Grid.Row="5" Grid.Column="1" 
-         Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
 
-                    <TextBlock Grid.Row="6" Grid.Column="0" 
-           Text="{DynamicResource lblStatus}" 
-           VerticalAlignment="Center" Margin="0,5"/>
-                    <ComboBox x:Name="cmbStatus" Grid.Row="6" Grid.Column="1" 
-          Margin="10,5,0,5" Height="25">
-                        <ComboBoxItem>
-                            <TextBlock Text="{DynamicResource statusRedovan}"/>
-                        </ComboBoxItem>
-                        <ComboBoxItem>
-                            <TextBlock Text="{DynamicResource statusVIP}"/>
-                        </ComboBoxItem>
-                    </ComboBox>
-
+                    <TextBlock Grid.Row="6" Grid.Column="0"
+                        Text="{DynamicResource lblGodinaClanstva}"
+                        VerticalAlignment="Center" Margin="0,5"/>
+                    
+                    <TextBox x:Name="txtGodinaClanstva" Grid.Row="6" Grid.Column="1" 
+                    Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                    
                     <TextBlock Grid.Row="7" Grid.Column="0" 
-           Text="{DynamicResource lblUlica}" 
-           VerticalAlignment="Center" Margin="0,5"/>
-                    <TextBox x:Name="txtUlica" Grid.Row="7" Grid.Column="1" 
-         Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Text="{DynamicResource lblStatus}" 
+                        VerticalAlignment="Center" Margin="0,5"/>
+                        <ComboBox x:Name="cmbStatus" Grid.Row="7" Grid.Column="1" 
+                            Margin="10,5,0,5" Height="25">
+                                <ComboBoxItem>
+                                    <TextBlock Text="{DynamicResource statusRedovan}"/>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <TextBlock Text="{DynamicResource statusVIP}"/>
+                                </ComboBoxItem>
+                            </ComboBox>
 
                     <TextBlock Grid.Row="8" Grid.Column="0" 
-           Text="{DynamicResource lblBroj}" 
-           VerticalAlignment="Center" Margin="0,5"/>
-                    <TextBox x:Name="txtBroj" Grid.Row="8" Grid.Column="1" 
-         Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Text="{DynamicResource lblUlica}" 
+                        VerticalAlignment="Center" Margin="0,5"/>
+                    
+                    <TextBox x:Name="txtUlica" Grid.Row="8" Grid.Column="1" 
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
 
                     <TextBlock Grid.Row="9" Grid.Column="0" 
-           Text="{DynamicResource lblGrad}" 
-           VerticalAlignment="Center" Margin="0,5"/>
-                    <TextBox x:Name="txtGrad" Grid.Row="9" Grid.Column="1" 
-         Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Text="{DynamicResource lblBroj}" 
+                        VerticalAlignment="Center" Margin="0,5"/>
+                    
+                    <TextBox x:Name="txtBroj" Grid.Row="9" Grid.Column="1" 
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
 
                     <TextBlock Grid.Row="10" Grid.Column="0" 
-           Text="{DynamicResource lblDrzava}" 
-           VerticalAlignment="Center" Margin="0,5"/>
-                    <TextBox x:Name="txtDrzava" Grid.Row="10" Grid.Column="1" 
-         Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Text="{DynamicResource lblGrad}" 
+                        VerticalAlignment="Center" Margin="0,5"/>
+                    
+                    <TextBox x:Name="txtGrad" Grid.Row="10" Grid.Column="1" 
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+
+                    <TextBlock Grid.Row="11" Grid.Column="0" 
+                        Text="{DynamicResource lblDrzava}" 
+                        VerticalAlignment="Center" Margin="0,5"/>
+
+                    <TextBox x:Name="txtDrzava" Grid.Row="11" Grid.Column="1" 
+                    Margin="11,5,0,5" Height="25" VerticalContentAlignment="Center"/>
                 </Grid>
             </TabItem>
 
             <TabItem Header="{DynamicResource tabKupljene}">
-                <Grid Margin="10">
+                <Grid Margin="11">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -148,7 +165,7 @@
             </TabItem>
 
             <TabItem Header="{DynamicResource tabZelje}">
-                <Grid Margin="10">
+                <Grid Margin="11">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -172,7 +189,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="80"/>
                             <DataGridTextColumn Header="{DynamicResource colNaziv}" Binding="{Binding Naziv}" Width="*"/>
-                            <DataGridTextColumn Header="{DynamicResource colZanr}" Binding="{Binding colZanr}" Width="90"/>
+                            <DataGridTextColumn Header="Žanr" Binding="{Binding Zanr, StringFormat={}{0}}" Width="*"/>
                             <DataGridTextColumn Header="{DynamicResource colCena}" Binding="{Binding Cena}" Width="65"/>
                         </DataGrid.Columns>
                     </DataGrid>

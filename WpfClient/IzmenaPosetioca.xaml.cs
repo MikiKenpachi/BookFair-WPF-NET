@@ -41,6 +41,7 @@ namespace WpfClient
             dpDatumRodjenja.SelectedDate = SelektovaniPosetilac.DatumRodjenja;
             txtTelefon.Text = SelektovaniPosetilac.Telefon;
             txtEmail.Text = SelektovaniPosetilac.Email;
+            txtGodinaClanstva.Text = SelektovaniPosetilac.GodinaClanstva.ToString();
 
             cmbStatus.SelectedIndex = SelektovaniPosetilac.Status == StatusPosetioca.R ? 0 : 1;
 
@@ -68,6 +69,8 @@ namespace WpfClient
             SelektovaniPosetilac.DatumRodjenja = dpDatumRodjenja.SelectedDate ?? SelektovaniPosetilac.DatumRodjenja;
             SelektovaniPosetilac.Telefon = txtTelefon.Text.Trim();
             SelektovaniPosetilac.Email = txtEmail.Text.Trim();
+            if (int.TryParse(txtGodinaClanstva.Text, out int godina))
+                SelektovaniPosetilac.GodinaClanstva = godina;
             SelektovaniPosetilac.Status = cmbStatus.SelectedIndex == 0 ? StatusPosetioca.R : StatusPosetioca.V;
 
             if (SelektovaniPosetilac.Adresa != null)

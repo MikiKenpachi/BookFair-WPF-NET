@@ -41,6 +41,9 @@ namespace WpfClient
 
             _sviIzdavaci = _izdavacDao.GetAll().ToList();
             _sviAutori = _autorDao.GetAll().ToList();
+            PopuniZanrove();
+            PopuniIzdavace();
+
 
             if (knjiga != null)
             {
@@ -64,6 +67,12 @@ namespace WpfClient
         {
             // Enum vrednosti direktno kao stavke ComboBox-a
             cbZanr.ItemsSource = Enum.GetValues(typeof(Knjiga.Zanrovi));
+        }
+
+        private void PopuniIzdavace()
+        {
+            cbIzdavac.ItemsSource = _sviIzdavaci;
+            cbIzdavac.DisplayMemberPath = "Naziv"; // ili koje god polje prikazuješ
         }
 
         private void PopuniPolja()
@@ -152,7 +161,7 @@ namespace WpfClient
                 string porukaKraj = Application.Current.FindResource("msgUklonitiAutoraPitanje").ToString();
                 string naslov = Application.Current.FindResource("titleUklanjanjeAutora").ToString();
 
-                var potvrda = MessageBox.Show($"{porukaStart}{prozor.OdabraniAutor.ImePrezime}{porukaKraj}",
+                var potvrda = MessageBox.Show($"{porukaStart} {prozor.OdabraniAutor.ImePrezime} {porukaKraj}",
                     naslov, MessageBoxButton.YesNo, MessageBoxImage.Question);
 
                 if (potvrda != MessageBoxResult.Yes) return;

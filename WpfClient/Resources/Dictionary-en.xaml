@@ -32,7 +32,7 @@
     <system:String x:Key="colEmail">E-mail</system:String>
     <system:String x:Key="colISBN">ISBN</system:String>
     <system:String x:Key="colNaziv">Title</system:String>
-    <system:String x:Key="colCena">Price</system:String>
+    <system:String x:Key="colCena">Price (RSD) </system:String>
     <system:String x:Key="colGodina">Year</system:String>
     <system:String x:Key="colZanr">Genre</system:String>
 
@@ -65,7 +65,11 @@
     <system:String x:Key="msgSelectBookEdit">You must first select a book in the table!</system:String>
     <system:String x:Key="titleNotice">Notice</system:String>
     <system:String x:Key="aboutTitle">About Application</system:String>
-    <system:String x:Key="aboutMessage">Book Fair v1.0&#x0a;&#x0a;Application for purchasing books within the Book Fair.&#x0a;&#x0a;Authors:&#x0a;- - - - - - - - - - - - -&#x0a;[Miloš Trišić] - RA 39/2023&#x0a;[Boris Stepanović] - RA 97/2023</system:String>
+    <system:String x:Key="aboutMessage1">Book Fair v1.0</system:String>
+    <system:String x:Key="aboutMessage2">Application for buying books in Book Fair.</system:String>
+    <system:String x:Key="aboutMessage3">Authors</system:String>
+
+    <system:String x:Key="titleKnjigeIzdavaca">Book's of Publisher : </system:String>
 
     <system:String x:Key="titleAutoriIzdavaca">Publisher Authors</system:String>
     <system:String x:Key="lblAutoriIzdavacaNaslov">Publisher Authors:</system:String>
@@ -138,6 +142,7 @@
     <system:String x:Key="lblStatus">Status</system:String>
     <system:String x:Key="statusRedovan">Regular</system:String>
     <system:String x:Key="statusVIP">V.I.P.</system:String>
+    <system:String x:Key="lblGodinaClanstva">Membership year</system:String>
 
     <system:String x:Key="titleIzmeniPosetioca">Edit Visitor</system:String>
 
@@ -150,6 +155,10 @@
     <system:String x:Key="tipIzmeniSelektovanog">Edit selected</system:String>
     <system:String x:Key="tipObrisiSelektovanog">Delete selected</system:String>
     <system:String x:Key="btnPrikaziAutore">Show authors</system:String>
+    <system:String x:Key="btnPrikaziKnjige">Show books</system:String>
+
+    <system:String x:Key="tipPretraziKnjige">Search books</system:String>
+
     <system:String x:Key="msgPotvrdaBrisanjaIzdavaca">Are you sure you want to delete the selected publisher?</system:String>
     <system:String x:Key="titlePotvrda">Confirmation</system:String>
     <system:String x:Key="msgNisteSelektovaliIzdavaca">Please select a publisher from the table.</system:String>
@@ -218,4 +227,8 @@
     <system:String x:Key="lblPosetiociAutoraNaslov">Visitors of author:</system:String>
     <system:String x:Key="tipPosetiociAutora">Show visitors who have author's books on their wishlist</system:String>
 
+
+    <system:String x:Key="txtPrethodna">Previous</system:String>
+    <system:String x:Key="txtSledeca">Next</system:String>
+    
 </ResourceDictionary>

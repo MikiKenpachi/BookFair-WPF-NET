@@ -46,6 +46,14 @@
                         Click="BtnPrikaziAutore_Click" 
                         Background="#FFD1E1FB" 
                         FontWeight="Bold"/>
+
+                <Button x:Name="btnPrikaziKnjige"
+                        Content="{DynamicResource btnPrikaziKnjige}"
+                        Width="120" Height="30"
+                        Margin="5"
+                        Click="BtnPrikaziKnjige_Click"
+                        Background="#FFD1E1FB" 
+                        FontWeight="Bold"></Button>
             </StackPanel>
 
             <Button Content="{DynamicResource btnZatvori}" Width="80" Height="35" 

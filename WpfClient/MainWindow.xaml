@@ -144,6 +144,7 @@
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="{DynamicResource statusNaslov}"/>
+                    <TextBlock Text=" "/>
                     <TextBlock Text="{Binding ElementName=MainTabControl, Path=SelectedItem.Header}"/>
                 </StackPanel>
             </StatusBarItem>
@@ -192,9 +193,9 @@
                     </DataGrid>
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5">
-                        <Button x:Name="btnPrethodna" Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" Background="#FFD1E1FB" FontWeight="Bold" Margin="5,0"/>
-                        <TextBlock x:Name="txtStranaInfo" Text="Stranica 1" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
-                        <Button x:Name="btnSledeca" Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" Background="#FFD1E1FB" FontWeight="Bold" Margin="5,0"/>
+                        <Button Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" ToolTip="{DynamicResource txtPrethodna}" Margin="2,0"/>
+                        <TextBlock x:Name="txtStranaInfoPosetioci"  VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
+                        <Button Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" ToolTip="{DynamicResource txtSledeca}" Margin="2,0"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -223,9 +224,9 @@
                     </DataGrid>
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5">
-                        <Button Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" Background="#FFD1E1FB" FontWeight="Bold" Margin="5,0"/>
-                        <TextBlock x:Name="txtStranaInfoAutori" Text="Stranica 1" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
-                        <Button Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" Background="#FFD1E1FB" FontWeight="Bold" Margin="5,0"/>
+                        <Button Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" ToolTip="{DynamicResource txtPrethodna}" Margin="2,0"/>
+                        <TextBlock x:Name="txtStranaInfoAutori"  VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
+                        <Button Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" ToolTip="{DynamicResource txtSledeca}" Margin="2,0"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -254,9 +255,9 @@
                     </DataGrid>
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5">
-                        <Button Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" Background="#FFD1E1FB" FontWeight="Bold" Margin="5,0"/>
-                        <TextBlock x:Name="txtStranaInfoKnjige" Text="Stranica 1" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
-                        <Button Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" Background="#FFD1E1FB" FontWeight="Bold" Margin="5,0"/>
+                        <Button Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" ToolTip="{DynamicResource txtPrethodna}" Margin="2,0"/>
+                        <TextBlock x:Name="txtStranaInfoKnjige"  VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
+                        <Button Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" ToolTip="{DynamicResource txtSledeca}" Margin="2,0"/>
                     </StackPanel>
                 </Grid>
             </TabItem>

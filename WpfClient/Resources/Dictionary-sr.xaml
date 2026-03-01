@@ -31,7 +31,7 @@
     <system:String x:Key="colEmail">E-mail</system:String>
     <system:String x:Key="colISBN">ISBN</system:String>
     <system:String x:Key="colNaziv">Naziv</system:String>
-    <system:String x:Key="colCena">Cena</system:String>
+    <system:String x:Key="colCena">Cena (RSD) </system:String>
     <system:String x:Key="colGodina">Godina izdanja</system:String>
     <system:String x:Key="colZanr">Žanr</system:String>
 
@@ -39,7 +39,7 @@
     <system:String x:Key="tipIzmeni">Izmeni</system:String>
     <system:String x:Key="tipObrisi">Obriši</system:String>
     <system:String x:Key="txtStranica">Stranica</system:String>
-    <system:String x:Key="statusNaslov">Sajam knjiga-</system:String>
+    <system:String x:Key="statusNaslov">Sajam knjiga -</system:String>
 
 	<system:String x:Key="lblStranica">Stranica</system:String>
 	<system:String x:Key="msgJezikPromenjen">Jezik je promenjen na Srpski.</system:String>
@@ -64,9 +64,14 @@
 	<system:String x:Key="msgSelectBookEdit">Morate prvo selektovati knjigu u tabeli!</system:String>
 	<system:String x:Key="titleNotice">Obaveštenje</system:String>
 	<system:String x:Key="aboutTitle">O aplikaciji</system:String>
-	<system:String x:Key="aboutMessage">Sajam Knjiga v1.0&#x0a;&#x0a;Aplikacija za kupovinu knjiga u okviru Sajma Knjiga.&#x0a;&#x0a;Autori:&#x0a;- - - - - - - - - - - - -&#x0a;[Miloš Trišić] - RA 39/2023&#x0a;[Boris Stepanović] - RA 97/2023</system:String>
+	<system:String x:Key="aboutMessage1">Sajam Knjiga v1.0</system:String>
+    <system:String x:Key="aboutMessage2">Aplikacija za kupovinu knjiga u okviru Sajma Knjiga.</system:String>
+    <system:String x:Key="aboutMessage3">Autori</system:String>
 
-	<system:String x:Key="titleAutoriIzdavaca">Autori Izdavača</system:String>
+    <system:String x:Key="titleKnjigeIzdavaca">Knjige Izdavača : </system:String>
+    
+    
+    <system:String x:Key="titleAutoriIzdavaca">Autori Izdavača</system:String>
 	<system:String x:Key="lblAutoriIzdavacaNaslov">Autori Izdavača: </system:String>
 	<system:String x:Key="tipPretraziAutore">Pretraži autore</system:String>
 	<system:String x:Key="btnZatvori">Zatvori</system:String>
@@ -137,8 +142,10 @@
 	<system:String x:Key="lblStatus">Status</system:String>
 	<system:String x:Key="statusRedovan">Redovan</system:String>
 	<system:String x:Key="statusVIP">V.I.P.</system:String>
+    <system:String x:Key="lblGodinaClanstva">Godina članstva</system:String>
 
-	<system:String x:Key="titleIzmeniPosetioca">Izmeni posetioca</system:String>
+    <system:String x:Key="titleIzmeniPosetioca">Izmeni posetioca</system:String>
+   
 	
 	<system:String x:Key="titleUpravljanjeIzdavacima">Upravljanje Izdavačima</system:String>
 	<system:String x:Key="lblRegistrovaniIzdavaci">Registrovani Izdavači</system:String>
@@ -149,8 +156,11 @@
 	<system:String x:Key="tipIzmeniSelektovanog">Izmeni selektovanog</system:String>
 	<system:String x:Key="tipObrisiSelektovanog">Obriši selektovanog</system:String>
 	<system:String x:Key="btnPrikaziAutore">Prikaži autore</system:String>
+    <system:String x:Key="btnPrikaziKnjige">Prikaži knjige</system:String>
 
-	<system:String x:Key="msgPotvrdaBrisanjaIzdavaca">Da li ste sigurni da želite da obrišete izabranog izdavača?</system:String>
+    <system:String x:Key="tipPretraziKnjige">Pretraži knjige</system:String>
+
+    <system:String x:Key="msgPotvrdaBrisanjaIzdavaca">Da li ste sigurni da želite da obrišete izabranog izdavača?</system:String>
 	<system:String x:Key="titlePotvrda">Potvrda</system:String>
 	<system:String x:Key="msgNisteSelektovaliIzdavaca">Molimo selektujte izdavača iz tabele.</system:String>
 
@@ -217,4 +227,8 @@
     <system:String x:Key="lblPosetiociAutoraNaslov">Posetioci autora:</system:String>
     <system:String x:Key="tipPosetiociAutora">Prikaži posetioce koji imaju knjige autora na listi želja</system:String>
 
+
+    <system:String x:Key="txtPrethodna">Prethodna</system:String>
+    <system:String x:Key="txtSledeca">Sledeća</system:String>
+    
 </ResourceDictionary>

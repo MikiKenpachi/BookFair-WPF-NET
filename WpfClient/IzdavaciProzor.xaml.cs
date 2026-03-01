@@ -68,6 +68,29 @@ namespace WpfClient
             prozor.ShowDialog();
         }
 
+        private void BtnPrikaziKnjige_Click(object sender, RoutedEventArgs e)
+        {
+            var selektovaniIzdavac = DataGridIzdavaci.SelectedItem as Izdavac;
+
+            if (selektovaniIzdavac == null)
+            {
+                MessageBox.Show(
+                    "Molimo selektujte izdavača.",
+                    "Obaveštenje",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                return;
+            }
+
+            // ListaKnjiga je već popunjena u DataBinding.PoveziSve()
+            // — samo je prosleđujemo novom prozoru
+            List<Knjiga> knjige = selektovaniIzdavac.ListaKnjiga;
+
+            KnjigeIzdavacaProzor prozor = new KnjigeIzdavacaProzor(knjige, selektovaniIzdavac.Naziv);
+            prozor.Owner = this;
+            prozor.ShowDialog();
+        }
+
         private void BtnIzmeni_Click(object sender, RoutedEventArgs e)
         {
             Izdavac selektovan = (Izdavac)DataGridIzdavaci.SelectedItem;

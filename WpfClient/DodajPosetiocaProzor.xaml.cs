@@ -45,6 +45,7 @@ namespace WpfClient
             dpDatum.SelectedDate = NoviPosetilac.DatumRodjenja; // Proveri naziv property-ja
             txtTelefon.Text = NoviPosetilac.Telefon;
             txtEmail.Text = NoviPosetilac.Email;
+            txtGodinaClanstva.Text = NoviPosetilac.GodinaClanstva.ToString();
             txtUlica.Text = $"{NoviPosetilac.Adresa.Ulica}";
             txtBroj.Text = $"{NoviPosetilac.Adresa.Broj}";
             txtGrad.Text = $"{NoviPosetilac.Adresa.Grad}";
@@ -86,6 +87,15 @@ namespace WpfClient
             NoviPosetilac.DatumRodjenja = dpDatum.SelectedDate ?? DateTime.Now;
             NoviPosetilac.Telefon = txtTelefon.Text;
             NoviPosetilac.Email = txtEmail.Text;
+
+            if (int.TryParse(txtGodinaClanstva.Text, out int godinaClanstva))
+            {
+                NoviPosetilac.GodinaClanstva = godinaClanstva;
+            }
+            else
+            {
+                NoviPosetilac.GodinaClanstva = 0; // or handle invalid input as needed
+            }
 
             // Čitanje statusa iz ComboBox-a
             if (cbStatus.SelectedItem is ComboBoxItem selectedItem)

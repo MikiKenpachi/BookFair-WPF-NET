@@ -1,10 +1,9 @@
 ﻿<Window x:Class="WpfClient.DodajPosetiocaProzor"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{DynamicResource titleDodajPosetioca}" Height="450" Width="350"
+        Title="{DynamicResource titleDodajPosetioca}" Height="490" Width="350"
         WindowStartupLocation="CenterOwner"
         Icon="Resources/bookshelf.ico">
-
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -17,9 +16,10 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <!-- NOVO -->
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
@@ -27,21 +27,19 @@
 
         <Label Content="{DynamicResource lblIme}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtIme" Grid.Row="0" Grid.Column="1" Margin="5" />
-
         <Label Content="{DynamicResource lblPrezime}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtPrezime" Grid.Row="1" Grid.Column="1" Margin="5" />
-
         <Label Content="{DynamicResource lblDatumRodjenja}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
         <DatePicker x:Name="dpDatum" Grid.Row="2" Grid.Column="1" Margin="5" />
-
         <Label Content="{DynamicResource lblTelefon}" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtTelefon" Grid.Row="3" Grid.Column="1" Margin="5" />
-
         <Label Content="{DynamicResource lblEmail}" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtEmail" Grid.Row="4" Grid.Column="1" Margin="5" />
-
-        <Label Content="{DynamicResource lblStatus}" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
-        <ComboBox x:Name="cbStatus" Grid.Row="5" Grid.Column="1" Margin="5">
+        <!-- Godina članstva -->
+        <Label Content="{DynamicResource lblGodinaClanstva}" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtGodinaClanstva" Grid.Row="5" Grid.Column="1" Margin="5" />
+        <Label Content="{DynamicResource lblStatus}" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
+        <ComboBox x:Name="cbStatus" Grid.Row="6" Grid.Column="1" Margin="5">
             <ComboBoxItem IsSelected="True">
                 <TextBlock Text="{DynamicResource statusRedovan}"/>
             </ComboBoxItem>
@@ -49,20 +47,18 @@
                 <TextBlock Text="{DynamicResource statusVIP}"/>
             </ComboBoxItem>
         </ComboBox>
+        <Label Content="{DynamicResource lblUlica}" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtUlica" Grid.Row="7" Grid.Column="1" Margin="5" />
+        <Label Content="{DynamicResource lblBroj}" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtBroj" Grid.Row="8" Grid.Column="1" Margin="5" />
+        <Label Content="{DynamicResource lblGrad}" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtGrad" Grid.Row="9" Grid.Column="1" Margin="5" />
+        <Label Content="{DynamicResource lblDrzava}" Grid.Row="10" Grid.Column="0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtDrzava" Grid.Row="10" Grid.Column="1" Margin="5" />
 
-        <Label Content="{DynamicResource lblUlica}" Grid.Row="6" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox x:Name="txtUlica" Grid.Row="6" Grid.Column="1" Margin="5" />
+        
 
-        <Label Content="{DynamicResource lblBroj}" Grid.Row="7" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox x:Name="txtBroj" Grid.Row="7" Grid.Column="1" Margin="5" />
-
-        <Label Content="{DynamicResource lblGrad}" Grid.Row="8" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox x:Name="txtGrad" Grid.Row="8" Grid.Column="1" Margin="5" />
-
-        <Label Content="{DynamicResource lblDrzava}" Grid.Row="9" Grid.Column="0" VerticalAlignment="Center"/>
-        <TextBox x:Name="txtDrzava" Grid.Row="9" Grid.Column="1" Margin="5" />
-
-        <StackPanel Orientation="Horizontal" Grid.Row="10" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        <StackPanel Orientation="Horizontal" Grid.Row="11" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Button Content="{DynamicResource btnOdustani}" Width="80" Margin="5" Click="BtnOdustani_Click" IsCancel="True"/>
             <Button Content="{DynamicResource btnPotvrdi}" Width="80" Margin="5" Background="CornflowerBlue" Click="BtnPotvrdi_Click"/>
         </StackPanel>

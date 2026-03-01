@@ -56,8 +56,10 @@ namespace WpfClient
         private List<Zelja> sveZeljeList;
 
         // ── Paginacija ──────────────────────────────────────────────────
-        private int trenutnaStranica = 1;
-        private const int velicinaStranice = 16;
+        private int stranicaPosetioci = 1;
+        private int stranicaAutori = 1;
+        private int stranicaKnjige = 1;
+        private const int velicinaStranice = 15;
 
         // ================================================================
         // Konstruktor
@@ -75,6 +77,16 @@ namespace WpfClient
             sviIzdavaciList = izdavacDao.GetAll();             
             sveKupovineList = kupiliDao.GetAll();
             sveZeljeList = zeljaDao.GetAll();
+
+            sviPosetiociList = sviPosetiociList
+            .OrderBy(p =>
+            {
+                var deo = p.BrClanskeKarte?.Replace("CK-", "");
+                return int.TryParse(deo, out int broj) ? broj : int.MaxValue;
+            })
+            .ToList();
+
+
 
             // ----------------------------------------------------------
             // KORAK 2: Poveži adrese (poseban fajl, ID je ključ veze)
@@ -142,53 +154,62 @@ namespace WpfClient
         /// </summary>
         private void OsveziPrikaz()
         {
-            int preskoci = (trenutnaStranica - 1) * velicinaStranice;
-
-            // Dobavljanje prevoda reči "Stranica" iz resursa
             string recStranica = Application.Current.FindResource("lblStranica").ToString();
 
             // Posetioci
+            int preskociP = (stranicaPosetioci - 1) * velicinaStranice;
             Posetioci.Clear();
-            foreach (var p in sviPosetiociList.Skip(preskoci).Take(velicinaStranice))
+            PosetiociView.SortDescriptions.Clear();
+            foreach (var p in sviPosetiociList
+                .OrderBy(p => {
+                    var deo = p.BrClanskeKarte?.Replace("CK-", "");
+                    return int.TryParse(deo, out int broj) ? broj : int.MaxValue;
+                })
+                .Skip(preskociP).Take(velicinaStranice))
                 Posetioci.Add(p);
-            if (txtStranaInfo != null)
-                txtStranaInfo.Text = $"{recStranica} {trenutnaStranica}";
+
+            int maxStrP = (int)Math.Ceiling(sviPosetiociList.Count / (double)velicinaStranice);
+            if (txtStranaInfoPosetioci != null)
+                txtStranaInfoPosetioci.Text = $"{recStranica} {stranicaPosetioci}/{maxStrP}";
 
             // Autori
+            int preskociA = (stranicaAutori - 1) * velicinaStranice;
             Autori.Clear();
-            foreach (var a in sviAutoriList.Skip(preskoci).Take(velicinaStranice))
+            foreach (var a in sviAutoriList.Skip(preskociA).Take(velicinaStranice))
                 Autori.Add(a);
+
+            int maxStrA = (int)Math.Ceiling(sviAutoriList.Count / (double)velicinaStranice);
             if (txtStranaInfoAutori != null)
-                txtStranaInfoAutori.Text = $"{recStranica} {trenutnaStranica}";
+                txtStranaInfoAutori.Text = $"{recStranica} {stranicaAutori}/{maxStrA}";
 
             // Knjige
+            int preskociK = (stranicaKnjige - 1) * velicinaStranice;
             Knjige.Clear();
-            foreach (var k in sveKnjigeList.Skip(preskoci).Take(velicinaStranice))
+            foreach (var k in sveKnjigeList.Skip(preskociK).Take(velicinaStranice))
                 Knjige.Add(k);
+
+            int maxStrK = (int)Math.Ceiling(sveKnjigeList.Count / (double)velicinaStranice);
             if (txtStranaInfoKnjige != null)
-                txtStranaInfoKnjige.Text = $"{recStranica} {trenutnaStranica}";
+                txtStranaInfoKnjige.Text = $"{recStranica} {stranicaKnjige}/{maxStrK}";
         }
 
         private void btnPrethodna_Click(object sender, RoutedEventArgs e)
         {
-            if (trenutnaStranica > 1)
-            {
-                trenutnaStranica--;
-                OsveziPrikaz();
-            }
+            int tab = MainTabControl.SelectedIndex;
+            if (tab == 0 && stranicaPosetioci > 1) { stranicaPosetioci--; OsveziPrikaz(); }
+            else if (tab == 1 && stranicaAutori > 1) { stranicaAutori--; OsveziPrikaz(); }
+            else if (tab == 2 && stranicaKnjige > 1) { stranicaKnjige--; OsveziPrikaz(); }
         }
 
         private void btnSledeca_Click(object sender, RoutedEventArgs e)
         {
-            // Koristi najveću od tri liste kao osnov za max stranicu
-            int maxBroj = Math.Max(sviPosetiociList.Count,
-                          Math.Max(sviAutoriList.Count, sveKnjigeList.Count));
-
-            if (trenutnaStranica * velicinaStranice < maxBroj)
-            {
-                trenutnaStranica++;
-                OsveziPrikaz();
-            }
+            int tab = MainTabControl.SelectedIndex;
+            if (tab == 0 && stranicaPosetioci * velicinaStranice < sviPosetiociList.Count)
+            { stranicaPosetioci++; OsveziPrikaz(); }
+            else if (tab == 1 && stranicaAutori * velicinaStranice < sviAutoriList.Count)
+            { stranicaAutori++; OsveziPrikaz(); }
+            else if (tab == 2 && stranicaKnjige * velicinaStranice < sveKnjigeList.Count)
+            { stranicaKnjige++; OsveziPrikaz(); }
         }
 
         // ================================================================
@@ -660,7 +681,12 @@ namespace WpfClient
 
         private void MenuAbout_Click(object sender, RoutedEventArgs e)
         {
-            string poruka = Application.Current.FindResource("aboutMessage").ToString();
+            string poruka1 = Application.Current.FindResource("aboutMessage1").ToString();
+            string poruka2 = Application.Current.FindResource("aboutMessage2").ToString();
+            string poruka3 = Application.Current.FindResource("aboutMessage3").ToString();
+            string poruka4 = "[Miloš Trišić RA 39/2023]";
+            string poruka5 = "[Boris Stepanović RA 97/2023]";
+            string poruka = poruka1 + "\n\n" + poruka2 + "\n\n" + poruka3 + "\n- - - - - - - - - - - - - - - - - - - - - -\n" + poruka4 + "\n" +  poruka5;
             string naslov = Application.Current.FindResource("aboutTitle").ToString();
 
             MessageBox.Show(poruka, naslov);
@@ -772,6 +798,15 @@ namespace WpfClient
 
         private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            // Ignoriši događaje koji dolaze od child kontrola (DataGrid, ComboBox...)
+            if (e.OriginalSource != MainTabControl) return;
+
+            int tab = MainTabControl.SelectedIndex;
+            if (tab == 0) stranicaPosetioci = 1;
+            else if (tab == 1) stranicaAutori = 1;
+            else if (tab == 2) stranicaKnjige = 1;
+
+            OsveziPrikaz();
             OsveziVidljivostDugmadi();
         }
 
