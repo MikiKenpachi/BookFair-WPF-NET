@@ -13,6 +13,10 @@
     <system:String x:Key="mHelp">_Help</system:String>
     <system:String x:Key="mAbout">_About</system:String>
 
+    <system:String x:Key="mSrb">Serbian</system:String>
+    <system:String x:Key="mEng">English</system:String>
+
+
     <system:String x:Key="tabPosetioci">Visitors</system:String>
     <system:String x:Key="tabAutori">Authors</system:String>
     <system:String x:Key="tabKnjige">Books</system:String>

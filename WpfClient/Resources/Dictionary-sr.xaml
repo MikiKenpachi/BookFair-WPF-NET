@@ -13,6 +13,9 @@
     <system:String x:Key="mHelp">_Pomoć</system:String>
     <system:String x:Key="mAbout">_O programu</system:String>
 
+    <system:String x:Key="mSrb"> Srpski </system:String>
+    <system:String x:Key="mEng">Engleski</system:String>
+
     <system:String x:Key="tabPosetioci"> Posetioci</system:String>
     <system:String x:Key="tabAutori"> Autori</system:String>
     <system:String x:Key="tabKnjige"> Knjige</system:String>
