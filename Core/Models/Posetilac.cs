@@ -16,6 +16,18 @@ namespace SajamKnjigaProjekat.Core.Models
         public string Telefon { get; set; }
         public string Email { get; set; }
         public string BrClanskeKarte { get; set; }
+
+        public int ClanskaKartaBroj
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(BrClanskeKarte))
+                    return 0;
+
+                var deo = BrClanskeKarte.Replace("CK-", "");
+                return int.TryParse(deo, out int broj) ? broj : 0;
+            }
+        }
         public int GodinaClanstva { get; set; }
         public StatusPosetioca Status { get; set; }
         public double ProsecnaOcena { get; set; }

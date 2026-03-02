@@ -189,7 +189,7 @@
                       SelectionMode="Single" Background="#FF95B5EB" 
                       Opacity="0.9" FontWeight="Bold">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="{DynamicResource colClanskaKarta}" Binding="{Binding BrClanskeKarte}" Width="*" />
+                            <DataGridTextColumn Header="{DynamicResource colClanskaKarta}" Binding="{Binding BrClanskeKarte}" SortMemberPath="ClanskaKartaBroj" Width="*" />
                             <DataGridTextColumn Header="{DynamicResource colIme}" Binding="{Binding Ime}" Width="*" />
                             <DataGridTextColumn Header="{DynamicResource colPrezime}" Binding="{Binding Prezime}" Width="*" />
                             <DataGridTextColumn Header="{DynamicResource colAdresa}" Width="3*">
