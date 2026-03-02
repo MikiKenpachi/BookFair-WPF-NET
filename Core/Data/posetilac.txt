@@ -19,3 +19,6 @@ Radomir|Vasic|1997-07-07T00:00:00.0000000|0669988965|rade@uns.ac.rs|CK-18|9|V|0
 Milivoje|Trisic|2004-03-04T00:00:00.0000000|0668204210|trile.rs|CK-19|4|V|0
 Maria|Kiss|1992-05-07T00:00:00.0000000|066821474|kissmari@uns.ac.rs|CK-20|11|R|0
 Vasko|Milovanovic|1996-06-06T00:00:00.0000000|0663254712|vasko@uns.ac.rs|CK-21|8|R|0
+Mihailo|Nedeljkovic|2004-12-20T00:00:00.0000000|06684755063|mica@uns.ac.rs|CK-22|10|R|5
+Milos|Markovic|2006-06-06T00:00:00.0000000|0663256233|miki.rs|CK-23|4|R|0
+Lazar|Kolarevic|2001-03-03T00:00:00.0000000|0662345112|laky@uns.ac.rs|CK-24|4|R|0

@@ -184,7 +184,11 @@ namespace WpfClient
         // ── Dugme "Ukloni knjigu" ────────────────────────────────────────
         private void BtnUkloniKnjigu_Click(object sender, RoutedEventArgs e)
         {
-            if (dgKnjige.SelectedItem is not Knjiga odabrana)
+            var selektovane = dgKnjige.SelectedItems
+                .Cast<Knjiga>()
+                .ToList();
+
+            if (!selektovane.Any())
             {
                 MessageBox.Show(
                     Application.Current.FindResource("msgOdaberiKnjiguIzTabele").ToString(),
@@ -193,29 +197,28 @@ namespace WpfClient
                 return;
             }
 
-            // Sastavljanje dinamičke poruke iz delova
+            // Poruka potvrde
             string start = Application.Current.FindResource("msgPotvrdaUklanjanjaStart").ToString();
-            string sredina = Application.Current.FindResource("msgPotvrdaUklanjanjaSredina").ToString();
-            string kraj = Application.Current.FindResource("msgPotvrdaUklanjanjaKraj").ToString();
+            
             string naslov = Application.Current.FindResource("titleUklanjanjeKnjige").ToString();
 
-            // Formiranje finalnog teksta: "Da li ste sigurni... " + "Naziv Knjige" + " iz spiska... " + "Ime Autora" + "?"
-            string punaPoruka = $"{start}{odabrana.Naziv}{sredina}{SelektovaniAutor.ImePrezime}{kraj}";
+            string popisKnjiga = string.Join("\n", selektovane.Select(k => $"• {k.Naziv}"));
+            string punaPoruka = $"{start}\n{popisKnjiga}\n";
 
-            var potvrda = MessageBox.Show(punaPoruka, naslov, MessageBoxButton.YesNo, MessageBoxImage.Question);
-
+            var potvrda = MessageBox.Show(punaPoruka, naslov, MessageBoxButton.YesNo, MessageBoxImage.None);
             if (potvrda != MessageBoxResult.Yes) return;
 
-            // 1. Ukloni iz DataGrid-a (ObservableCollection)
-            _knjige.Remove(odabrana);
+            foreach (var knjiga in selektovane)
+            {
+                // 1. Ukloni iz DataGrid-a (ObservableCollection)
+                _knjige.Remove(knjiga);
+                // 2. Ukloni iz memorijskog spiska autora
+                SelektovaniAutor.SpisakKnjiga?.Remove(knjiga);
+                // 3. Bidirekciona veza
+                knjiga.ListaAutora?.Remove(SelektovaniAutor);
+            }
 
-            // 2. Ukloni iz memorijskog spiska autora
-            SelektovaniAutor.SpisakKnjiga?.Remove(odabrana);
-
-            // 3. Bidirekciona veza
-            odabrana.ListaAutora?.Remove(SelektovaniAutor);
-
-            // 4. Snimi promene
+            // 4. Snimi promene — jednom nakon petlje
             _autorDao.Update(SelektovaniAutor);
             _knjigaDao.Save();
         }

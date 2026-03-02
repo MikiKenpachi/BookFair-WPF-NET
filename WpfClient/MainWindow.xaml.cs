@@ -283,7 +283,7 @@ namespace WpfClient
                         p.Adresa.VlasnikID = p.BrClanskeKarte;
 
 
-                    // 
+                    sviPosetiociList.Add(p);
                     posetilacDao.Add(p);
                     
                     if (p.Adresa != null)

@@ -26,19 +26,19 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Label Content="{DynamicResource colIme}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource lblIme}" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtIme" Grid.Row="0" Grid.Column="1" Margin="5" />
 
-        <Label Content="{DynamicResource colPrezime}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource lblPrezime}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtPrezime" Grid.Row="1" Grid.Column="1" Margin="5" />
 
-        <Label Content="{DynamicResource colDatumRodjenja}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource lblDatumRodjenja}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
         <DatePicker x:Name="dpDatum" Grid.Row="2" Grid.Column="1" Margin="5" />
 
-        <Label Content="{DynamicResource colTelefon}" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource lblTelefon}" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtTelefon" Grid.Row="3" Grid.Column="1" Margin="5" />
 
-        <Label Content="{DynamicResource colEmail}" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
+        <Label Content="{DynamicResource lblEmail}" Grid.Row="4" Grid.Column="0" VerticalAlignment="Center"/>
         <TextBox x:Name="txtEmail" Grid.Row="4" Grid.Column="1" Margin="5" />
 
         <Label Content="{DynamicResource lblUlica}" Grid.Row="5" Grid.Column="0" VerticalAlignment="Center"/>

@@ -44,7 +44,12 @@ namespace WpfClient
         private void BtnPrikaziAutore_Click(object sender, RoutedEventArgs e)
         {
             var selektovaniIzdavac = DataGridIzdavaci.SelectedItem as Izdavac;
-            if (selektovaniIzdavac == null) { /* MessageBox... */ return; }
+            if (selektovaniIzdavac == null)
+            {
+                nijeSelektovan();
+
+                return;
+            }
 
             // 1. Dobavi sve adrese (npr. preko DAO klase)
             AdresaDAO adresaDao = new AdresaDAO();
@@ -74,11 +79,8 @@ namespace WpfClient
 
             if (selektovaniIzdavac == null)
             {
-                MessageBox.Show(
-                    "Molimo selektujte izdavača.",
-                    "Obaveštenje",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                nijeSelektovan();
+
                 return;
             }
 
@@ -108,6 +110,12 @@ namespace WpfClient
                     // Komentar "NE zovemo dao.Update()!" — izmena se čuva samo u memoriji OC-a
                 }
             }
+            else
+            {
+                nijeSelektovan();
+
+                return;
+            }
         }
 
         private void BtnObrisi_Click(object sender, RoutedEventArgs e)
@@ -136,6 +144,19 @@ namespace WpfClient
             }
         }
 
+        public void nijeSelektovan()
+        {
+            string message = (string)Application.Current.FindResource("msgNisteSelektovaliIzdavaca");
+            string title = (string)Application.Current.FindResource("titleObavestenje");
+
+            MessageBox.Show(
+                message,
+                title,
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+
+            return;
+        }
         private void BtnZatvori_Click(object sender, RoutedEventArgs e)
         {
             this.Close();

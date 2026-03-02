@@ -55,7 +55,7 @@
 
     <system:String x:Key="msgConfirmDeletePosetilac">Are you sure you want to delete visitor</system:String>
     <system:String x:Key="msgConfirmDeleteAutor">Are you sure you want to delete author</system:String>
-    <system:String x:Key="msgConfirmDeleteKnjiga">Are you sure you want to delete book</system:String>
+    <system:String x:Key="msgConfirmDeleteKnjiga">Are you sure you want to delete : </system:String>
 
     <system:String x:Key="titleDeletePosetilac">Delete Visitor</system:String>
     <system:String x:Key="titleDeleteAutor">Delete Author</system:String>
@@ -96,25 +96,27 @@
     <system:String x:Key="lblNazivIzdavaca">Publisher Name:</system:String>
     <system:String x:Key="lblSefAutor">Manager (Author):</system:String>
 
-    <system:String x:Key="titleIzmenaIzdavaca">Izmena izdavača</system:String>
-    <system:String x:Key="titleDodajIzdavaca">Dodaj novog izdavača</system:String>
-    <system:String x:Key="msgIspraviGreske">Molimo ispravite greške označene crvenom bojom!</system:String>
-    <system:String x:Key="titleValidacija">Validacija</system:String>
+    <system:String x:Key="titleIzmenaIzdavaca">Edit Publisher</system:String>
+    <system:String x:Key="titleDodajIzdavaca">Add New Publisher</system:String>
+    <system:String x:Key="msgIspraviGreske">Please fix the errors marked in red!</system:String>
+    <system:String x:Key="titleValidacija">Validation</system:String>
 
     <system:String x:Key="errSifraObavezna">Publisher code is required.</system:String>
-    <system:String x:Key="errNazivPrazan">Name cannot be empty.</system:String>
-    <system:String x:Key="errNazivKratak">Name must be at least 3 characters long.</system:String>
+    <system:String x:Key="errNazivPrazan">Name is required.</system:String>
+    <system:String x:Key="errNazivIzdavacaKratak">Must have more than 3 characters.</system:String>
+    <system:String x:Key="errNazivIzdavacaDugacak">Must have less than 30 characters.</system:String>
+    <system:String x:Key="errSifraIzdavaca">Must have exactly 5 characters.</system:String>
     <system:String x:Key="errSefObavezan">You must assign a publisher manager.</system:String>
-    <system:String x:Key="errSefIskustvo">Manager must have more than 5 years of experience (Currently:</system:String>
+    <system:String x:Key="errSefIskustvo">Manager must have more than 5 years of experience (Currently :</system:String>
 
     <system:String x:Key="titleDodajKnjigu">Add New Book</system:String>
     <system:String x:Key="lblISBN">ISBN *</system:String>
     <system:String x:Key="lblNazivKnjige">Title *</system:String>
     <system:String x:Key="lblCena">Price *</system:String>
     <system:String x:Key="lblGodinaIzdanja">Publication Year *</system:String>
-    <system:String x:Key="lblBrojStrana">Pages</system:String>
+    <system:String x:Key="lblBrojStrana">Pages *</system:String>
     <system:String x:Key="lblZanr">Genre *</system:String>
-    <system:String x:Key="lblIzdavac">Publisher</system:String>
+    <system:String x:Key="lblIzdavac">Publisher *</system:String>
     <system:String x:Key="lblAutor">Author *</system:String>
     <system:String x:Key="tipDodajAutora">Add author</system:String>
     <system:String x:Key="tipUkloniAutora">Remove author</system:String>
@@ -230,5 +232,5 @@
 
     <system:String x:Key="txtPrethodna">Previous</system:String>
     <system:String x:Key="txtSledeca">Next</system:String>
-    
+
 </ResourceDictionary>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Core.DTO
@@ -32,15 +33,18 @@ namespace Core.DTO
                 {
                     case nameof(Sifra):
                         if (string.IsNullOrWhiteSpace(Sifra))
-                            // Pozivamo Translator koji će "pitati" WPF za pravi string
                             rezultat = Core.Languages.Translator.Prevedi("errSifraObavezna");
+                        else if (!Regex.IsMatch(Sifra, @"^\d{5}$"))
+                            rezultat = Core.Languages.Translator.Prevedi("errSifraIzdavaca");
                         break;
 
                     case nameof(Naziv):
                         if (string.IsNullOrWhiteSpace(Naziv))
                             rezultat = Languages.Translator.Prevedi("errNazivPrazan");
                         else if (Naziv.Length < 3)
-                            rezultat = Languages.Translator.Prevedi("errNazivKratak");
+                            rezultat = Languages.Translator.Prevedi("errNazivIzdavacaKratak");
+                        else if (Naziv.Length > 30)
+                            rezultat = Languages.Translator.Prevedi("errNazivIzdavacaDugacak");
                         break;
 
                     case nameof(SefIzdavaca):
@@ -51,7 +55,7 @@ namespace Core.DTO
                         else if (SefIzdavaca.Godine_iskustva <= 5)
                         {
                             string poruka = Languages.Translator.Prevedi("errSefIskustvo");
-                            rezultat = $"{poruka}{SefIzdavaca.Godine_iskustva}).";
+                            rezultat = $"{poruka} {SefIzdavaca.Godine_iskustva}).";
                         }
                         break;
                 }

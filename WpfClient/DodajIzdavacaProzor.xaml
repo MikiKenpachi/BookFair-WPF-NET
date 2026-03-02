@@ -8,13 +8,13 @@
     <Window.Resources>
         <ControlTemplate x:Key="GreskaTemplate">
             <StackPanel>
-                <Border BorderBrush="Red" BorderThickness="2">
+                <Border BorderBrush="Red" BorderThickness="0.5">
                     <AdornedElementPlaceholder x:Name="OriginalnaKontrola"/>
                 </Border>
                 <TextBlock Text="{Binding [0].ErrorContent}" 
                            Foreground="Red" 
                            FontSize="11" 
-                           FontWeight="Bold"
+                           FontWeight="Regular"
                            Margin="0,2,0,0"/>
             </StackPanel>
         </ControlTemplate>
@@ -23,7 +23,9 @@
             <Setter Property="Validation.ErrorTemplate" Value="{StaticResource GreskaTemplate}"/>
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="true">
-                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                    <Setter Property="ToolTip" 
+                    Value="{Binding RelativeSource={RelativeSource Self}, 
+                    Path=(Validation.Errors).CurrentItem.ErrorContent}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -32,7 +34,9 @@
             <Setter Property="Validation.ErrorTemplate" Value="{StaticResource GreskaTemplate}"/>
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="true">
-                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                    <Setter Property="ToolTip" 
+                    Value="{Binding RelativeSource={RelativeSource Self}, 
+                    Path=(Validation.Errors).CurrentItem.ErrorContent}"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -41,23 +45,25 @@
     <Grid Margin="20">
         <StackPanel>
             <TextBlock Text="{DynamicResource lblSifraIzdavaca}" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtSifra" 
-                     Height="25" Margin="0,0,0,15"
-                     Text="{Binding Sifra, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+            <TextBox x:Name="txtSifra" Height="25" Margin="0,0,0,15"
+                     Text="{Binding Sifra, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     TextChanged="TxtPolje_Changed"/>
 
             <TextBlock Text="{DynamicResource lblNazivIzdavaca}" Margin="0,0,0,5"/>
-            <TextBox x:Name="txtNaziv" 
-                     Height="25" Margin="0,0,0,15"
-                     Text="{Binding Naziv, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+            <TextBox x:Name="txtNaziv" Height="25" Margin="0,0,0,15"
+                     Text="{Binding Naziv, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                     TextChanged="TxtPolje_Changed"/>
 
             <TextBlock Text="{DynamicResource lblSefAutor}" Margin="0,0,0,5"/>
-            <ComboBox x:Name="cbSefovi" 
-                      Height="25" Margin="0,0,0,20" 
+            <ComboBox x:Name="cbSefovi" Height="25" Margin="0,0,0,20"
                       DisplayMemberPath="ImePrezime"
-                      SelectedItem="{Binding SefIzdavaca, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                      SelectedItem="{Binding SefIzdavaca, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                      SelectionChanged="TxtPolje_Changed"/>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-                <Button Content="{DynamicResource btnPotvrdi}" Width="90" Height="30" Margin="5" Click="BtnPotvrdi_Click" Background="#FFD1E1FB" FontWeight="Bold"/>
+                <Button x:Name="btnPotvrdi" Content="{DynamicResource btnPotvrdi}" 
+                        Width="90" Height="30" Margin="5" Click="BtnPotvrdi_Click" 
+                        Background="#FFD1E1FB" FontWeight="Bold" IsEnabled="False"/>
                 <Button Content="{DynamicResource btnOdustani}" Width="90" Height="30" Margin="5" Click="BtnOdustani_Click"/>
             </StackPanel>
         </StackPanel>

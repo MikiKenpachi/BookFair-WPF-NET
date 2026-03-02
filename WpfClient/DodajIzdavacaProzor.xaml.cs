@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,7 +24,7 @@ namespace WpfClient
 
     public partial class DodajIzdavacaProzor : Window
     {
-        public IzdavacDTO MojDTo { get; set; }
+        public IzdavacDTO izdavacDTO { get; set; }
         public List<Autor> SviAutori { get; set; }
 
         // 1. DODAJ OVO: Ovo svojstvo omogućava glavnom prozoru da "izvuče" rezultat
@@ -41,12 +42,12 @@ namespace WpfClient
                     .Select(g => g.First())
                     .ToList();
 
-                cbSefovi.ItemsSource = autoriKojiRadeZaIzdavaca;
+                cbSefovi.ItemsSource = sviAutori;
 
                 var selektovaniSef = autoriKojiRadeZaIzdavaca
                     .FirstOrDefault(a => a.Broj_lk == postojeciIzdavac.SefIzdavaca?.Broj_lk);
 
-                MojDTo = new IzdavacDTO
+                izdavacDTO = new IzdavacDTO
                 {
                     Sifra = postojeciIzdavac.Sifra,
                     Naziv = postojeciIzdavac.Naziv,
@@ -62,40 +63,81 @@ namespace WpfClient
             else
             {
                 cbSefovi.ItemsSource = sviAutori;
-                MojDTo = new IzdavacDTO();
+                izdavacDTO = new IzdavacDTO();
                 // LOKALIZACIJA NASLOVA
                 this.Title = Application.Current.FindResource("titleDodajIzdavaca").ToString();
             }
 
-            this.DataContext = MojDTo;
+            this.DataContext = izdavacDTO;
+            btnPotvrdi.IsEnabled = FormaJeValidna();
+        }
+
+        private void TxtPolje_Changed(object sender, EventArgs e)
+        {
+            if (btnPotvrdi != null)
+                btnPotvrdi.IsEnabled = FormaJeValidna();
+        }
+
+        private bool FormaJeValidna()
+        {
+            return ValidacijaSifreIzdavaca(txtSifra.Text.Trim()) &&
+                   ValidacijaNazivaIzdavaca(txtNaziv.Text.Trim()) &&
+                   cbSefovi.SelectedItem != null &&
+                   (cbSefovi.SelectedItem as Autor)?.Godine_iskustva > 5;
         }
 
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
             // Validacija preko DTO-a sa lokalizovanim porukama
-            if (!string.IsNullOrEmpty(MojDTo["Sifra"]) ||
-                !string.IsNullOrEmpty(MojDTo["Naziv"]) ||
-                !string.IsNullOrEmpty(MojDTo["SefIzdavaca"]))
+            if (!string.IsNullOrEmpty(izdavacDTO["Sifra"]) ||
+                !string.IsNullOrEmpty(izdavacDTO["Naziv"]) ||
+                !string.IsNullOrEmpty(izdavacDTO["SefIzdavaca"]))
             {
                 string poruka = Application.Current.FindResource("msgIspraviGreske").ToString();
                 string naslov = Application.Current.FindResource("titleValidacija").ToString();
+
+                if (!ValidacijaSifreIzdavaca(txtSifra.Text.Trim()))
+                {
+                    MessageBox.Show(Application.Current.FindResource("msgSifraFormat").ToString(),
+                        naslov, MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (!ValidacijaNazivaIzdavaca(txtNaziv.Text.Trim()))
+                {
+                    MessageBox.Show(Application.Current.FindResource("msgNazivNevalidan").ToString(),
+                        naslov, MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
 
                 MessageBox.Show(poruka, naslov, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
+
+
             NoviIzdavac = new Izdavac
             {
-                Sifra = MojDTo.Sifra,
-                Naziv = MojDTo.Naziv,
-                SefIzdavaca = MojDTo.SefIzdavaca,
-                ListaAutora = MojDTo.ListaAutora,
-                ListaKnjiga = MojDTo.ListaKnjiga
+                Sifra = izdavacDTO.Sifra,
+                Naziv = izdavacDTO.Naziv,
+                SefIzdavaca = izdavacDTO.SefIzdavaca,
+                ListaAutora = izdavacDTO.ListaAutora,
+                ListaKnjiga = izdavacDTO.ListaKnjiga
             };
 
             this.DialogResult = true;
         }
 
+        private bool ValidacijaSifreIzdavaca(string sifra)
+        {
+            return Regex.IsMatch(sifra, @"^\d{5}$");
+        }
+
+        private bool ValidacijaNazivaIzdavaca(string naziv)
+        {
+            return !string.IsNullOrWhiteSpace(naziv) && naziv.Length >= 3 && naziv.Length <= 30;
+        }
 
 
         private void BtnOdustani_Click(object sender, RoutedEventArgs e)

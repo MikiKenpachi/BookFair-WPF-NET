@@ -1,4 +1,5 @@
-﻿using SajamKnjigaProjekat.Core.DAO;
+﻿using Core.DTO;
+using SajamKnjigaProjekat.Core.DAO;
 using SajamKnjigaProjekat.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace WpfClient
     public partial class DodajPosetiocaProzor : Window
     {
         public Posetilac? NoviPosetilac { get; private set; }
+
+        private PosetilacDTO posetilacDTO;
         public DodajPosetiocaProzor(Posetilac p = null)
         {
             InitializeComponent();
@@ -27,15 +30,35 @@ namespace WpfClient
             if (p != null)
             {
                 NoviPosetilac = p;
-                PopuniPolja();
+
+                posetilacDTO = new PosetilacDTO
+                {
+                    Ime = p.Ime,
+                    Prezime = p.Prezime,
+                    DatumRodjenja = p.DatumRodjenja,
+                    Telefon = p.Telefon,
+                    Email = p.Email,
+                    GodinaClanstva = p.GodinaClanstva.ToString(),
+                    Ulica = p.Adresa?.Ulica,
+                    Broj = p.Adresa?.Broj,
+                    Grad = p.Adresa?.Grad,
+                    Drzava = p.Adresa?.Drzava,
+                    Status = p.Status
+                };
+
+                //PopuniPolja();
                 // Lokalizovan naslov za izmenu
                 this.Title = Application.Current.FindResource("titleIzmeniPosetioca").ToString();
             }
             else
             {
                 // Lokalizovan naslov za dodavanje
+                posetilacDTO = new PosetilacDTO(); // Prazan DTO za unos novog posetioca
                 this.Title = Application.Current.FindResource("titleDodajPosetioca").ToString();
             }
+
+            this.DataContext = posetilacDTO;
+            btnPotvrdi.IsEnabled = FormaJeValidna();
         }
 
         private void PopuniPolja()
@@ -63,71 +86,54 @@ namespace WpfClient
 
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtIme.Text) || string.IsNullOrWhiteSpace(txtPrezime.Text))
-            {
-                string poruka = Application.Current.FindResource("msgUnesiteImePrezime").ToString();
-                string naslov = Application.Current.FindResource("errorTitle").ToString();
-
-                MessageBox.Show(poruka, naslov, MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            // 2. Ako NoviPosetilac ne postoji (dodavanje novog), kreiraj novu instancu
-            // Ako postoji (izmena), samo ćemo mu ažurirati property-je
             if (NoviPosetilac == null)
             {
                 NoviPosetilac = new Posetilac();
-                // Ako tvoja klasa Posetilac ima i instancu klase Adresa unutar sebe:
                 NoviPosetilac.Adresa = new Adresa();
             }
 
-            // 3. Mapiranje podataka iz UI kontrola u objekat
-            NoviPosetilac.Ime = txtIme.Text;
-            NoviPosetilac.Prezime = txtPrezime.Text;
+            NoviPosetilac.Ime = posetilacDTO.Ime;
+            NoviPosetilac.Prezime = posetilacDTO.Prezime;
             NoviPosetilac.DatumRodjenja = dpDatum.SelectedDate ?? DateTime.Now;
-            NoviPosetilac.Telefon = txtTelefon.Text;
-            NoviPosetilac.Email = txtEmail.Text;
+            NoviPosetilac.Telefon = posetilacDTO.Telefon;
+            NoviPosetilac.Email = posetilacDTO.Email;
+            NoviPosetilac.GodinaClanstva = int.Parse(posetilacDTO.GodinaClanstva);
+            NoviPosetilac.Adresa.Ulica = posetilacDTO.Ulica;
+            NoviPosetilac.Adresa.Broj = posetilacDTO.Broj;
+            NoviPosetilac.Adresa.Grad = posetilacDTO.Grad;
+            NoviPosetilac.Adresa.Drzava = posetilacDTO.Drzava;
 
-            if (int.TryParse(txtGodinaClanstva.Text, out int godinaClanstva))
-            {
-                NoviPosetilac.GodinaClanstva = godinaClanstva;
-            }
+            if (cbStatus.SelectedItem is ComboBoxItem item && item.Content.ToString() == "V.I.P.")
+                NoviPosetilac.Status = StatusPosetioca.V;
             else
-            {
-                NoviPosetilac.GodinaClanstva = 0; // or handle invalid input as needed
-            }
+                NoviPosetilac.Status = StatusPosetioca.R;
 
-            // Čitanje statusa iz ComboBox-a
-            if (cbStatus.SelectedItem is ComboBoxItem selectedItem)
-            {
-                string sadrzaj = selectedItem.Content.ToString();
-
-                if (sadrzaj == "V.I.P.")
-                {
-                    NoviPosetilac.Status = StatusPosetioca.V;
-                }
-                else
-                {
-                    NoviPosetilac.Status = StatusPosetioca.R;
-                }
-            }
-
-            // Čitanje razdvojenih polja adrese
-            NoviPosetilac.Adresa.Ulica = txtUlica.Text;
-            NoviPosetilac.Adresa.Broj = txtBroj.Text;
-            NoviPosetilac.Adresa.Grad = txtGrad.Text;
-            NoviPosetilac.Adresa.Drzava = txtDrzava.Text;
-
-            // 4. Zatvaranje prozora uz potvrdu
-            // Postavljanjem DialogResult na true, signaliziramo pozivaocu (MainWindow) da je akcija uspešna
             this.DialogResult = true;
             this.Close();
-
         }
 
-        private void txtBrClanske_TextChanged(object sender, TextChangedEventArgs e)
+        private void TxtPolje_Changed(object sender, EventArgs e)
         {
 
+            posetilacDTO.DatumRodjenja = dpDatum.SelectedDate;
+
+            if (btnPotvrdi != null)
+                btnPotvrdi.IsEnabled = FormaJeValidna();
         }
+
+        private bool FormaJeValidna()
+        {
+            return string.IsNullOrEmpty(posetilacDTO[nameof(posetilacDTO.Ime)]) &&
+                   string.IsNullOrEmpty(posetilacDTO[nameof(posetilacDTO.Prezime)]) &&
+                   string.IsNullOrEmpty(posetilacDTO[nameof(posetilacDTO.Telefon)]) &&
+                   string.IsNullOrEmpty(posetilacDTO[nameof(posetilacDTO.Email)]) &&
+                   string.IsNullOrEmpty(posetilacDTO[nameof(posetilacDTO.GodinaClanstva)]) &&
+                   string.IsNullOrEmpty(posetilacDTO[nameof(posetilacDTO.Ulica)]) &&
+                   string.IsNullOrEmpty(posetilacDTO[nameof(posetilacDTO.Broj)]) &&
+                   string.IsNullOrEmpty(posetilacDTO[nameof(posetilacDTO.Grad)]) &&
+                   string.IsNullOrEmpty(posetilacDTO[nameof(posetilacDTO.Drzava)]) &&
+                   dpDatum.SelectedDate.HasValue;
+        }
+
     }
 }

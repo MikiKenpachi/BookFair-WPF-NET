@@ -19,6 +19,9 @@ CK-18|Majska|Loznica|3|Srbija
 CK-19|Vuka Karadzica|Loznica|70|Srbija
 CK-20|Bulevar Oslobodjenja|Budimpesta|103|Madjarska
 CK-21|Njegoseva|Zajecar|15|Srbija
+CK-22|Poenkareva|Loznica|12|Srbija
+CK-23|Branka Bajica|Sombor|44|Srbija
+CK-24|Zeke Buljubase|Aleksinac|100|Srbija
 10101965|Tolstojeva|Novi Sad|64|Srbija
 04051972|Solunska|Sombor|14|Srbija
 12121992|Danteova|Zrenjanin|13|Srbija

@@ -92,7 +92,7 @@
                               Grid.Row="1"
                               AutoGenerateColumns="False"
                               IsReadOnly="True"
-                              SelectionMode="Single"
+                              SelectionMode="Extended"
                               CanUserAddRows="False"
                               CanUserDeleteRows="False"
                               GridLinesVisibility="Horizontal"
