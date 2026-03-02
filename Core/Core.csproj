@@ -52,7 +52,9 @@
     <Compile Include="DAO\KupiliDAO.cs" />
     <Compile Include="DAO\PosetilacDAO.cs" />
     <Compile Include="DAO\ZeljaDAO.cs" />
+    <Compile Include="DTO\AutorDTO.cs" />
     <Compile Include="DTO\IzdavacDTO.cs" />
+    <Compile Include="DTO\KnjigaDTO.cs" />
     <Compile Include="DTO\PosetilacDTO.cs" />
     <Compile Include="Languages\Translator.cs" />
     <Compile Include="Models\Adresa.cs" />

@@ -1,4 +1,5 @@
 ﻿using Core.DAO;
+using Core.DTO;
 using SajamKnjigaProjekat.Core.DAO;
 using SajamKnjigaProjekat.Core.Models;
 using System;
@@ -16,14 +17,14 @@ namespace WpfClient
     /// </summary>
     public partial class DodajKnjiguProzor : Window
     {
-        // ── DAO ─────────────────────────────────────────────────────────
         private readonly AutorDAO _autorDao = new AutorDAO();
         private readonly IzdavacDAO _izdavacDao = new IzdavacDAO();
 
         // ── Rezultat ─────────────────────────────────────────────────────
         public Knjiga NovaKnjiga { get; private set; }
 
-        //private Autor _trenutniAutor = null;   --->  ne koristimo?
+        // ── Validator ────────────────────────────────────────────────────
+        private KnjigaDTO _validator = new KnjigaDTO();
 
         private ObservableCollection<Autor> _odabraniAutori = new ObservableCollection<Autor>();
 
@@ -37,13 +38,11 @@ namespace WpfClient
         public DodajKnjiguProzor(Knjiga knjiga = null)
         {
             InitializeComponent();
-            // ... (vaš postojeći kod za učitavanje)
 
             _sviIzdavaci = _izdavacDao.GetAll().ToList();
             _sviAutori = _autorDao.GetAll().ToList();
             PopuniZanrove();
             PopuniIzdavace();
-
 
             if (knjiga != null)
             {
@@ -72,11 +71,13 @@ namespace WpfClient
         private void PopuniIzdavace()
         {
             cbIzdavac.ItemsSource = _sviIzdavaci;
-            cbIzdavac.DisplayMemberPath = "Naziv"; // ili koje god polje prikazuješ
+            cbIzdavac.DisplayMemberPath = "Naziv";
         }
 
         private void PopuniPolja()
         {
+            if (NovaKnjiga == null) return;
+
             txtISBN.Text = NovaKnjiga.ISBN;
             txtISBN.IsReadOnly = true;   // ISBN se ne menja pri izmeni
             txtISBN.Background = System.Windows.Media.Brushes.WhiteSmoke;
@@ -90,7 +91,7 @@ namespace WpfClient
 
             // Izdavač
             if (NovaKnjiga.Izdavac != null)
-                   cbIzdavac.SelectedItem = _sviIzdavaci.FirstOrDefault(i => i.Sifra == NovaKnjiga.Izdavac.Sifra);
+                cbIzdavac.SelectedItem = _sviIzdavaci.FirstOrDefault(i => i.Sifra == NovaKnjiga.Izdavac.Sifra);
 
             // Učitaj SVE autore knjige u kolekciju
             _odabraniAutori.Clear();
@@ -108,23 +109,46 @@ namespace WpfClient
         }
 
         // ================================================================
+        // Validacija pomoću DTO
+        // ================================================================
+
+        private void SinhronizujValidatorIzForme()
+        {
+            _validator.ISBN = txtISBN.Text;
+            _validator.Naziv = txtNaziv.Text;
+            _validator.Cena = txtCena.Text;
+            _validator.BrojStrana = txtBrojStrana.Text;
+            _validator.GodinaIzdanja = txtGodinaIzdanja.Text;
+            _validator.Zanr = cbZanr.SelectedItem as Knjiga.Zanrovi?;
+            _validator.Izdavac = cbIzdavac.SelectedItem as Izdavac;
+            _validator.Autori = _odabraniAutori.ToList();
+        }
+
+        private bool JeLiValidno()
+        {
+            string[] polja = {
+                nameof(KnjigaDTO.ISBN), nameof(KnjigaDTO.Naziv), nameof(KnjigaDTO.Cena),
+                nameof(KnjigaDTO.BrojStrana), nameof(KnjigaDTO.GodinaIzdanja),
+                nameof(KnjigaDTO.Zanr), nameof(KnjigaDTO.Izdavac)
+            };
+
+            foreach (var p in polja)
+            {
+                if (_validator[p] == "X") return false;
+            }
+            return true;
+        }
+
+        // ================================================================
         // Logika dugmadi [+] i [-] za autora
         // ================================================================
 
-        /// <summary>
-        /// [+] je aktivan samo ako knjiga NEMA autora.
-        /// [-] je aktivan samo ako knjiga IMA autora.
-        /// </summary>
         private void OsveziDugmadAutora()
         {
-            // [+] je aktivan sve dok ima autora koji nisu dodati
             btnDodajAutora.IsEnabled = _odabraniAutori.Count < _sviAutori.Count;
-
-            // [-] je aktivan samo ako ima barem jedan autor na listi
             btnUkloniAutora.IsEnabled = _odabraniAutori.Count > 0;
         }
 
-        // ── Dugme [+] — dodaj autora ─────────────────────────────────────
         private void BtnDodajAutora_Click(object sender, RoutedEventArgs e)
         {
             var dostupni = _sviAutori
@@ -149,14 +173,12 @@ namespace WpfClient
             }
         }
 
-        // ── Dugme [-] — ukloni autora ────────────────────────────────────
         private void BtnUkloniAutora_Click(object sender, RoutedEventArgs e)
         {
             var prozor = new OdaberiAutoraProzor(_odabraniAutori.ToList()) { Owner = this };
 
             if (prozor.ShowDialog() == true && prozor.OdabraniAutor != null)
             {
-                // Sastavljanje poruke: "Ukloniti autora [Ime] sa knjige?"
                 string porukaStart = Application.Current.FindResource("msgUklonitiAutora").ToString();
                 string porukaKraj = Application.Current.FindResource("msgUklonitiAutoraPitanje").ToString();
                 string naslov = Application.Current.FindResource("titleUklanjanjeAutora").ToString();
@@ -178,46 +200,36 @@ namespace WpfClient
 
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
-            // Validacija obaveznih polja
-            string naslovGreska = Application.Current.FindResource("errorTitle").ToString();
+            // 1. Sinhronizacija UI -> Validator
+            SinhronizujValidatorIzForme();
 
-            if (string.IsNullOrWhiteSpace(txtISBN.Text) ||
-                string.IsNullOrWhiteSpace(txtNaziv.Text) ||
-                string.IsNullOrWhiteSpace(txtCena.Text) ||
-                string.IsNullOrWhiteSpace(txtGodinaIzdanja.Text))
+            // 2. Provera validnosti oslanjanjem na DTO
+            if (!JeLiValidno())
             {
-                MessageBox.Show(Application.Current.FindResource("msgPopuniteSvaPolja").ToString(),
-                    naslovGreska, MessageBoxButton.OK, MessageBoxImage.Warning);
+                string naslovGreska = Application.Current.FindResource("errorTitle").ToString();
+                string poruka = Application.Current.FindResource("msgPopuniteSvaPolja").ToString();
+                MessageBox.Show(poruka, naslovGreska, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            if (cbZanr.SelectedItem == null)
-            {
-                MessageBox.Show(Application.Current.FindResource("msgOdaberiteZanr").ToString(),
-                    naslovGreska, MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            // Kreiraj knjigu ako je dodavanje
+            // 3. Kreiraj knjigu ako je dodavanje
             if (NovaKnjiga == null)
                 NovaKnjiga = new Knjiga();
 
-            // Popuni polja
-            NovaKnjiga.ISBN = txtISBN.Text.Trim();
-            NovaKnjiga.Naziv = txtNaziv.Text.Trim();
-            NovaKnjiga.Cena = txtCena.Text.Trim();
-            NovaKnjiga.Broj_strana = txtBrojStrana.Text.Trim();
-            NovaKnjiga.Godina_izdanja = txtGodinaIzdanja.Text.Trim();
-            NovaKnjiga.Zanr = (Knjiga.Zanrovi)cbZanr.SelectedItem;
+            // 4. Mapiranje iz DTO u Model (korišćenje očišćenih vrednosti iz validatora)
+            NovaKnjiga.ISBN = _validator.ISBN.Trim();
+            NovaKnjiga.Naziv = _validator.Naziv.Trim();
+            NovaKnjiga.Cena = _validator.Cena.Trim();
+            NovaKnjiga.Broj_strana = _validator.BrojStrana.Trim();
+            NovaKnjiga.Godina_izdanja = _validator.GodinaIzdanja.Trim();
+            NovaKnjiga.Zanr = _validator.Zanr.Value;
+            NovaKnjiga.Izdavac = _validator.Izdavac;
 
-            // Izdavač
-            NovaKnjiga.Izdavac = cbIzdavac.SelectedItem as Izdavac;
-
-            // Postavi sve odabrane autore
+            // 5. Upravljanje listom autora (Bidirekciona veza)
             if (NovaKnjiga.ListaAutora == null)
                 NovaKnjiga.ListaAutora = new List<Autor>();
 
-            // Ukloni stareautore koji više nisu na listi
+            // Ukloni ovu knjigu iz SpisakKnjiga onih autora koji su izbačeni
             var uklonjeni = NovaKnjiga.ListaAutora
                 .Where(a => !_odabraniAutori.Any(x => x.Broj_lk == a.Broj_lk))
                 .ToList();
@@ -225,10 +237,10 @@ namespace WpfClient
             foreach (var autor in uklonjeni)
                 autor.SpisakKnjiga?.Remove(NovaKnjiga);
 
-            // Postavi novu listu
+            // Postavi novu listu autora u knjigu
             NovaKnjiga.ListaAutora = _odabraniAutori.ToList();
 
-            // Bidirekciona veza — svaki autor dobija referencu na ovu knjigu
+            // Dodaj ovu knjigu u SpisakKnjiga svih trenutno odabranih autora
             foreach (var autor in NovaKnjiga.ListaAutora)
             {
                 if (autor.SpisakKnjiga == null)
@@ -248,7 +260,6 @@ namespace WpfClient
             this.Close();
         }
 
-        // Add or update this method to show all authors separated by comma and space
         private void OsveziPrikazAutora()
         {
             txtAutor.Text = string.Join(", ", _odabraniAutori.Select(a => a.ImePrezime));

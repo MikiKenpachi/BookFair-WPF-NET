@@ -68,7 +68,7 @@
                           CanUserDeleteRows="False"
                           IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="{DynamicResource colClanskaKarta}" Binding="{Binding BrClanskeKarte}" Width="*" />
+                        <DataGridTextColumn Header="{DynamicResource colClanskaKarta}" Binding="{Binding BrClanskeKarte}" SortMemberPath="ClanskaKartaBroj" Width="*" />
                         <DataGridTextColumn Header="{DynamicResource colIme}" Binding="{Binding Ime}" Width="*" />
                         <DataGridTextColumn Header="{DynamicResource colPrezime}" Binding="{Binding Prezime}" Width="*" />
                         <DataGridTextColumn Header="{DynamicResource colStatus}" Binding="{Binding Status}" Width="0.7*" />
@@ -97,7 +97,7 @@
                           CanUserDeleteRows="False"
                           IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="{DynamicResource colClanskaKarta}" Binding="{Binding BrClanskeKarte}" Width="*" />
+                        <DataGridTextColumn Header="{DynamicResource colClanskaKarta}" Binding="{Binding BrClanskeKarte}" SortMemberPath="ClanskaKartaBroj" Width="*" />
                         <DataGridTextColumn Header="{DynamicResource colIme}" Binding="{Binding Ime}" Width="*" />
                         <DataGridTextColumn Header="{DynamicResource colPrezime}" Binding="{Binding Prezime}" Width="*" />
                         <DataGridTextColumn Header="{DynamicResource colStatus}" Binding="{Binding Status}" Width="0.7*" />
