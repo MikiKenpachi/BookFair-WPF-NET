@@ -12,9 +12,21 @@
     <system:String x:Key="mLanguage">_Jezik</system:String>
     <system:String x:Key="mHelp">_Pomoć</system:String>
     <system:String x:Key="mAbout">_O programu</system:String>
-
+    <system:String x:Key="tabPosetiociPoredjenje">Poredi 2 posetioca</system:String>
+    <system:String x:Key="titleObavestenje">Obaveštenje</system:String>
+    <system:String x:Key="msgOdaberiObeKnjige">Molimo odaberite obe knjige za poređenje.</system:String>
     <system:String x:Key="mSrb"> Srpski </system:String>
     <system:String x:Key="mEng">Engleski</system:String>
+
+    <system:String x:Key="titlePoredjenjePosetilaca">Poređenje posetilaca</system:String>
+    <system:String x:Key="lblNaslovPoredjenja">Poređenje posetilaca po dve knjige</system:String>
+    <system:String x:Key="lblKnjiga1">Knjiga 1:</system:String>
+    <system:String x:Key="lblKnjiga2">Knjiga 2:</system:String>
+    <system:String x:Key="btnPretrazi">Pretraži</system:String>
+    <system:String x:Key="lblObaNaZelji">1) Obe na listi želja</system:String>
+    <system:String x:Key="lblKupiliSamoPrvu">2) Kupili prvu knjigu</system:String>
+    <system:String x:Key="btnPrikazi">Prikaži</system:String>
+    <system:String x:Key="btnZatvori">Zatvori</system:String>
 
     <system:String x:Key="tabPosetioci"> Posetioci</system:String>
     <system:String x:Key="tabAutori"> Autori</system:String>
@@ -74,7 +86,7 @@
     <system:String x:Key="titleAutoriIzdavaca">Autori Izdavača</system:String>
 	<system:String x:Key="lblAutoriIzdavacaNaslov">Autori Izdavača: </system:String>
 	<system:String x:Key="tipPretraziAutore">Pretraži autore</system:String>
-	<system:String x:Key="btnZatvori">Zatvori</system:String>
+
 	<system:String x:Key="colTelefon">Telefon</system:String>
 
 	<system:String x:Key="titleDodajAutora">Dodaj autora</system:String>
@@ -133,7 +145,7 @@
 	<system:String x:Key="btnDodajNaListu">Dodaj</system:String>
 	<system:String x:Key="msgOdaberiKnjigu">Molimo odaberite knjigu sa liste.</system:String>
 
-	<system:String x:Key="titleObavestenje">Obaveštenje</system:String>
+	
 
 	<system:String x:Key="titleDodajPosetioca">Dodaj Posetioca</system:String>
 	<system:String x:Key="lblIme">Ime *</system:String>

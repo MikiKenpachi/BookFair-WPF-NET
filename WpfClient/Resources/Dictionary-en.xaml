@@ -145,6 +145,19 @@
     <system:String x:Key="statusRedovan">Regular</system:String>
     <system:String x:Key="statusVIP">V.I.P.</system:String>
     <system:String x:Key="lblGodinaClanstva">Membership year</system:String>
+    <system:String x:Key="titlePoredjenjePosetilaca">Visitor Comparison</system:String>
+    <system:String x:Key="lblNaslovPoredjenja">Visitor comparison by two books</system:String>
+    <system:String x:Key="lblKnjiga1">Book 1:</system:String>
+    <system:String x:Key="lblKnjiga2">Book 2:</system:String>
+    <system:String x:Key="btnPretrazi">Search</system:String>
+    <system:String x:Key="lblObaNaZelji">1) Both on wishlist</system:String>
+    <system:String x:Key="lblKupiliSamoPrvu">2) Bought the first book</system:String>
+    <system:String x:Key="btnPrikazi">Show</system:String>
+  
+
+    <system:String x:Key="tabPosetiociPoredjenje">Compare 2 visitors</system:String>
+
+    <system:String x:Key="msgOdaberiObeKnjige">Please select both books for comparison.</system:String>
 
     <system:String x:Key="titleIzmeniPosetioca">Edit Visitor</system:String>
 

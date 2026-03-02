@@ -671,6 +671,16 @@ namespace WpfClient
         private void MenuKnjige_Click(object sender, RoutedEventArgs e) =>
             MainTabControl.SelectedIndex = 2;
 
+        private void MenuPosetiociPoredjenje_Click(object sender, RoutedEventArgs e)
+        {
+            PoredjenjePosetilacaView prozor = new PoredjenjePosetilacaView(sviPosetiociList, sveKnjigeList);
+            prozor.Owner = this;
+            prozor.ShowDialog();
+        }
+           
+
+       
+
         private void MenuIzdavaci_Click(object sender, RoutedEventArgs e)
         {
             // Prosleđujemo referencu na listu koju MainWindow već ima
