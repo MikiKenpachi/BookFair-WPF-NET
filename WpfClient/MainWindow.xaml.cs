@@ -717,6 +717,15 @@ namespace WpfClient
                 MenuClose_Click(sender, null);
                 e.Handled = true;
             }
+
+            else if (isCtrl && e.Key == Key.P)
+            {
+                if (MainTabControl.SelectedIndex == 0)
+                    BtnAutoriPosetioca_Click(sender, null); // prikazi autore cije knjige posetilac ima na listi zelja
+                else if (MainTabControl.SelectedIndex == 1)
+                    BtnPosetiociAutora_Click(sender, null); // prikazi posetioce koji imaju knjige autora na listi zelja
+                e.Handled = true;
+            }
         }
         // ================================================================
         // Lokalizacija

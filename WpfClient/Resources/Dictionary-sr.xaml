@@ -223,11 +223,11 @@
 
     <system:String x:Key="titleAutoriPosetioca">Autori posetioca</system:String>
     <system:String x:Key="lblAutoriPosetilacaNaslov">Autori posetioca:</system:String>
-    <system:String x:Key="tipAutoriPosetioca">Prikaži autore čije knjige posetilac ima na listi želja</system:String>
+    <system:String x:Key="tipAutoriPosetioca">Prikaži autore čije knjige posetilac ima na listi želja (CTRL+P)</system:String>
 
     <system:String x:Key="titlePosetiociAutora">Posetioci autora</system:String>
     <system:String x:Key="lblPosetiociAutoraNaslov">Posetioci autora:</system:String>
-    <system:String x:Key="tipPosetiociAutora">Prikaži posetioce koji imaju knjige autora na listi želja</system:String>
+    <system:String x:Key="tipPosetiociAutora">Prikaži posetioce koji imaju knjige autora na listi želja (CTRL+P)</system:String>
 
 
     <system:String x:Key="txtPrethodna">Prethodna</system:String>

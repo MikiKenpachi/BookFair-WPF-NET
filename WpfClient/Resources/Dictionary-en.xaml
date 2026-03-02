@@ -223,11 +223,11 @@
 
     <system:String x:Key="titleAutoriPosetioca">Visitor's Authors</system:String>
     <system:String x:Key="lblAutoriPosetilacaNaslov">Authors of visitor:</system:String>
-    <system:String x:Key="tipAutoriPosetioca">Show authors whose books visitor has on their wishlist</system:String>
+    <system:String x:Key="tipAutoriPosetioca">Show authors whose books visitor has on their wishlist (CTRL+P)</system:String>
 
     <system:String x:Key="titlePosetiociAutora">Author Visitors</system:String>
     <system:String x:Key="lblPosetiociAutoraNaslov">Visitors of author:</system:String>
-    <system:String x:Key="tipPosetiociAutora">Show visitors who have author's books on their wishlist</system:String>
+    <system:String x:Key="tipPosetiociAutora">Show visitors who have author's books on their wishlist (CTRL+P)</system:String>
 
 
     <system:String x:Key="txtPrethodna">Previous</system:String>

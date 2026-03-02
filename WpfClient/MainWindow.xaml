@@ -127,9 +127,17 @@
                     <Button Content="+" Width="30" Height="30" Click="BtnDodaj_Click" ToolTip="{DynamicResource tipDodaj}" Margin="2,0"/>
                     <Button Content="✎" Width="30" Height="30" Click="BtnIzmeni_Click" ToolTip="{DynamicResource tipIzmeni}" Margin="2,0"/>
                     <Button Content="🗑" Width="30" Height="30" Click="BtnObrisi_Click" ToolTip="{DynamicResource tipObrisi}" Margin="2,0"/>
-                    <Button x:Name="btnPosetiociAutora" Content="👥" Width="30" Height="30" Click="BtnPosetiociAutora_Click" ToolTip="{DynamicResource tipPosetiociAutora}" Margin="2,0" Visibility="Visible"/>
-                    <Button x:Name="btnAutoriPosetioca" Content="✍️" Width="30" Height="30" Click="BtnAutoriPosetioca_Click" ToolTip="{DynamicResource tipAutoriPosetioca}" Margin="2,0" Visibility="Collapsed"/>
-
+                    <Button x:Name="btnPosetiociAutora" Content="👥" Width="30" Height="30" Click="BtnPosetiociAutora_Click" Margin="2,0" Visibility="Visible">
+                        <Button.ToolTip>
+                            <ToolTip Content="{DynamicResource tipPosetiociAutora}"/>
+                        </Button.ToolTip>
+                    </Button>
+                    
+                    <Button x:Name="btnAutoriPosetioca" Content="✍️" Width="30" Height="30" Click="BtnAutoriPosetioca_Click" Margin="2,0" Visibility="Visible">
+                        <Button.ToolTip>
+                            <ToolTip Content="{DynamicResource tipAutoriPosetioca}"/>
+                        </Button.ToolTip>
+                    </Button>
                 </StackPanel>
 
                 
