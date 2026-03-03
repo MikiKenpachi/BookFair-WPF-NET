@@ -70,6 +70,7 @@ namespace WpfClient
 
             // 4. Pošalji listu sa povezanim adresama u prozor
             AutoriIzdavacaProzor prozor = new AutoriIzdavacaProzor(autori, selektovaniIzdavac.Naziv);
+            prozor.Owner = this;
             prozor.ShowDialog();
         }
 

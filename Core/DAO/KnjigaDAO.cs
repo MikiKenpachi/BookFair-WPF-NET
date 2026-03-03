@@ -26,13 +26,13 @@ namespace SajamKnjigaProjekat.Core.DAO
         public void Add(Knjiga knjiga)
         {
             listaKnjiga.Add(knjiga);
-            _storage.Save(listaKnjiga);
+            //_storage.Save(listaKnjiga);
         }
 
         public void Remove(Knjiga knjiga)
         {
             listaKnjiga.Remove(knjiga);
-            _storage.Save(listaKnjiga);
+            //_storage.Save(listaKnjiga);
         }
 
         public void Save()

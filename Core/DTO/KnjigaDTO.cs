@@ -1,13 +1,12 @@
 ﻿using SajamKnjigaProjekat.Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace Core.DTO
 {
-    public class KnjigaDTO
+    public class KnjigaDTO : IDataErrorInfo
     {
         public string ISBN { get; set; }
         public string Naziv { get; set; }
@@ -28,25 +27,30 @@ namespace Core.DTO
                 {
                     case nameof(ISBN):
                         if (string.IsNullOrWhiteSpace(ISBN)) return "X";
-                        // ISBN obično ima 10 ili 13 cifara (opciona dodatna provera)
-                        if (ISBN.Length < 10) return "X";
+                        if (!Regex.IsMatch(ISBN.Trim(), @"^\d{6}$")) return "X";
                         break;
 
                     case nameof(Naziv):
                         if (string.IsNullOrWhiteSpace(Naziv)) return "X";
+                        if (Naziv.Trim().Length < 2) return "X";
                         break;
 
                     case nameof(Cena):
-                        if (string.IsNullOrWhiteSpace(Cena) || !double.TryParse(Cena, out _)) return "X";
+                        if (string.IsNullOrWhiteSpace(Cena)) return "X";
+                        if (!double.TryParse(Cena, System.Globalization.NumberStyles.Any,
+                                System.Globalization.CultureInfo.InvariantCulture, out double cenaVal)) return "X";
+                        if (cenaVal <= 0) return "X";
                         break;
 
                     case nameof(BrojStrana):
-                        if (string.IsNullOrWhiteSpace(BrojStrana) || !int.TryParse(BrojStrana, out _)) return "X";
+                        if (string.IsNullOrWhiteSpace(BrojStrana)) return "X";
+                        if (!int.TryParse(BrojStrana, out int straneVal) || straneVal <= 0) return "X";
                         break;
 
                     case nameof(GodinaIzdanja):
                         if (string.IsNullOrWhiteSpace(GodinaIzdanja)) return "X";
-                        if (!int.TryParse(GodinaIzdanja, out int god) || god > DateTime.Now.Year) return "X";
+                        if (!int.TryParse(GodinaIzdanja, out int god)) return "X";
+                        if (god < 1400 || god > DateTime.Now.Year) return "X";
                         break;
 
                     case nameof(Zanr):

@@ -29,7 +29,7 @@ namespace WpfClient
             dgKnjige.ItemsSource = KnjigeView;
 
             // Dopunjavamo naslov imenom izdavača
-            txtNaslov.Text += " " + nazivIzdavaca;
+            txtNaslov.Text += " : " + nazivIzdavaca;
         }
 
         // ================================================================

@@ -42,7 +42,7 @@ namespace WpfClient
                     .Select(g => g.First())
                     .ToList();
 
-                cbSefovi.ItemsSource = sviAutori;
+                cbSefovi.ItemsSource = autoriKojiRadeZaIzdavaca;
 
                 var selektovaniSef = autoriKojiRadeZaIzdavaca
                     .FirstOrDefault(a => a.Broj_lk == postojeciIzdavac.SefIzdavaca?.Broj_lk);
@@ -83,7 +83,7 @@ namespace WpfClient
             return ValidacijaSifreIzdavaca(txtSifra.Text.Trim()) &&
                    ValidacijaNazivaIzdavaca(txtNaziv.Text.Trim()) &&
                    cbSefovi.SelectedItem != null &&
-                   (cbSefovi.SelectedItem as Autor)?.Godine_iskustva > 5;
+                   (cbSefovi.SelectedItem as Autor)?.Godine_iskustva >= 5;
         }
 
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)

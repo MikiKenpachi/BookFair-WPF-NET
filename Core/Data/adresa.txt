@@ -21,7 +21,7 @@ CK-20|Bulevar Oslobodjenja|Budimpesta|103|Madjarska
 CK-21|Njegoseva|Zajecar|15|Srbija
 CK-22|Poenkareva|Loznica|12|Srbija
 CK-23|Branka Bajica|Sombor|44|Srbija
-CK-24|Zeke Buljubase|Aleksinac|100|Srbija
+CK-24|Antina|Loznica|55|Srbija
 10101965|Tolstojeva|Novi Sad|64|Srbija
 04051972|Solunska|Sombor|14|Srbija
 12121992|Danteova|Zrenjanin|13|Srbija
@@ -35,4 +35,3 @@ CK-24|Zeke Buljubase|Aleksinac|100|Srbija
 27041943|Crvene armije|Moskva|76|Rusija
 05111973|Kosovska|Sankt Peterzburg|2|Rusija
 03112001|Primorska|Madrid|76|Spanija
-12121984|Jevrejska|Podgorica|44|Crna Gora

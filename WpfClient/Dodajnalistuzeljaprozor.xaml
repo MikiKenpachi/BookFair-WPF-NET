@@ -16,7 +16,7 @@
         <DataGrid Grid.Row="0" x:Name="listKnjige"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  SelectionMode="Single"
+                  SelectionMode="Extended"
                   GridLinesVisibility="Horizontal"
                   HeadersVisibility="Column"
                   Margin="0,0,0,10">

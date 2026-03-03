@@ -39,13 +39,11 @@ namespace SajamKnjigaProjekat.Core.DAO
         public void Add(Posetilac p)
         {
             listaPosetilaca.Add(p);
-            _storage.Save(listaPosetilaca);
         }
 
         public void Remove(Posetilac p)
         {
             listaPosetilaca.Remove(p);
-            _storage.Save(listaPosetilaca); 
         }
 
         public void Update(Posetilac p)
@@ -63,7 +61,6 @@ namespace SajamKnjigaProjekat.Core.DAO
 
                 // 4. Snimimo nazad u fajl (pozivamo tvoju postojeću metodu za snimanje)
                 listaPosetilaca = svi;
-                Save();
             }
         }
 

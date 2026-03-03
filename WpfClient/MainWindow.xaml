@@ -77,13 +77,13 @@
             </MenuItem>
 
             <MenuItem Header="{DynamicResource mEdit}">
-                <MenuItem Header="{DynamicResource mEdit}" Click="BtnIzmeni_Click">
+                <MenuItem Header="{DynamicResource mEdit}" Click="BtnIzmeni_Click" InputGestureText="F2 / Ctrl+E">
                     <MenuItem.Icon>
                         <TextBlock Text="✎" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </MenuItem.Icon>
                 </MenuItem>
 
-                <MenuItem Header="{DynamicResource mDelete}" Click="BtnObrisi_Click">
+                <MenuItem Header="{DynamicResource mDelete}" Click="BtnObrisi_Click" InputGestureText="Del / Ctrl+D">
                     <MenuItem.Icon>
                         <TextBlock Text="🗑" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </MenuItem.Icon>
@@ -101,7 +101,7 @@
             </MenuItem>
 
             <MenuItem Header="{DynamicResource mLanguage}">
-                <MenuItem Header="{DynamicResource mLanguage}">
+                <MenuItem Header="{DynamicResource msgIzaberite}">
                     <MenuItem.Icon>
                         <TextBlock Text="🌐" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </MenuItem.Icon>
@@ -138,7 +138,6 @@
                             <ToolTip Content="{DynamicResource tipPosetiociAutora}"/>
                         </Button.ToolTip>
                     </Button>
-                    
                     <Button x:Name="btnAutoriPosetioca" Content="✍️" Width="30" Height="30" Click="BtnAutoriPosetioca_Click" Margin="2,0" Visibility="Visible">
                         <Button.ToolTip>
                             <ToolTip Content="{DynamicResource tipAutoriPosetioca}"/>
@@ -146,10 +145,9 @@
                     </Button>
                 </StackPanel>
 
-                
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
                     <TextBox x:Name="txtPretraga" Width="154" Height="25" VerticalContentAlignment="Center" Margin="5,0" TextChanged="TextBox_TextChanged" />
-                    <Button Content="🔍" Width="30" Height="25" Click="Button_Click"/>
+                    <Button Content="🔍" ToolTip="{DynamicResource btnPretraga}" Width="30" Height="25" Click="Button_Click"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -192,7 +190,7 @@
                             <DataGridTextColumn Header="{DynamicResource colClanskaKarta}" Binding="{Binding BrClanskeKarte}" SortMemberPath="ClanskaKartaBroj" Width="*" />
                             <DataGridTextColumn Header="{DynamicResource colIme}" Binding="{Binding Ime}" Width="*" />
                             <DataGridTextColumn Header="{DynamicResource colPrezime}" Binding="{Binding Prezime}" Width="*" />
-                            <DataGridTextColumn Header="{DynamicResource colAdresa}" Width="3*">
+                            <DataGridTextColumn Header="{DynamicResource colAdresa}" Width="3*" SortMemberPath="Adresa.Ulica">
                                 <DataGridTextColumn.Binding>
                                     <MultiBinding StringFormat="{}{0} {1}, {2}, {3}">
                                         <Binding Path="Adresa.Ulica" />
@@ -208,7 +206,7 @@
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5">
                         <Button Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" ToolTip="{DynamicResource txtPrethodna}" Margin="2,0"/>
-                        <TextBlock x:Name="txtStranaInfoPosetioci"  VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
+                        <TextBlock x:Name="txtStranaInfoPosetioci" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
                         <Button Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" ToolTip="{DynamicResource txtSledeca}" Margin="2,0"/>
                     </StackPanel>
                 </Grid>
@@ -239,7 +237,7 @@
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5">
                         <Button Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" ToolTip="{DynamicResource txtPrethodna}" Margin="2,0"/>
-                        <TextBlock x:Name="txtStranaInfoAutori"  VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
+                        <TextBlock x:Name="txtStranaInfoAutori" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
                         <Button Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" ToolTip="{DynamicResource txtSledeca}" Margin="2,0"/>
                     </StackPanel>
                 </Grid>
@@ -270,7 +268,7 @@
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,5">
                         <Button Content="&lt;" Width="40" Height="30" Click="btnPrethodna_Click" ToolTip="{DynamicResource txtPrethodna}" Margin="2,0"/>
-                        <TextBlock x:Name="txtStranaInfoKnjige"  VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
+                        <TextBlock x:Name="txtStranaInfoKnjige" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="15,0"/>
                         <Button Content="&gt;" Width="40" Height="30" Click="btnSledeca_Click" ToolTip="{DynamicResource txtSledeca}" Margin="2,0"/>
                     </StackPanel>
                 </Grid>

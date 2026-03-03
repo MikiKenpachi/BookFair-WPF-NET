@@ -6,6 +6,33 @@
         FontFamily="Kristen ITC" ResizeMode="NoResize"
         Icon="Resources/bookshelf.ico">
 
+    <Window.Resources>
+        <!-- Isti template kao u DodajAutoraProzor / DodajPosetiocaProzor -->
+        <ControlTemplate x:Key="CrveniOkvir">
+            <Border BorderBrush="Red" BorderThickness="0.5">
+                <AdornedElementPlaceholder/>
+            </Border>
+        </ControlTemplate>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource CrveniOkvir}"/>
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DatePicker">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="BorderBrush" Value="Red"/>
+                    <Setter Property="BorderThickness" Value="0.1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -37,92 +64,92 @@
                     <TextBlock Grid.Row="0" Grid.Column="0" 
                         Text="{DynamicResource lblBrClanske}" 
                         VerticalAlignment="Center" Margin="0,5"/>
-                            <TextBox x:Name="txtBrClanske" Grid.Row="0" Grid.Column="1" 
-                            Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center" 
-                            IsReadOnly="True" Background="#F0F0F0"/>
-                    
+                    <TextBox x:Name="txtBrClanske" Grid.Row="0" Grid.Column="1" 
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center" 
+                        IsReadOnly="True" Background="#F0F0F0"/>
+
                     <TextBlock Grid.Row="1" Grid.Column="0" 
                         Text="{DynamicResource lblIme}" 
                         VerticalAlignment="Center" Margin="0,5"/>
-                    
                     <TextBox x:Name="txtIme" Grid.Row="1" Grid.Column="1" 
-                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"
+                        TextChanged="TxtPolje_Changed"/>
 
                     <TextBlock Grid.Row="2" Grid.Column="0" 
                         Text="{DynamicResource lblPrezime}" 
                         VerticalAlignment="Center" Margin="0,5"/>
-                    
                     <TextBox x:Name="txtPrezime" Grid.Row="2" Grid.Column="1" 
-                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"
+                        TextChanged="TxtPolje_Changed"/>
 
                     <TextBlock Grid.Row="3" Grid.Column="0" 
                         Text="{DynamicResource lblDatumRodjenja}" 
                         VerticalAlignment="Center" Margin="0,5"/>
-                    
                     <DatePicker x:Name="dpDatumRodjenja" Grid.Row="3" Grid.Column="1" 
-                        Margin="10,5,0,5" Height="25"/>
+                        Margin="10,5,0,5" Height="25"
+                        SelectedDateChanged="TxtPolje_Changed"/>
 
                     <TextBlock Grid.Row="4" Grid.Column="0" 
                         Text="{DynamicResource lblTelefon}" 
                         VerticalAlignment="Center" Margin="0,5"/>
-                    
                     <TextBox x:Name="txtTelefon" Grid.Row="4" Grid.Column="1" 
-                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"
+                        TextChanged="TxtPolje_Changed"/>
 
                     <TextBlock Grid.Row="5" Grid.Column="0" 
                         Text="{DynamicResource lblEmail}" 
                         VerticalAlignment="Center" Margin="0,5"/>
-                    
                     <TextBox x:Name="txtEmail" Grid.Row="5" Grid.Column="1" 
-                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"
+                        TextChanged="TxtPolje_Changed"/>
 
                     <TextBlock Grid.Row="6" Grid.Column="0"
                         Text="{DynamicResource lblGodinaClanstva}"
                         VerticalAlignment="Center" Margin="0,5"/>
-                    
                     <TextBox x:Name="txtGodinaClanstva" Grid.Row="6" Grid.Column="1" 
-                    Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
-                    
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"
+                        TextChanged="TxtPolje_Changed"/>
+
                     <TextBlock Grid.Row="7" Grid.Column="0" 
                         Text="{DynamicResource lblStatus}" 
                         VerticalAlignment="Center" Margin="0,5"/>
-                        <ComboBox x:Name="cmbStatus" Grid.Row="7" Grid.Column="1" 
-                            Margin="10,5,0,5" Height="25">
-                                <ComboBoxItem>
-                                    <TextBlock Text="{DynamicResource statusRedovan}"/>
-                                </ComboBoxItem>
-                                <ComboBoxItem>
-                                    <TextBlock Text="{DynamicResource statusVIP}"/>
-                                </ComboBoxItem>
-                            </ComboBox>
+                    <ComboBox x:Name="cmbStatus" Grid.Row="7" Grid.Column="1" 
+                        Margin="10,5,0,5" Height="25">
+                        <ComboBoxItem>
+                            <TextBlock Text="{DynamicResource statusRedovan}"/>
+                        </ComboBoxItem>
+                        <ComboBoxItem>
+                            <TextBlock Text="{DynamicResource statusVIP}"/>
+                        </ComboBoxItem>
+                    </ComboBox>
 
                     <TextBlock Grid.Row="8" Grid.Column="0" 
                         Text="{DynamicResource lblUlica}" 
                         VerticalAlignment="Center" Margin="0,5"/>
-                    
                     <TextBox x:Name="txtUlica" Grid.Row="8" Grid.Column="1" 
-                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"
+                        TextChanged="TxtPolje_Changed"/>
 
                     <TextBlock Grid.Row="9" Grid.Column="0" 
                         Text="{DynamicResource lblBroj}" 
                         VerticalAlignment="Center" Margin="0,5"/>
-                    
                     <TextBox x:Name="txtBroj" Grid.Row="9" Grid.Column="1" 
-                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"
+                        TextChanged="TxtPolje_Changed"/>
 
                     <TextBlock Grid.Row="10" Grid.Column="0" 
                         Text="{DynamicResource lblGrad}" 
                         VerticalAlignment="Center" Margin="0,5"/>
-                    
                     <TextBox x:Name="txtGrad" Grid.Row="10" Grid.Column="1" 
-                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Margin="10,5,0,5" Height="25" VerticalContentAlignment="Center"
+                        TextChanged="TxtPolje_Changed"/>
 
                     <TextBlock Grid.Row="11" Grid.Column="0" 
                         Text="{DynamicResource lblDrzava}" 
                         VerticalAlignment="Center" Margin="0,5"/>
-
                     <TextBox x:Name="txtDrzava" Grid.Row="11" Grid.Column="1" 
-                    Margin="11,5,0,5" Height="25" VerticalContentAlignment="Center"/>
+                        Margin="11,5,0,5" Height="25" VerticalContentAlignment="Center"
+                        TextChanged="TxtPolje_Changed"/>
                 </Grid>
             </TabItem>
 
@@ -135,16 +162,14 @@
                     </Grid.RowDefinitions>
 
                     <Button Grid.Row="0" 
-                Content="{DynamicResource btnPonistiKupovinu}"
-                HorizontalAlignment="Left" Margin="0,0,0,8"
-                Click="BtnPonistiKupovinu_Click"/>
+                        Content="{DynamicResource btnPonistiKupovinu}"
+                        HorizontalAlignment="Left" Margin="0,0,0,8"
+                        Click="BtnPonistiKupovinu_Click"/>
 
                     <DataGrid Grid.Row="1" x:Name="dgKupljene"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  SelectionMode="Single"
-                  GridLinesVisibility="Horizontal"
-                  HeadersVisibility="Column">
+                        AutoGenerateColumns="False" IsReadOnly="True"
+                        SelectionMode="Extended" GridLinesVisibility="Horizontal"
+                        HeadersVisibility="Column">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ISBN" Binding="{Binding Knjiga.ISBN}" Width="80"/>
                             <DataGridTextColumn Header="{DynamicResource colNaziv}" Binding="{Binding Knjiga.Naziv}" Width="*"/>
@@ -155,11 +180,9 @@
                     </DataGrid>
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal"
-                    HorizontalAlignment="Right" Margin="0,8,0,0">
-                        <TextBlock x:Name="lblProsecnaOcena" 
-                       Margin="0,0,20,0" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="lblUkupnoPotroseno" 
-                       VerticalAlignment="Center"/>
+                        HorizontalAlignment="Right" Margin="0,8,0,0">
+                        <TextBlock x:Name="lblProsecnaOcena" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="lblUkupnoPotroseno" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Grid>
             </TabItem>
@@ -173,19 +196,17 @@
 
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
                         <Button Content="{DynamicResource btnDodaj}" Width="70" Margin="0,0,6,0"
-                    Click="BtnDodajNaListuZelja_Click"/>
+                            Click="BtnDodajNaListuZelja_Click"/>
                         <Button Content="{DynamicResource btnObrisi}" Width="70" Margin="0,0,6,0"
-                    Click="BtnUkloniSaListeZelja_Click"/>
+                            Click="BtnUkloniSaListeZelja_Click"/>
                         <Button Content="{DynamicResource btnKupovina}" Width="80"
-                    Click="BtnUpisKupovine_Click"/>
+                            Click="BtnUpisKupovine_Click"/>
                     </StackPanel>
 
                     <DataGrid Grid.Row="1" x:Name="dgZelje"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  SelectionMode="Single"
-                  GridLinesVisibility="Horizontal"
-                  HeadersVisibility="Column">
+                        AutoGenerateColumns="False" IsReadOnly="True"
+                        SelectionMode="Extended" GridLinesVisibility="Horizontal"
+                        HeadersVisibility="Column">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="ISBN" Binding="{Binding ISBN}" Width="80"/>
                             <DataGridTextColumn Header="{DynamicResource colNaziv}" Binding="{Binding Naziv}" Width="*"/>
@@ -199,13 +220,14 @@
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,5">
             <Button Content="{DynamicResource btnOdustani}" 
-            Width="100" Height="30" Margin="5,0" 
-            Click="BtnOdustani_Click"/>
-
-            <Button Content="{DynamicResource btnPotvrdi}" 
-            Width="100" Height="30" 
-            Background="#95B5EB" FontWeight="Bold" 
-            Click="BtnPotvrdi_Click"/>
+                Width="100" Height="30" Margin="5,0" 
+                Click="BtnOdustani_Click"/>
+            <Button x:Name="btnPotvrdi"
+                Content="{DynamicResource btnPotvrdi}" 
+                Width="100" Height="30" 
+                Background="#95B5EB" FontWeight="Bold" 
+                Click="BtnPotvrdi_Click"
+                IsEnabled="False"/>
         </StackPanel>
     </Grid>
 </Window>

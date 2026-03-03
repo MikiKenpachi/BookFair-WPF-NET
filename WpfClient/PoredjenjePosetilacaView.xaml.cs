@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq; // OBAVEZNO dodaj ovo za filtriranje (Where, Any)
+using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 
@@ -13,18 +13,12 @@ namespace WpfClient
     /// </summary>
     public partial class PoredjenjePosetilacaView : Window
     {
-        // Polja moraju biti unutar klase
         private readonly List<Posetilac> _sviPosetioci;
         private readonly List<Knjiga> _sveKnjige;
-  
 
         public ICollectionView PosetiociView { get; set; }
         public ICollectionView Posetioci2View { get; set; }
 
-
-
-
-        // Konstruktor mora biti unutar klase
         public PoredjenjePosetilacaView(List<Posetilac> posetioci, List<Knjiga> knjige)
         {
             InitializeComponent();
@@ -32,16 +26,13 @@ namespace WpfClient
             _sviPosetioci = posetioci;
             _sveKnjige = knjige;
 
-            // Popunjavamo ComboBox-ove knjigama
             cmbKnjiga1.ItemsSource = _sveKnjige;
             cmbKnjiga1.DisplayMemberPath = "Naziv";
             cmbKnjiga2.ItemsSource = _sveKnjige;
             cmbKnjiga2.DisplayMemberPath = "Naziv";
 
-
-          
-
-   
+            cmbKnjiga1.SelectionChanged += CmbKnjiga1_SelectionChanged;
+            cmbKnjiga2.SelectionChanged += CmbKnjiga2_SelectionChanged;
         }
 
         private void Prikazi_Click(object sender, RoutedEventArgs e)
@@ -68,14 +59,14 @@ namespace WpfClient
             PosetiociView = CollectionViewSource.GetDefaultView(zeljeObe);
             dgZeljeObe.ItemsSource = PosetiociView;
 
-            // Tabela 2: Posetioci koji su kupili PRVU knjigu (k1)
-            var kupiliPrvu = _sviPosetioci.Where(p =>
+            // Tabela 2: Posetioci koji su kupili PRVU knjigu (k1), a NISU kupili drugu (k2)
+            var kupiliPrvuNisuDrugu = _sviPosetioci.Where(p =>
                 p.ListaKupovina != null &&
-                p.ListaKupovina.Any(k => k.ISBN == k1.ISBN)
+                p.ListaKupovina.Any(k => k.ISBN == k1.ISBN) &&
+                !p.ListaKupovina.Any(k => k.ISBN == k2.ISBN)
             ).ToList();
 
-            Posetioci2View = CollectionViewSource.GetDefaultView(kupiliPrvu);
-
+            Posetioci2View = CollectionViewSource.GetDefaultView(kupiliPrvuNisuDrugu);
             dgKupljenaPrva.ItemsSource = Posetioci2View;
         }
 
@@ -87,16 +78,12 @@ namespace WpfClient
         private void SearchLevo_Click(object sender, RoutedEventArgs e)
         {
             string filter = SearchLevoTextBox.Text.ToLower();
-
-
             FiltrirajPosetioce(filter);
         }
 
         private void SearchDesno_Click(object sender, RoutedEventArgs e)
         {
             string filter = SearchDesnoTextBox.Text.ToLower();
-
-
             FiltrirajPosetioce2(filter);
         }
 
@@ -172,6 +159,28 @@ namespace WpfClient
             Posetioci2View.Refresh();
         }
 
+        private void CmbKnjiga1_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var k1 = cmbKnjiga1.SelectedItem as Knjiga;
 
+            if (k1 != null && cmbKnjiga2.SelectedItem is Knjiga k2 && k1.ISBN == k2.ISBN)
+                cmbKnjiga2.SelectedItem = null;
+
+            cmbKnjiga2.ItemsSource = k1 == null
+                ? _sveKnjige
+                : _sveKnjige.Where(k => k.ISBN != k1.ISBN).ToList();
+        }
+
+        private void CmbKnjiga2_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var k2 = cmbKnjiga2.SelectedItem as Knjiga;
+
+            if (k2 != null && cmbKnjiga1.SelectedItem is Knjiga k1 && k2.ISBN == k1.ISBN)
+                cmbKnjiga1.SelectedItem = null;
+
+            cmbKnjiga1.ItemsSource = k2 == null
+                ? _sveKnjige
+                : _sveKnjige.Where(k => k.ISBN != k2.ISBN).ToList();
+        }
     }
 }

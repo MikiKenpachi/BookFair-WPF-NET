@@ -28,7 +28,7 @@ namespace SajamKnjigaProjekat.Core.DAO
         public void Add(Adresa a)
         {
             listaAdresa.Add(a);
-            _storage.Save(listaAdresa);
+           // _storage.Save(listaAdresa);
         }
 
         public void Remove(string vlasnikID)
@@ -39,7 +39,7 @@ namespace SajamKnjigaProjekat.Core.DAO
                 .ToList();
 
             // odmah snimamo fajl
-            _storage.Save(listaAdresa);
+            //_storage.Save(listaAdresa);
         }
 
         // Opcionalno: ažuriraj adresu postojećeg vlasnika
@@ -49,7 +49,7 @@ namespace SajamKnjigaProjekat.Core.DAO
             if (index >= 0)
             {
                 listaAdresa[index] = a;
-                _storage.Save(listaAdresa);
+                //_storage.Save(listaAdresa);
             }
         }
 

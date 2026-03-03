@@ -1,14 +1,13 @@
 Nebojsa|Ralevic|1965-10-10|0633255789|nralevic@uns.ac.rs|32|10101965
-Ljuba|Budinski|1972-04-05|0699874478|ljuba.rs|17|04051972
+Ljuba|Budinski|1972-04-05|0699874478|ljuba@uns.ac.rs|17|04051972
 Srdjan|Popov|1992-12-12|0631279345|popov@uns.ac.rs|4|12121992
 Erik|Najt|1987-10-06|0632567865|erik@uns.ac.rs|14|10061987
 Biljana|Marcelja|1957-02-02|0632568741|marcelja@uns.ac.rs|44|02021957
-Vladimir|Dimitrieski|1987-05-05|0663256325|vladimir.rs|10|05051987
+Vladimir|Dimitrieski|1987-05-05|0663256325|vladimir@uns.ac.rs|10|05051987
 Dusan|Gajic|1982-03-05|0662144125|gajic@uns.ac.rs|14|03051982
 Ivo|Andric|1937-06-06|0668712354|ivo@uns.ac.rs|38|06061937
 Milorad|Pavic|1987-04-04|0668741236|pavic@gmail.com|4|04041987
 Dobrica|Cosic|1994-03-09|0668932567|cosic@uns.ac.rs|3|03091994
 Fjodor|Dostojevski|1943-04-27|0638475698|fdostojevsky@uns.ac.rs|44|27041943
 Lav|Tolstoj|1973-11-05|06698889631|tolstoj@uns.ac.rs|17|05111973
-Gabriel|Garcia Marquez|2001-11-03|0697441254|gabriel.rs|9|03112001
-Zoran|Jelicic|1984-12-12|0669987124|jelicic@uns.ac.rs|4|12121984
+Gabriel|Garcia Marquez|2001-11-03|0697441254|gabriel@uns.ac.rs|9|03112001

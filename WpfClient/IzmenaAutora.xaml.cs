@@ -75,9 +75,10 @@ namespace WpfClient
             _validator.Broj = txtBroj.Text;
             _validator.Grad = txtGrad.Text;
 
-            if (int.TryParse(txtIskustvo.Text, out int iskustvo))
-                _validator.GodineIskustva = iskustvo;
+            
         }
+
+
 
         private bool JeLiValidno()
         {
@@ -115,7 +116,7 @@ namespace WpfClient
             SelektovaniAutor.Telefon = _validator.Telefon.Trim();
             SelektovaniAutor.Broj_lk = _validator.BrojLk.Trim();
             SelektovaniAutor.Datum_rodjenja = _validator.DatumRodjenja ?? SelektovaniAutor.Datum_rodjenja;
-            SelektovaniAutor.Godine_iskustva = _validator.GodineIskustva;
+            
 
             if (SelektovaniAutor.Adresa != null)
             {

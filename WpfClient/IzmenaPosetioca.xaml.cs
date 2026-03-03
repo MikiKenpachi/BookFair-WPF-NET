@@ -1,10 +1,12 @@
 ﻿using Core.DAO;
+using Core.DTO;
 using SajamKnjigaProjekat.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq; // Ne zaboravi Linq za Any, Sum, Average
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace WpfClient
 {
@@ -15,7 +17,10 @@ namespace WpfClient
         private ObservableCollection<Kupovina> _kupljene;
         private ObservableCollection<Knjiga> _zelje;
         private readonly List<Knjiga> _sveKnjige;
-        private readonly ZeljaDAO _zeljaDao;    
+        private readonly ZeljaDAO _zeljaDao;
+
+        // ── DTO validator — isti koji koristi DodajPosetiocaProzor ──
+        private PosetilacDTO _validator = new PosetilacDTO();
 
         public IzmenaPosetioca(Posetilac posetilac, List<Knjiga> sveKnjige, KupiliDAO kupiliDao, ZeljaDAO zeljaDao)
         {
@@ -30,8 +35,12 @@ namespace WpfClient
             UcitajZelje();
         }
 
-        // --- POMOĆNA METODA ZA RAD SA RESURSIMA ---
-        private string GetResource(string key) => Application.Current.FindResource(key)?.ToString() ?? key;
+        private string GetResource(string key) =>
+            Application.Current.FindResource(key)?.ToString() ?? key;
+
+        // ================================================================
+        // Podaci o posetiocu
+        // ================================================================
 
         private void PopuniPolja()
         {
@@ -42,7 +51,6 @@ namespace WpfClient
             txtTelefon.Text = SelektovaniPosetilac.Telefon;
             txtEmail.Text = SelektovaniPosetilac.Email;
             txtGodinaClanstva.Text = SelektovaniPosetilac.GodinaClanstva.ToString();
-
             cmbStatus.SelectedIndex = SelektovaniPosetilac.Status == StatusPosetioca.R ? 0 : 1;
 
             if (SelektovaniPosetilac.Adresa != null)
@@ -52,33 +60,109 @@ namespace WpfClient
                 txtGrad.Text = SelektovaniPosetilac.Adresa.Grad;
                 txtDrzava.Text = SelektovaniPosetilac.Adresa.Drzava;
             }
+
+            // Sinhronizuj validator odmah pri otvaranju pa postavi dugme
+            AzurirajValidatorIzForme();
+            btnPotvrdi.IsEnabled = FormaJeValidna();
+        }
+
+        private void AzurirajValidatorIzForme()
+        {
+            _validator.Ime = txtIme.Text;
+            _validator.Prezime = txtPrezime.Text;
+            _validator.DatumRodjenja = dpDatumRodjenja.SelectedDate;
+            _validator.Telefon = txtTelefon.Text;
+            _validator.Email = txtEmail.Text;
+            _validator.GodinaClanstva = txtGodinaClanstva.Text;
+            _validator.Ulica = txtUlica.Text;
+            _validator.Broj = txtBroj.Text;
+            _validator.Grad = txtGrad.Text;
+            _validator.Drzava = txtDrzava.Text;
+        }
+
+        private bool FormaJeValidna()
+        {
+            return string.IsNullOrEmpty(_validator[nameof(PosetilacDTO.Ime)]) &&
+                   string.IsNullOrEmpty(_validator[nameof(PosetilacDTO.Prezime)]) &&
+                   string.IsNullOrEmpty(_validator[nameof(PosetilacDTO.DatumRodjenja)]) &&
+                   string.IsNullOrEmpty(_validator[nameof(PosetilacDTO.Telefon)]) &&
+                   string.IsNullOrEmpty(_validator[nameof(PosetilacDTO.Email)]) &&
+                   string.IsNullOrEmpty(_validator[nameof(PosetilacDTO.GodinaClanstva)]) &&
+                   string.IsNullOrEmpty(_validator[nameof(PosetilacDTO.Ulica)]) &&
+                   string.IsNullOrEmpty(_validator[nameof(PosetilacDTO.Broj)]) &&
+                   string.IsNullOrEmpty(_validator[nameof(PosetilacDTO.Grad)]) &&
+                   string.IsNullOrEmpty(_validator[nameof(PosetilacDTO.Drzava)]) &&
+                   dpDatumRodjenja.SelectedDate.HasValue;
+        }
+
+        // Poziva se na kraju TxtPolje_Changed
+        
+
+        private void ObojiNevalidnaPolja()
+        {
+            ObojiTextBox(txtIme, _validator[nameof(PosetilacDTO.Ime)]);
+            ObojiTextBox(txtPrezime, _validator[nameof(PosetilacDTO.Prezime)]);
+            ObojiTextBox(txtTelefon, _validator[nameof(PosetilacDTO.Telefon)]);
+            ObojiTextBox(txtEmail, _validator[nameof(PosetilacDTO.Email)]);
+            ObojiTextBox(txtGodinaClanstva, _validator[nameof(PosetilacDTO.GodinaClanstva)]);
+            ObojiTextBox(txtUlica, _validator[nameof(PosetilacDTO.Ulica)]);
+            ObojiTextBox(txtBroj, _validator[nameof(PosetilacDTO.Broj)]);
+            ObojiTextBox(txtGrad, _validator[nameof(PosetilacDTO.Grad)]);
+            ObojiTextBox(txtDrzava, _validator[nameof(PosetilacDTO.Drzava)]);
+
+            // DatePicker
+            bool datumNevalidan = !string.IsNullOrEmpty(_validator[nameof(PosetilacDTO.DatumRodjenja)]);
+            dpDatumRodjenja.BorderBrush = datumNevalidan
+                ? System.Windows.Media.Brushes.Red
+                : System.Windows.Media.Brushes.Gray;
+            dpDatumRodjenja.BorderThickness = datumNevalidan
+                ? new Thickness(0.5)
+                : new Thickness(1);
+        }
+
+        private void ObojiTextBox(TextBox tb, string greska)
+        {
+            bool nevalidno = !string.IsNullOrEmpty(greska);
+            tb.BorderBrush = nevalidno
+                ? System.Windows.Media.Brushes.Red
+                : System.Windows.Media.Brushes.Gray;
+            tb.BorderThickness = new Thickness(nevalidno ? 0.5 : 1);
+        }
+
+        private void TxtPolje_Changed(object sender, EventArgs e)
+        {
+            if (_validator == null) return;
+            AzurirajValidatorIzForme();
+            ObojiNevalidnaPolja();
+            if (btnPotvrdi != null)
+                btnPotvrdi.IsEnabled = FormaJeValidna();
         }
 
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtIme.Text) || string.IsNullOrWhiteSpace(txtPrezime.Text))
+            AzurirajValidatorIzForme();
+
+            if (!FormaJeValidna())
             {
-                // Lokalizovana poruka o grešci
                 MessageBox.Show(GetResource("msgObaveznaPolja"), GetResource("titleGreska"),
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            SelektovaniPosetilac.Ime = txtIme.Text.Trim();
-            SelektovaniPosetilac.Prezime = txtPrezime.Text.Trim();
+            SelektovaniPosetilac.Ime = _validator.Ime.Trim();
+            SelektovaniPosetilac.Prezime = _validator.Prezime.Trim();
             SelektovaniPosetilac.DatumRodjenja = dpDatumRodjenja.SelectedDate ?? SelektovaniPosetilac.DatumRodjenja;
-            SelektovaniPosetilac.Telefon = txtTelefon.Text.Trim();
-            SelektovaniPosetilac.Email = txtEmail.Text.Trim();
-            if (int.TryParse(txtGodinaClanstva.Text, out int godina))
-                SelektovaniPosetilac.GodinaClanstva = godina;
+            SelektovaniPosetilac.Telefon = _validator.Telefon.Trim();
+            SelektovaniPosetilac.Email = _validator.Email.Trim();
+            SelektovaniPosetilac.GodinaClanstva = int.Parse(_validator.GodinaClanstva);
             SelektovaniPosetilac.Status = cmbStatus.SelectedIndex == 0 ? StatusPosetioca.R : StatusPosetioca.V;
 
             if (SelektovaniPosetilac.Adresa != null)
             {
-                SelektovaniPosetilac.Adresa.Ulica = txtUlica.Text.Trim();
-                SelektovaniPosetilac.Adresa.Broj = txtBroj.Text.Trim();
-                SelektovaniPosetilac.Adresa.Grad = txtGrad.Text.Trim();
-                SelektovaniPosetilac.Adresa.Drzava = txtDrzava.Text.Trim();
+                SelektovaniPosetilac.Adresa.Ulica = _validator.Ulica.Trim();
+                SelektovaniPosetilac.Adresa.Broj = _validator.Broj.Trim();
+                SelektovaniPosetilac.Adresa.Grad = _validator.Grad.Trim();
+                SelektovaniPosetilac.Adresa.Drzava = _validator.Drzava.Trim();
             }
 
             this.DialogResult = true;
@@ -91,7 +175,9 @@ namespace WpfClient
             this.Close();
         }
 
-        // --- TAB: KUPLJENE ---
+        // ================================================================
+        // Tab: Kupljene
+        // ================================================================
 
         private void UcitajKupljene()
         {
@@ -111,8 +197,8 @@ namespace WpfClient
 
         private void OsveziStatistiku()
         {
-            string labelaProsek = GetResource("statProsek"); // "Prosečna ocena: "
-            string labelaPotroseno = GetResource("statPotroseno"); // "Potrošeno: "
+            string labelaProsek = GetResource("statProsek");
+            string labelaPotroseno = GetResource("statPotroseno");
 
             if (!_kupljene.Any())
             {
@@ -135,7 +221,9 @@ namespace WpfClient
 
         private void BtnPonistiKupovinu_Click(object sender, RoutedEventArgs e)
         {
-            if (dgKupljene.SelectedItem is not Kupovina odabrana)
+            var odabrane = dgKupljene.SelectedItems.Cast<Kupovina>().ToList();
+
+            if (!odabrane.Any())
             {
                 MessageBox.Show(GetResource("msgOdaberiStavku"), GetResource("titleObavestenje"),
                     MessageBoxButton.OK, MessageBoxImage.Information);
@@ -147,21 +235,26 @@ namespace WpfClient
 
             if (potvrda != MessageBoxResult.Yes) return;
 
-            _kupiliDao.Remove(SelektovaniPosetilac.BrClanskeKarte, odabrana.Knjiga.ISBN);
-            SelektovaniPosetilac.ListaKupovina.Remove(odabrana.Knjiga);
-            _kupljene.Remove(odabrana);
-
-            if (odabrana.Knjiga != null && !SelektovaniPosetilac.ListaZelja.Any(k => k.ISBN == odabrana.Knjiga.ISBN))
+            foreach (var kupovina in odabrane)
             {
-                SelektovaniPosetilac.DodajNaListuZelja(odabrana.Knjiga);
-                _zelje.Add(odabrana.Knjiga);
-                _zeljaDao.Add(new Zelja(SelektovaniPosetilac, odabrana.Knjiga));
+                _kupiliDao.Remove(SelektovaniPosetilac.BrClanskeKarte, kupovina.Knjiga.ISBN);
+                SelektovaniPosetilac.ListaKupovina.Remove(kupovina.Knjiga);
+                _kupljene.Remove(kupovina);
+
+                if (kupovina.Knjiga != null && !SelektovaniPosetilac.ListaZelja.Any(k => k.ISBN == kupovina.Knjiga.ISBN))
+                {
+                    SelektovaniPosetilac.DodajNaListuZelja(kupovina.Knjiga);
+                    _zelje.Add(kupovina.Knjiga);
+                    _zeljaDao.Add(new Zelja(SelektovaniPosetilac, kupovina.Knjiga));
+                }
             }
 
             OsveziStatistiku();
         }
 
-        // --- TAB: ŽELJE ---
+        // ================================================================
+        // Tab: Želje
+        // ================================================================
 
         private void UcitajZelje()
         {
@@ -177,20 +270,22 @@ namespace WpfClient
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };
 
-            if (prozor.ShowDialog() == true && prozor.OdabranaKnjiga != null)
+            if (prozor.ShowDialog() == true && prozor.OdabraneKnjige.Any())
             {
-                var knjiga = prozor.OdabranaKnjiga;
-                SelektovaniPosetilac.DodajNaListuZelja(knjiga);
-                _zelje.Add(knjiga);
-
-                // NOVO — snimi u zelje.txt odmah
-                _zeljaDao.Add(new Zelja(SelektovaniPosetilac, knjiga));
+                foreach (var knjiga in prozor.OdabraneKnjige)
+                {
+                    SelektovaniPosetilac.DodajNaListuZelja(knjiga);
+                    _zelje.Add(knjiga);
+                    _zeljaDao.Add(new Zelja(SelektovaniPosetilac, knjiga));
+                }
             }
         }
 
         private void BtnUkloniSaListeZelja_Click(object sender, RoutedEventArgs e)
         {
-            if (dgZelje.SelectedItem is not Knjiga odabrana)
+            var odabrane = dgZelje.SelectedItems.Cast<Knjiga>().ToList();
+
+            if (!odabrane.Any())
             {
                 MessageBox.Show(GetResource("msgOdaberiKnjigu"), GetResource("titleObavestenje"),
                     MessageBoxButton.OK, MessageBoxImage.Information);
@@ -202,38 +297,46 @@ namespace WpfClient
 
             if (potvrda != MessageBoxResult.Yes) return;
 
-            SelektovaniPosetilac.ListaZelja.Remove(odabrana);
-            _zelje.Remove(odabrana);
-            _zeljaDao.Remove(SelektovaniPosetilac.BrClanskeKarte, odabrana.ISBN);
+            foreach (var knjiga in odabrane)
+            {
+                SelektovaniPosetilac.ListaZelja.Remove(knjiga);
+                _zelje.Remove(knjiga);
+                _zeljaDao.Remove(SelektovaniPosetilac.BrClanskeKarte, knjiga.ISBN);
+            }
         }
 
         private void BtnUpisKupovine_Click(object sender, RoutedEventArgs e)
         {
-            if (dgZelje.SelectedItem is not Knjiga odabrana)
+            var odabrane = dgZelje.SelectedItems.Cast<Knjiga>().ToList();
+
+            if (!odabrane.Any())
             {
                 MessageBox.Show(GetResource("msgOdaberiKnjigu"), GetResource("titleObavestenje"),
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            var prozor = new UpisKupovineProzor(SelektovaniPosetilac, odabrana)
+            foreach (var knjiga in odabrane)
             {
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner
-            };
+                var prozor = new UpisKupovineProzor(SelektovaniPosetilac, knjiga)
+                {
+                    Owner = this,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner
+                };
 
-            if (prozor.ShowDialog() == true && prozor.NovaKupovina != null)
-            {
-                var kupovina = prozor.NovaKupovina;
-                _kupiliDao.Add(kupovina);
-                SelektovaniPosetilac.DodajKupovinu(odabrana);
-                _kupljene.Add(kupovina);
-                _zeljaDao.Remove(SelektovaniPosetilac.BrClanskeKarte, odabrana.ISBN);
-                SelektovaniPosetilac.ListaZelja.Remove(odabrana);
-                _zelje.Remove(odabrana);
-
-                OsveziStatistiku();
+                if (prozor.ShowDialog() == true && prozor.NovaKupovina != null)
+                {
+                    var kupovina = prozor.NovaKupovina;
+                    _kupiliDao.Add(kupovina);
+                    SelektovaniPosetilac.DodajKupovinu(knjiga);
+                    _kupljene.Add(kupovina);
+                    _zeljaDao.Remove(SelektovaniPosetilac.BrClanskeKarte, knjiga.ISBN);
+                    SelektovaniPosetilac.ListaZelja.Remove(knjiga);
+                    _zelje.Remove(knjiga);
+                }
             }
+
+            OsveziStatistiku();
         }
     }
 }

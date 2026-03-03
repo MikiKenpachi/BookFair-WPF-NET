@@ -40,7 +40,7 @@ namespace Core.DAO
         public void Add(Zelja z)
         {
             listaZelja.Add(z);
-            _storage.Save(listaZelja);
+            //_storage.Save(listaZelja);
         }
 
         // Uklanja željу po posetiocu i knjizi
@@ -50,14 +50,14 @@ namespace Core.DAO
                 .Where(z => !(z.Posetilac?.BrClanskeKarte == brClanskeKarte &&
                               z.Knjiga?.ISBN == isbn))
                 .ToList();
-            _storage.Save(listaZelja);
+            //_storage.Save(listaZelja);
         }
 
         // Uklanja konkretan objekat
         public void Remove(Zelja zelja)
         {
             listaZelja.Remove(zelja);
-            _storage.Save(listaZelja);
+            //_storage.Save(listaZelja);
         }
 
         // Uklanja sve želje jednog posjetioca (korisno pri brisanju posjetioca)
@@ -67,6 +67,14 @@ namespace Core.DAO
                 .Where(z => z.Posetilac?.BrClanskeKarte != brClanskeKarte)
                 .ToList();
             _storage.Save(listaZelja);
+        }
+
+        // Uklanja sve želje za odredjenu knjigu (korisno pri brisanju knjige)
+        public void RemoveByKnjiga(string isbn)
+        {
+            listaZelja = listaZelja
+                .Where(z => z.Knjiga?.ISBN != isbn)
+                .ToList();
         }
 
         public void Save()

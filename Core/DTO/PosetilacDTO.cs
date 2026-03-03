@@ -1,12 +1,8 @@
 ﻿using Core.Languages;
 using SajamKnjigaProjekat.Core.Models;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Core.DTO
 {
@@ -35,32 +31,48 @@ namespace Core.DTO
                     case nameof(Ime):
                         if (string.IsNullOrWhiteSpace(Ime)) return "X";
                         break;
+
                     case nameof(Prezime):
                         if (string.IsNullOrWhiteSpace(Prezime)) return "X";
                         break;
-                    case nameof(DatumRodjenja):
-                        if (DatumRodjenja == null)
-                            return "Datum rođenja je obavezan.";
 
-                        return null;
+                    case nameof(DatumRodjenja):
+                        if (DatumRodjenja == null) return "X";
+                        break;
+
                     case nameof(Telefon):
                         if (string.IsNullOrWhiteSpace(Telefon)) return "X";
                         break;
+
                     case nameof(Email):
+                        // Obavezan i mora biti u formatu nesto@nesto
                         if (string.IsNullOrWhiteSpace(Email)) return "X";
+                        if (!Regex.IsMatch(Email.Trim(), @"^[^@\s]+@[^@\s]+$")) return "X";
                         break;
+
                     case nameof(GodinaClanstva):
                         if (string.IsNullOrWhiteSpace(GodinaClanstva)) return "X";
+                        if (!int.TryParse(GodinaClanstva, out int god) || god <= 0) return "X";
+                        // Ne može biti član duže nego što ima godina
+                        if (DatumRodjenja.HasValue)
+                        {
+                            int starost = DateTime.Now.Year - DatumRodjenja.Value.Year;
+                            if (god > starost) return "X";
+                        }
                         break;
+
                     case nameof(Ulica):
                         if (string.IsNullOrWhiteSpace(Ulica)) return "X";
                         break;
+
                     case nameof(Broj):
                         if (string.IsNullOrWhiteSpace(Broj)) return "X";
                         break;
+
                     case nameof(Grad):
                         if (string.IsNullOrWhiteSpace(Grad)) return "X";
                         break;
+
                     case nameof(Drzava):
                         if (string.IsNullOrWhiteSpace(Drzava)) return "X";
                         break;

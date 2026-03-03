@@ -28,13 +28,13 @@ namespace SajamKnjigaProjekat.Core.DAO
         public void Add(Autor autor)
         {
             listaAutora.Add(autor);
-            _storage.Save(listaAutora);
+            //_storage.Save(listaAutora);
         }
 
         public void Remove(Autor autor)
         {
             listaAutora.Remove(autor);
-            _storage.Save(listaAutora);
+            //_storage.Save(listaAutora);
         }
 
         public void Save()
@@ -62,7 +62,6 @@ namespace SajamKnjigaProjekat.Core.DAO
 
                 // 4. Snimimo nazad u fajl (pozivamo tvoju postojeću metodu za snimanje)
                 listaAutora = svi;
-                Save();
             }
         }
         public Autor GetByLicnaKarta(string lk)

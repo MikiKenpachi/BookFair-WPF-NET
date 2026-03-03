@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="{DynamicResource titleUpravljanjeIzdavacima}" Height="450" Width="600"
         WindowStartupLocation="CenterOwner" FontFamily="Kristen ITC"
+        ResizeMode="NoResize"
         Icon="Resources/bookshelf.ico">
 
     <Grid Margin="15">
@@ -40,7 +41,8 @@
                     <TextBlock Text="🗑" FontSize="16"/>
                 </Button>
                 <Button x:Name="btnPrikaziAutore" 
-                        Content="{DynamicResource btnPrikaziAutore}" 
+                        Content="{DynamicResource btnPrikaziAutore}"
+                        ToolTip="{DynamicResource tipPrikaziAutoreIzdavaca}"
                         Width="120" Height="30" 
                         Margin="5" 
                         Click="BtnPrikaziAutore_Click" 
@@ -49,6 +51,7 @@
 
                 <Button x:Name="btnPrikaziKnjige"
                         Content="{DynamicResource btnPrikaziKnjige}"
+                        ToolTip="{DynamicResource tipPrikaziKnjigeIzdavaca}"
                         Width="120" Height="30"
                         Margin="5"
                         Click="BtnPrikaziKnjige_Click"

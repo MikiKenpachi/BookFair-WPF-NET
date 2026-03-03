@@ -33,7 +33,7 @@ namespace WpfClient
             AutoriView = CollectionViewSource.GetDefaultView(autori);
 
             dgAutori.ItemsSource = AutoriView;
-            txtNaslov.Text += " " +  nazivIzdavaca;
+            txtNaslov.Text += " : " +  nazivIzdavaca;
         }
 
         private void BtnPretrazi_Click(object sender, RoutedEventArgs e)

@@ -36,9 +36,9 @@
     <system:String x:Key="colGodina">Year</system:String>
     <system:String x:Key="colZanr">Genre</system:String>
 
-    <system:String x:Key="tipDodaj">Add</system:String>
-    <system:String x:Key="tipIzmeni">Edit</system:String>
-    <system:String x:Key="tipObrisi">Delete</system:String>
+    <system:String x:Key="tipDodaj">Add (CTRL+N)</system:String>
+    <system:String x:Key="tipIzmeni">Edit (CTRL+E)</system:String>
+    <system:String x:Key="tipObrisi">Delete (CTRL+D)</system:String>
     <system:String x:Key="txtStranica">Page</system:String>
     <system:String x:Key="statusNaslov">Book Fair-</system:String>
 
@@ -69,21 +69,21 @@
     <system:String x:Key="aboutMessage2">Application for buying books in Book Fair.</system:String>
     <system:String x:Key="aboutMessage3">Authors</system:String>
 
-    <system:String x:Key="titleKnjigeIzdavaca">Book's of Publisher : </system:String>
+    <system:String x:Key="titleKnjigeIzdavaca">Book's of Publisher</system:String>
 
     <system:String x:Key="titleAutoriIzdavaca">Publisher Authors</system:String>
-    <system:String x:Key="lblAutoriIzdavacaNaslov">Publisher Authors:</system:String>
+    <system:String x:Key="lblAutoriIzdavacaNaslov">Publisher Authors</system:String>
     <system:String x:Key="tipPretraziAutore">Search authors</system:String>
     <system:String x:Key="btnZatvori">Close</system:String>
     <system:String x:Key="colTelefon">Phone</system:String>
 
     <system:String x:Key="titleDodajAutora">Add Author</system:String>
-    <system:String x:Key="lblUlica">Street</system:String>
-    <system:String x:Key="lblBroj">Number</system:String>
-    <system:String x:Key="lblGrad">City</system:String>
-    <system:String x:Key="lblDrzava">Country</system:String>
-    <system:String x:Key="lblIskustvo">Experience (yrs)</system:String>
-    <system:String x:Key="lblBrojLK">ID Card Number</system:String>
+    <system:String x:Key="lblUlica">Street *</system:String>
+    <system:String x:Key="lblBroj">Number *</system:String>
+    <system:String x:Key="lblGrad">City *</system:String>
+    <system:String x:Key="lblDrzava">Country *</system:String>
+    <system:String x:Key="lblIskustvo">Experience (yrs) *</system:String>
+    <system:String x:Key="lblBrojLK">ID Card Number *</system:String>
     <system:String x:Key="btnOdustani">Cancel</system:String>
     <system:String x:Key="btnPotvrdi">Confirm</system:String>
 
@@ -136,15 +136,15 @@
     <system:String x:Key="titleObavestenje">Notice</system:String>
 
     <system:String x:Key="titleDodajPosetioca">Add Visitor</system:String>
-    <system:String x:Key="lblIme">First Name</system:String>
-    <system:String x:Key="lblPrezime">Last Name</system:String>
-    <system:String x:Key="lblDatumRodjenja">Date of Birth</system:String>
-    <system:String x:Key="lblTelefon">Phone Number</system:String>
-    <system:String x:Key="lblEmail">Email</system:String>
-    <system:String x:Key="lblStatus">Status</system:String>
+    <system:String x:Key="lblIme">First Name *</system:String>
+    <system:String x:Key="lblPrezime">Last Name *</system:String>
+    <system:String x:Key="lblDatumRodjenja">Date of Birth *</system:String>
+    <system:String x:Key="lblTelefon">Phone Number *</system:String>
+    <system:String x:Key="lblEmail">Email *</system:String>
+    <system:String x:Key="lblStatus">Status *</system:String>
     <system:String x:Key="statusRedovan">Regular</system:String>
     <system:String x:Key="statusVIP">V.I.P.</system:String>
-    <system:String x:Key="lblGodinaClanstva">Membership year</system:String>
+    <system:String x:Key="lblGodinaClanstva">Membership year *</system:String>
     <system:String x:Key="titlePoredjenjePosetilaca">Visitor Comparison</system:String>
     <system:String x:Key="lblNaslovPoredjenja">Visitor comparison by two books</system:String>
     <system:String x:Key="lblKnjiga1">Book 1:</system:String>
@@ -212,13 +212,15 @@
     <system:String x:Key="btnObrisi">Delete</system:String>
 
     <system:String x:Key="titleGreska">Error</system:String>
+    <system:String x:Key="btnPretraga">Search</system:String>
+    
     <system:String x:Key="titlePonistavanje">Cancel Purchase</system:String>
     <system:String x:Key="titleUklanjanje">Remove from List</system:String>
 
     <system:String x:Key="msgObaveznaPolja">First and last name are required.</system:String>
     <system:String x:Key="msgOdaberiStavku">Please select an item from the table first.</system:String>
     <system:String x:Key="msgPotvrdaPonistiKupovinu">Are you sure you want to cancel this purchase?</system:String>
-    <system:String x:Key="titleOdaberiAutora">Select Author:</system:String>
+    <system:String x:Key="titleOdaberiAutora">Select Author :</system:String>
     <system:String x:Key="msgPotvrdaUkloniZelju">Are you sure you want to remove this book from your wishlist?</system:String>
 
     <system:String x:Key="lblUputstvoDodajKnjigu">Select the book you want to add to the author:</system:String>
@@ -235,15 +237,26 @@
 
 
     <system:String x:Key="titleAutoriPosetioca">Visitor's Authors</system:String>
-    <system:String x:Key="lblAutoriPosetilacaNaslov">Authors of visitor:</system:String>
+    <system:String x:Key="lblAutoriPosetilacaNaslov">Authors of visitor :</system:String>
     <system:String x:Key="tipAutoriPosetioca">Show authors whose books visitor has on their wishlist (CTRL+P)</system:String>
 
     <system:String x:Key="titlePosetiociAutora">Author Visitors</system:String>
-    <system:String x:Key="lblPosetiociAutoraNaslov">Visitors of author:</system:String>
+    <system:String x:Key="lblPosetiociAutoraNaslov">Visitors of author :</system:String>
     <system:String x:Key="tipPosetiociAutora">Show visitors who have author's books on their wishlist (CTRL+P)</system:String>
 
 
     <system:String x:Key="txtPrethodna">Previous</system:String>
     <system:String x:Key="txtSledeca">Next</system:String>
 
+    <system:String x:Key="msgIzaberite">Choose</system:String>
+    <system:String x:Key="msgSaveOnClose">Do you want to save changes before closing?</system:String>
+    <system:String x:Key="titleSaveOnClose">Save changes</system:String>
+
+    <system:String x:Key="txtSelectedPublisher">Selected publisher</system:String>
+    <system:String x:Key="msgIstaKnjiga">You cannot select the same book in both fields.</system:String>
+    <system:String x:Key="colBrojStrana">Page count</system:String>
+    <system:String x:Key="tipPrikaziAutoreIzdavaca">Show authors of selected publisher</system:String>
+    <system:String x:Key="tipPrikaziKnjigeIzdavaca">Show books of selected publisher</system:String>
+
+    <system:String x:Key="errISBNFormat">ISBN must have exactly 6 digits.</system:String>
 </ResourceDictionary>

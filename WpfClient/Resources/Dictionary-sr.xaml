@@ -47,9 +47,9 @@
     <system:String x:Key="colGodina">Godina izdanja</system:String>
     <system:String x:Key="colZanr">Žanr</system:String>
 
-    <system:String x:Key="tipDodaj">Dodaj</system:String>
-    <system:String x:Key="tipIzmeni">Izmeni</system:String>
-    <system:String x:Key="tipObrisi">Obriši</system:String>
+    <system:String x:Key="tipDodaj">Dodaj (CTRL+N)</system:String>
+    <system:String x:Key="tipIzmeni">Izmeni (CTRL+E)</system:String>
+    <system:String x:Key="tipObrisi">Obriši (CTRL+D)</system:String>
     <system:String x:Key="txtStranica">Stranica</system:String>
     <system:String x:Key="statusNaslov">Sajam knjiga -</system:String>
 
@@ -80,11 +80,11 @@
     <system:String x:Key="aboutMessage2">Aplikacija za kupovinu knjiga u okviru Sajma Knjiga.</system:String>
     <system:String x:Key="aboutMessage3">Autori</system:String>
 
-    <system:String x:Key="titleKnjigeIzdavaca">Knjige Izdavača : </system:String>
+    <system:String x:Key="titleKnjigeIzdavaca">Knjige Izdavača</system:String>
     
     
     <system:String x:Key="titleAutoriIzdavaca">Autori Izdavača</system:String>
-	<system:String x:Key="lblAutoriIzdavacaNaslov">Autori Izdavača: </system:String>
+	<system:String x:Key="lblAutoriIzdavacaNaslov">Autori Izdavača</system:String>
 	<system:String x:Key="tipPretraziAutore">Pretraži autore</system:String>
 
 	<system:String x:Key="colTelefon">Telefon</system:String>
@@ -209,6 +209,7 @@
 	<system:String x:Key="btnObrisi">Obrisi </system:String>
 
 	<system:String x:Key="titleGreska">Greška</system:String>
+    <system:String x:Key="btnPretraga">Pretraga</system:String>
 
 	<system:String x:Key="titlePonistavanje">Poništavanje kupovine</system:String>
 	<system:String x:Key="titleUklanjanje">Uklanjanje sa liste</system:String>
@@ -218,7 +219,7 @@
 
 	<system:String x:Key="msgPotvrdaPonistiKupovinu">Da li ste sigurni da želite da poništite kupovinu?</system:String>
 	<system:String x:Key="msgPotvrdaUkloniZelju">Da li ste sigurni da želite da uklonite knjigu sa liste želja?</system:String>
-	<system:String x:Key="titleOdaberiAutora">Odaberite Autora:</system:String>
+	<system:String x:Key="titleOdaberiAutora">Odaberite Autora :</system:String>
 
 	<system:String x:Key="lblUputstvoDodajKnjigu">Odaberite knjigu koju želite da dodate autoru:</system:String>
 	<system:String x:Key="msgOdaberiKnjiguUpozorenje">Molimo izaberite knjigu iz liste.</system:String>
@@ -234,15 +235,26 @@
 
 
     <system:String x:Key="titleAutoriPosetioca">Autori posetioca</system:String>
-    <system:String x:Key="lblAutoriPosetilacaNaslov">Autori posetioca:</system:String>
+    <system:String x:Key="lblAutoriPosetilacaNaslov">Autori posetioca :</system:String>
     <system:String x:Key="tipAutoriPosetioca">Prikaži autore čije knjige posetilac ima na listi želja (CTRL+P)</system:String>
 
     <system:String x:Key="titlePosetiociAutora">Posetioci autora</system:String>
-    <system:String x:Key="lblPosetiociAutoraNaslov">Posetioci autora:</system:String>
+    <system:String x:Key="lblPosetiociAutoraNaslov">Posetioci autora :</system:String>
     <system:String x:Key="tipPosetiociAutora">Prikaži posetioce koji imaju knjige autora na listi želja (CTRL+P)</system:String>
 
 
     <system:String x:Key="txtPrethodna">Prethodna</system:String>
     <system:String x:Key="txtSledeca">Sledeća</system:String>
 
+    <system:String x:Key="msgIzaberite">Izaberite</system:String>
+    <system:String x:Key="msgSaveOnClose">Želite li da sačuvate izmene pre zatvaranja?</system:String>
+    <system:String x:Key="titleSaveOnClose">Čuvanje izmena</system:String>
+
+    <system:String x:Key="txtSelectedPublisher">Izabrani izdavač</system:String>
+    <system:String x:Key="msgIstaKnjiga">Ne možete odabrati istu knjigu u oba polja.</system:String>
+    <system:String x:Key="colBrojStrana">Broj strana</system:String>
+    <system:String x:Key="tipPrikaziAutoreIzdavaca">Prikaži autore selektovanog izdavača</system:String>
+    <system:String x:Key="tipPrikaziKnjigeIzdavaca">Prikaži knjige selektovanog izdavača</system:String>
+
+    <system:String x:Key="errISBNFormat">ISBN mora imati tačno 6 cifara.</system:String>
 </ResourceDictionary>

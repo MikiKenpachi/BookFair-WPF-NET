@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Row="0" Margin="0,0,0,10">
-            <TextBlock x:Name="txtNaslov" Text="{DynamicResource lblAutoriIzdavacaNaslov}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+            <TextBlock x:Name="txtNaslov" Text="{DynamicResource txtSelectedPublisher}" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBox x:Name="txtPretraga" Width="150" Height="25" VerticalContentAlignment="Center" Margin="5,0"/>

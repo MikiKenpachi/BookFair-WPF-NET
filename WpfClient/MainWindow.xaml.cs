@@ -46,8 +46,6 @@ namespace WpfClient
         private readonly ZeljaDAO zeljaDao = new ZeljaDAO();
 
         // ── Master liste — sadrže SVE entitete (osnova za paginaciju) ───
-        // VAŽNO: ovo su ISTE instance koje DataBinding poveže međusobno.
-        // Nikad ih ne zamenjuj novim listama — samo dodaj/ukloni elemente.
         private List<Posetilac> sviPosetiociList;
         private List<Autor> sviAutoriList;
         private List<Knjiga> sveKnjigeList;
@@ -61,6 +59,9 @@ namespace WpfClient
         private int stranicaKnjige = 1;
         private const int velicinaStranice = 15;
 
+        // ── Režim pretrage — dok je true, paginacija se premošćuje ──────
+        private bool _uRezimuPretrage = false;
+
         // ================================================================
         // Konstruktor
         // ================================================================
@@ -68,38 +69,27 @@ namespace WpfClient
         {
             InitializeComponent();
 
-            // ----------------------------------------------------------
-            // KORAK 1: Učitaj sve entitete iz fajlova (samo jednom!)
-            // ----------------------------------------------------------
             sviPosetiociList = posetilacDao.GetAll();
             sviAutoriList = autorDao.GetAll();
             sveKnjigeList = knjigaDao.GetAll();
-            sviIzdavaciList = izdavacDao.GetAll();             
+            sviIzdavaciList = izdavacDao.GetAll();
             sveKupovineList = kupiliDao.GetAll();
             sveZeljeList = zeljaDao.GetAll();
 
             sviPosetiociList = sviPosetiociList
-            .OrderBy(p =>
-            {
-                var deo = p.BrClanskeKarte?.Replace("CK-", "");
-                return int.TryParse(deo, out int broj) ? broj : int.MaxValue;
-            })
-            .ToList();
+                .OrderBy(p =>
+                {
+                    var deo = p.BrClanskeKarte?.Replace("CK-", "");
+                    return int.TryParse(deo, out int broj) ? broj : int.MaxValue;
+                })
+                .ToList();
 
-
-
-            // ----------------------------------------------------------
-            // KORAK 2: Poveži adrese (poseban fajl, ID je ključ veze)
-            // ----------------------------------------------------------
             foreach (var p in sviPosetiociList)
                 p.Adresa = adresaDao.GetByVlasnikID(p.BrClanskeKarte);
 
             foreach (var a in sviAutoriList)
                 a.Adresa = adresaDao.GetByVlasnikID(a.Broj_lk);
 
-            // ----------------------------------------------------------
-            // KORAK 3: DataBinding
-            // ----------------------------------------------------------
             DataBinding.PoveziSve(
                 sviPosetiociList,
                 sveKnjigeList,
@@ -108,10 +98,6 @@ namespace WpfClient
                 sveKupovineList,
                 sveZeljeList);
 
-            // ----------------------------------------------------------
-            // KORAK 4: Napravi ObservableCollection-e i ICollectionView-e
-            // ObservableCollection počinje prazna — OsveziPrikaz() je puni
-            // ----------------------------------------------------------
             Posetioci = new ObservableCollection<Posetilac>();
             Autori = new ObservableCollection<Autor>();
             Knjige = new ObservableCollection<Knjiga>();
@@ -121,23 +107,14 @@ namespace WpfClient
             AutoriView = CollectionViewSource.GetDefaultView(Autori);
             KnjigeView = CollectionViewSource.GetDefaultView(Knjige);
 
-            // ----------------------------------------------------------
-            // KORAK 5: Poveži DataGrid-ove sa View-ovima
-            // ----------------------------------------------------------
             DataGridPosetioci.ItemsSource = PosetiociView;
             DataGridAutori.ItemsSource = AutoriView;
             DataGridKnjige.ItemsSource = KnjigeView;
 
-            // ----------------------------------------------------------
-            // KORAK 6: Popuni prvi prikaz (stranica 1)
-            // ----------------------------------------------------------
             OsveziPrikaz();
 
             this.DataContext = this;
 
-            // ----------------------------------------------------------
-            // Tajmer za sat u status baru
-            // ----------------------------------------------------------
             DispatcherTimer timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromSeconds(1);
             timer.Tick += timer_Tick;
@@ -147,26 +124,22 @@ namespace WpfClient
         // ================================================================
         // Paginacija
         // ================================================================
-
-        /// <summary>
-        /// Puni ObservableCollection-e podacima za trenutnu stranicu.
-        /// Radi sa master listama — DataBinding veze su već uspostavljene.
-        /// </summary>
         private void OsveziPrikaz()
         {
             string recStranica = Application.Current.FindResource("lblStranica").ToString();
+
+            var sortPosetioci = PosetiociView.SortDescriptions.ToList();
+            var sortAutori = AutoriView.SortDescriptions.ToList();
+            var sortKnjige = KnjigeView.SortDescriptions.ToList();
 
             // Posetioci
             int preskociP = (stranicaPosetioci - 1) * velicinaStranice;
             Posetioci.Clear();
             PosetiociView.SortDescriptions.Clear();
-            foreach (var p in sviPosetiociList
-                .OrderBy(p => {
-                    var deo = p.BrClanskeKarte?.Replace("CK-", "");
-                    return int.TryParse(deo, out int broj) ? broj : int.MaxValue;
-                })
-                .Skip(preskociP).Take(velicinaStranice))
+            foreach (var p in sviPosetiociList.Skip(preskociP).Take(velicinaStranice))
                 Posetioci.Add(p);
+            foreach (var s in sortPosetioci)
+                PosetiociView.SortDescriptions.Add(s);
 
             int maxStrP = (int)Math.Ceiling(sviPosetiociList.Count / (double)velicinaStranice);
             if (txtStranaInfoPosetioci != null)
@@ -177,6 +150,8 @@ namespace WpfClient
             Autori.Clear();
             foreach (var a in sviAutoriList.Skip(preskociA).Take(velicinaStranice))
                 Autori.Add(a);
+            foreach (var s in sortAutori)
+                AutoriView.SortDescriptions.Add(s);
 
             int maxStrA = (int)Math.Ceiling(sviAutoriList.Count / (double)velicinaStranice);
             if (txtStranaInfoAutori != null)
@@ -187,6 +162,8 @@ namespace WpfClient
             Knjige.Clear();
             foreach (var k in sveKnjigeList.Skip(preskociK).Take(velicinaStranice))
                 Knjige.Add(k);
+            foreach (var s in sortKnjige)
+                KnjigeView.SortDescriptions.Add(s);
 
             int maxStrK = (int)Math.Ceiling(sveKnjigeList.Count / (double)velicinaStranice);
             if (txtStranaInfoKnjige != null)
@@ -213,25 +190,19 @@ namespace WpfClient
         }
 
         // ================================================================
-        // Save — snima SVE entitete u fajlove
+        // Save
         // ================================================================
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Snimamo master liste
                 posetilacDao.SaveAll(sviPosetiociList);
                 autorDao.SaveAll(sviAutoriList);
                 knjigaDao.SaveAll(sveKnjigeList);
                 zeljaDao.Save();
-
-                // Izdavači
                 izdavacDao.SaveAll(Izdavaci.ToList());
-
-                // Kupovine
                 kupiliDao.Save();
 
-                // Adrese
                 var sveAdrese = new List<Adresa>();
                 foreach (var p in sviPosetiociList)
                     if (p.Adresa != null) sveAdrese.Add(p.Adresa);
@@ -239,18 +210,14 @@ namespace WpfClient
                     if (a.Adresa != null) sveAdrese.Add(a.Adresa);
                 adresaDao.SaveAll(sveAdrese);
 
-                // --- LOKALIZACIJA PORUKE O USPEHU ---
                 string porukaUspeh = Application.Current.FindResource("msgSaveSuccess").ToString();
                 string naslovStatus = Application.Current.FindResource("statusTitle").ToString();
-
                 MessageBox.Show(porukaUspeh, naslovStatus, MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                // --- LOKALIZACIJA PORUKE O GREŠCI ---
                 string porukaGreska = Application.Current.FindResource("msgSaveError").ToString();
                 string naslovGreska = Application.Current.FindResource("errorTitle").ToString();
-
                 MessageBox.Show($"{porukaGreska} {ex.Message}", naslovGreska, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -260,7 +227,7 @@ namespace WpfClient
         // ================================================================
         private void BtnDodaj_Click(object sender, RoutedEventArgs e)
         {
-            if (MainTabControl.SelectedIndex == 0) // Posetioci
+            if (MainTabControl.SelectedIndex == 0)
             {
                 var dijalog = new DodajPosetiocaProzor();
                 dijalog.Owner = this;
@@ -269,30 +236,27 @@ namespace WpfClient
                 {
                     Posetilac p = dijalog.NoviPosetilac;
 
-                    // Generiši sledeći ID na osnovu ukupnog broja u master listi
                     int maxId = sviPosetiociList
                         .Select(x => {
                             var deo = x.BrClanskeKarte?.Replace("CK-", "");
                             return int.TryParse(deo, out int n) ? n : 0;
                         }).DefaultIfEmpty(0).Max();
 
-                    int nextId = maxId + 1;
-                    p.BrClanskeKarte = $"CK-{nextId}";
+                    p.BrClanskeKarte = $"CK-{maxId + 1}";
 
                     if (p.Adresa != null)
                         p.Adresa.VlasnikID = p.BrClanskeKarte;
 
-
                     sviPosetiociList.Add(p);
                     posetilacDao.Add(p);
-                    
+
                     if (p.Adresa != null)
                         adresaDao.Add(p.Adresa);
 
                     OsveziPrikaz();
                 }
             }
-            else if (MainTabControl.SelectedIndex == 1) // Autori
+            else if (MainTabControl.SelectedIndex == 1)
             {
                 var dijalog = new DodajAutoraProzor();
                 dijalog.Owner = this;
@@ -304,7 +268,6 @@ namespace WpfClient
                     if (a.Adresa != null)
                         a.Adresa.VlasnikID = a.Broj_lk;
 
-
                     autorDao.Add(a);
                     if (a.Adresa != null)
                         adresaDao.Add(a.Adresa);
@@ -312,7 +275,7 @@ namespace WpfClient
                     OsveziPrikaz();
                 }
             }
-            else if (MainTabControl.SelectedIndex == 2) // Knjige
+            else if (MainTabControl.SelectedIndex == 2)
             {
                 var dijalog = new DodajKnjiguProzor();
                 dijalog.Owner = this;
@@ -322,7 +285,6 @@ namespace WpfClient
                     Knjiga k = dijalog.NovaKnjiga;
                     knjigaDao.Add(k);
 
-                    // Uspostavi bidirekcione veze
                     if (k.ListaAutora != null)
                         foreach (var autor in k.ListaAutora)
                             autor.DodajSpisakKnjiga(k);
@@ -342,7 +304,7 @@ namespace WpfClient
         {
             int aktivniTab = MainTabControl.SelectedIndex;
 
-            if (aktivniTab == 0) // Posetioci
+            if (aktivniTab == 0)
             {
                 var selektovan = DataGridPosetioci.SelectedItem as Posetilac;
                 if (selektovan == null)
@@ -353,20 +315,28 @@ namespace WpfClient
 
                 string pitanje = $"{Application.Current.FindResource("msgConfirmDeletePosetilac")} {selektovan.Ime} {selektovan.Prezime}?";
                 string naslov = Application.Current.FindResource("titleDeletePosetilac").ToString();
-
                 var result = MessageBox.Show(pitanje, naslov, MessageBoxButton.YesNo);
 
                 if (result == MessageBoxResult.Yes)
                 {
                     sviPosetiociList.Remove(selektovan);
                     posetilacDao.Remove(selektovan);
-                    zeljaDao.RemoveByPosetilac(selektovan.BrClanskeKarte);
+
                     if (selektovan.Adresa != null)
                         adresaDao.Remove(selektovan.BrClanskeKarte);
+
+                    zeljaDao.RemoveByPosetilac(selektovan.BrClanskeKarte);
+                    foreach (var knjiga in selektovan.ListaZelja)
+                        knjiga.Na_listi_zelja.Remove(selektovan);
+
+                    kupiliDao.RemoveByPosetilac(selektovan.BrClanskeKarte);
+                    foreach (var knjiga in selektovan.ListaKupovina)
+                        knjiga.Kupili.Remove(selektovan);
+
                     OsveziPrikaz();
                 }
             }
-            else if (aktivniTab == 1) // Autori
+            else if (aktivniTab == 1)
             {
                 var selektovan = DataGridAutori.SelectedItem as Autor;
                 if (selektovan == null)
@@ -377,19 +347,30 @@ namespace WpfClient
 
                 string pitanje = $"{Application.Current.FindResource("msgConfirmDeleteAutor")} {selektovan.Ime} {selektovan.Prezime}?";
                 string naslov = Application.Current.FindResource("titleDeleteAutor").ToString();
-
                 var result = MessageBox.Show(pitanje, naslov, MessageBoxButton.YesNo);
 
                 if (result == MessageBoxResult.Yes)
                 {
                     sviAutoriList.Remove(selektovan);
                     autorDao.Remove(selektovan);
+
                     if (selektovan.Adresa != null)
                         adresaDao.Remove(selektovan.Broj_lk);
+
+                    foreach (var knjiga in selektovan.SpisakKnjiga.ToList())
+                        knjiga.ListaAutora.Remove(selektovan);
+
+                    foreach (var izdavac in sviIzdavaciList)
+                    {
+                        if (izdavac.SefIzdavaca?.Broj_lk == selektovan.Broj_lk)
+                            izdavac.SefIzdavaca = null;
+                        izdavac.ListaAutora.Remove(selektovan);
+                    }
+
                     OsveziPrikaz();
                 }
             }
-            else if (aktivniTab == 2) // Knjige
+            else if (aktivniTab == 2)
             {
                 var selektovana = DataGridKnjige.SelectedItem as Knjiga;
                 if (selektovana == null)
@@ -400,13 +381,26 @@ namespace WpfClient
 
                 string pitanje = $"{Application.Current.FindResource("msgConfirmDeleteKnjiga")} \"{selektovana.Naziv}\"?";
                 string naslov = Application.Current.FindResource("titleDeleteKnjiga").ToString();
-
                 var result = MessageBox.Show(pitanje, naslov, MessageBoxButton.YesNo);
 
                 if (result == MessageBoxResult.Yes)
                 {
                     sveKnjigeList.Remove(selektovana);
                     knjigaDao.Remove(selektovana);
+
+                    foreach (var autor in selektovana.ListaAutora.ToList())
+                        autor.SpisakKnjiga?.Remove(selektovana);
+
+                    selektovana.Izdavac?.ListaKnjiga.Remove(selektovana);
+
+                    kupiliDao.RemoveByKnjiga(selektovana.ISBN);
+                    foreach (var posetilac in selektovana.Kupili.ToList())
+                        posetilac.ListaKupovina.Remove(selektovana);
+
+                    zeljaDao.RemoveByKnjiga(selektovana.ISBN);
+                    foreach (var posetilac in selektovana.Na_listi_zelja.ToList())
+                        posetilac.ListaZelja.Remove(selektovana);
+
                     OsveziPrikaz();
                 }
             }
@@ -420,7 +414,7 @@ namespace WpfClient
             int aktivniTab = MainTabControl.SelectedIndex;
             string naslovObavestenja = Application.Current.FindResource("titleNotice").ToString();
 
-            if (aktivniTab == 0) // Posetioci
+            if (aktivniTab == 0)
             {
                 var selektovan = DataGridPosetioci.SelectedItem as Posetilac;
                 if (selektovan == null)
@@ -443,7 +437,7 @@ namespace WpfClient
 
                 DataGridPosetioci.SelectedItem = null;
             }
-            else if (aktivniTab == 1) // Autori
+            else if (aktivniTab == 1)
             {
                 var selektovan = DataGridAutori.SelectedItem as Autor;
                 if (selektovan == null)
@@ -466,7 +460,7 @@ namespace WpfClient
 
                 DataGridAutori.SelectedItem = null;
             }
-            else if (aktivniTab == 2) // Knjige
+            else if (aktivniTab == 2)
             {
                 var selektovana = DataGridKnjige.SelectedItem as Knjiga;
                 if (selektovana == null)
@@ -488,10 +482,11 @@ namespace WpfClient
             }
         }
 
-
+        // ================================================================
+        // Specijalni prikazi
+        // ================================================================
         private void BtnPosetiociAutora_Click(object sender, RoutedEventArgs e)
         {
-            // Funkcionalnost dostupna samo na tabu Autori
             if (MainTabControl.SelectedIndex != 1)
             {
                 MessageBox.Show(
@@ -509,8 +504,6 @@ namespace WpfClient
                 return;
             }
 
-            // Filtriramo: posetioci koji na listi zelja imaju barem jednu
-            // knjigu izabranog autora (bez duplikata — lista je Vec<Posetilac>)
             var posetioci = sviPosetiociList
                 .Where(p => p.ListaZelja
                     .Any(k => k.ListaAutora
@@ -521,7 +514,6 @@ namespace WpfClient
             prozor.Owner = this;
             prozor.ShowDialog();
         }
-
 
         private void BtnAutoriPosetioca_Click(object sender, RoutedEventArgs e)
         {
@@ -534,9 +526,6 @@ namespace WpfClient
                 return;
             }
 
-            // Svi autori čije knjige se nalaze na listi želja posjetioca
-            // .SelectMany() razvija sve knjige sa liste želja u jedan niz autora
-            // .GroupBy() + .Select(g => g.First()) eliminiše duplikate
             var autori = selektovani.ListaZelja
                 .SelectMany(k => k.ListaAutora)
                 .GroupBy(a => a.Broj_lk)
@@ -548,113 +537,97 @@ namespace WpfClient
             prozor.ShowDialog();
         }
 
-
         // ================================================================
-        // Pretraga
+        // Pretraga — pretražuje SVE stranice, ne samo trenutnu
         // ================================================================
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            string filter = txtPretraga.Text.ToLower();
+            string upit = txtPretraga.Text.Trim();
 
-            if (MainTabControl.SelectedIndex == 0)
-                FiltrirajPosetioce(filter);
-            else if (MainTabControl.SelectedIndex == 1)
-                FiltrirajAutore(filter);
-            else if (MainTabControl.SelectedIndex == 2)
-                FiltrirajKnjige(filter);
+            _uRezimuPretrage = !string.IsNullOrWhiteSpace(upit);
+
+            if (!_uRezimuPretrage)
+            {
+                // Polje je prazno — vrati normalnu paginaciju
+                OsveziPrikaz();
+                return;
+            }
+
+            int tab = MainTabControl.SelectedIndex;
+
+            if (tab == 0)
+            {
+                var rezultati = FiltriranaListaPosetioci(upit.ToLower());
+                Posetioci.Clear();
+                foreach (var p in rezultati) Posetioci.Add(p);
+
+                if (txtStranaInfoPosetioci != null)
+                    txtStranaInfoPosetioci.Text = $"Broj rezultata : {rezultati.Count}";
+            }
+            else if (tab == 1)
+            {
+                var rezultati = FiltriranaListaAutori(upit.ToLower());
+                Autori.Clear();
+                foreach (var a in rezultati) Autori.Add(a);
+
+                if (txtStranaInfoAutori != null)
+                    txtStranaInfoAutori.Text = $"Broj rezultata : {rezultati.Count}";
+            }
+            else if (tab == 2)
+            {
+                var rezultati = FiltriranaListaKnjige(upit.ToLower());
+                Knjige.Clear();
+                foreach (var k in rezultati) Knjige.Add(k);
+
+                if (txtStranaInfoKnjige != null)
+                    txtStranaInfoKnjige.Text = $"Broj rezultata : {rezultati.Count}";
+            }
         }
 
-        private void FiltrirajPosetioce(string upit)
+        private List<Posetilac> FiltriranaListaPosetioci(string upit)
         {
-            if (PosetiociView == null) return;
+            string[] delovi = upit.Split(',');
+            for (int i = 0; i < delovi.Length; i++) delovi[i] = delovi[i].Trim();
 
-            if (string.IsNullOrWhiteSpace(upit))
+            return sviPosetiociList.Where(p =>
             {
-                PosetiociView.Filter = null;
-            }
-            else
-            {
-                string[] delovi = upit.ToLower().Split(',');
-                for (int i = 0; i < delovi.Length; i++) delovi[i] = delovi[i].Trim();
+                string prezime = p.Prezime?.ToLower() ?? "";
+                string ime = p.Ime?.ToLower() ?? "";
+                string karta = p.BrClanskeKarte?.ToLower() ?? "";
 
-                PosetiociView.Filter = obj =>
-                {
-                    var p = obj as Posetilac;
-                    if (p == null) return false;
-
-                    string prezime = p.Prezime?.ToLower() ?? "";
-                    string ime = p.Ime?.ToLower() ?? "";
-                    string karta = p.BrClanskeKarte?.ToLower() ?? "";
-
-                    if (delovi.Length == 1)
-                        return prezime.Contains(delovi[0]);
-                    else if (delovi.Length == 2)
-                        return prezime.Contains(delovi[0]) && ime.Contains(delovi[1]);
-                    else if (delovi.Length >= 3)
-                        return karta.Contains(delovi[0]) && ime.Contains(delovi[1]) && prezime.Contains(delovi[2]);
-
-                    return false;
-                };
-            }
-
-            PosetiociView.Refresh();
+                if (delovi.Length == 1)
+                    return prezime.Contains(delovi[0]);
+                else if (delovi.Length == 2)
+                    return prezime.Contains(delovi[0]) && ime.Contains(delovi[1]);
+                else
+                    return karta.Contains(delovi[0]) && ime.Contains(delovi[1]) && prezime.Contains(delovi[2]);
+            }).ToList();
         }
 
-        private void FiltrirajAutore(string upit)
+        private List<Autor> FiltriranaListaAutori(string upit)
         {
-            if (AutoriView == null) return;
+            string[] delovi = upit.Split(',');
+            for (int i = 0; i < delovi.Length; i++) delovi[i] = delovi[i].Trim();
 
-            if (string.IsNullOrWhiteSpace(upit))
+            return sviAutoriList.Where(a =>
             {
-                AutoriView.Filter = null;
-            }
-            else
-            {
-                string[] delovi = upit.ToLower().Split(',');
-                for (int i = 0; i < delovi.Length; i++) delovi[i] = delovi[i].Trim();
+                string prezime = a.Prezime?.ToLower() ?? "";
+                string ime = a.Ime?.ToLower() ?? "";
 
-                AutoriView.Filter = obj =>
-                {
-                    var a = obj as Autor;
-                    if (a == null) return false;
-
-                    string prezime = a.Prezime?.ToLower() ?? "";
-                    string ime = a.Ime?.ToLower() ?? "";
-
-                    if (delovi.Length == 1)
-                        return prezime.Contains(delovi[0]);
-                    else if (delovi.Length >= 2)
-                        return prezime.Contains(delovi[0]) && ime.Contains(delovi[1]);
-
-                    return false;
-                };
-            }
-
-            AutoriView.Refresh();
+                if (delovi.Length == 1)
+                    return prezime.Contains(delovi[0]);
+                else
+                    return prezime.Contains(delovi[0]) && ime.Contains(delovi[1]);
+            }).ToList();
         }
 
-        private void FiltrirajKnjige(string upit)
+        private List<Knjiga> FiltriranaListaKnjige(string upit)
         {
-            if (KnjigeView == null) return;
-
-            if (string.IsNullOrWhiteSpace(upit))
-            {
-                KnjigeView.Filter = null;
-            }
-            else
-            {
-                string f = upit.ToLower().Trim();
-
-                KnjigeView.Filter = obj =>
-                {
-                    var k = obj as Knjiga;
-                    if (k == null) return false;
-                    return (k.Naziv?.ToLower().Contains(f) == true) ||
-                           (k.ISBN?.ToLower().Contains(f) == true);
-                };
-            }
-
-            KnjigeView.Refresh();
+            string f = upit.Trim();
+            return sveKnjigeList.Where(k =>
+                (k.Naziv?.ToLower().Contains(f) == true) ||
+                (k.ISBN?.ToLower().Contains(f) == true)
+            ).ToList();
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e) { }
@@ -677,13 +650,9 @@ namespace WpfClient
             prozor.Owner = this;
             prozor.ShowDialog();
         }
-           
-
-       
 
         private void MenuIzdavaci_Click(object sender, RoutedEventArgs e)
         {
-            // Prosleđujemo referencu na listu koju MainWindow već ima
             IzdavaciProzor popUp = new IzdavaciProzor(this.Izdavaci);
             popUp.Owner = this;
             popUp.ShowDialog();
@@ -696,9 +665,8 @@ namespace WpfClient
             string poruka3 = Application.Current.FindResource("aboutMessage3").ToString();
             string poruka4 = "[Miloš Trišić RA 39/2023]";
             string poruka5 = "[Boris Stepanović RA 97/2023]";
-            string poruka = poruka1 + "\n\n" + poruka2 + "\n\n" + poruka3 + "\n- - - - - - - - - - - - - - - - - - - - - -\n" + poruka4 + "\n" +  poruka5;
+            string poruka = poruka1 + "\n\n" + poruka2 + "\n\n" + poruka3 + "\n- - - - - - - - - - - - - - - - - - - - - -\n" + poruka4 + "\n" + poruka5;
             string naslov = Application.Current.FindResource("aboutTitle").ToString();
-
             MessageBox.Show(poruka, naslov);
         }
 
@@ -713,36 +681,30 @@ namespace WpfClient
             bool isCtrl = Keyboard.Modifiers == ModifierKeys.Control;
 
             if (isCtrl && e.Key == Key.N)
-            {
-                BtnDodaj_Click(sender, null);
-                e.Handled = true;
-            }
+            { BtnDodaj_Click(sender, null); e.Handled = true; }
             else if (isCtrl && e.Key == Key.S)
-            {
-                BtnSave_Click(sender, null);
-                e.Handled = true;
-            }
-            else if (e.Key == Key.Escape)
-            {
-                MenuClose_Click(sender, null);
-                e.Handled = true;
-            }
-
+            { BtnSave_Click(sender, null); e.Handled = true; }
+            else if (e.Key == Key.F2 || (isCtrl && e.Key == Key.E))
+            { BtnIzmeni_Click(sender, null); e.Handled = true; }
+            else if (e.Key == Key.Delete || (isCtrl && e.Key == Key.D))
+            { BtnObrisi_Click(sender, null); e.Handled = true; }
             else if (isCtrl && e.Key == Key.P)
             {
                 if (MainTabControl.SelectedIndex == 0)
-                    BtnAutoriPosetioca_Click(sender, null); // prikazi autore cije knjige posetilac ima na listi zelja
+                    BtnAutoriPosetioca_Click(sender, null);
                 else if (MainTabControl.SelectedIndex == 1)
-                    BtnPosetiociAutora_Click(sender, null); // prikazi posetioce koji imaju knjige autora na listi zelja
+                    BtnPosetiociAutora_Click(sender, null);
                 e.Handled = true;
             }
+            else if (e.Key == Key.Escape)
+            { MenuClose_Click(sender, null); e.Handled = true; }
         }
+
         // ================================================================
         // Lokalizacija
         // ================================================================
         private void OsveziNaziveKolona()
         {
-            // POSETIOCI
             if (DataGridPosetioci != null && DataGridPosetioci.Columns.Count > 0)
             {
                 DataGridPosetioci.Columns[0].Header = Application.Current.FindResource("colClanskaKarta");
@@ -752,7 +714,6 @@ namespace WpfClient
                 DataGridPosetioci.Columns[4].Header = Application.Current.FindResource("colStatus");
             }
 
-            // AUTORI
             if (DataGridAutori != null && DataGridAutori.Columns.Count > 0)
             {
                 DataGridAutori.Columns[0].Header = Application.Current.FindResource("colIme");
@@ -762,7 +723,6 @@ namespace WpfClient
                 DataGridAutori.Columns[4].Header = Application.Current.FindResource("colEmail");
             }
 
-            // KNJIGE
             if (DataGridKnjige != null && DataGridKnjige.Columns.Count > 0)
             {
                 DataGridKnjige.Columns[0].Header = Application.Current.FindResource("colISBN");
@@ -772,16 +732,14 @@ namespace WpfClient
                 DataGridKnjige.Columns[4].Header = Application.Current.FindResource("colZanr");
             }
         }
+
         private void BtnSrpski_Click(object sender, RoutedEventArgs e)
         {
             if (Application.Current is App app)
             {
                 app.ChangeLanguage("sr");
-
-                // DODAJ OVE DVE LINIJE:
                 OsveziNaziveKolona();
                 OsveziPrikaz();
-
                 string poruka = Application.Current.FindResource("msgJezikPromenjen").ToString();
                 MessageBox.Show(poruka);
             }
@@ -792,17 +750,12 @@ namespace WpfClient
             if (Application.Current is App app)
             {
                 app.ChangeLanguage("en");
-
-                // DODAJ OVE DVE LINIJE:
                 OsveziNaziveKolona();
                 OsveziPrikaz();
-
                 string poruka = Application.Current.FindResource("msgJezikPromenjen").ToString();
                 MessageBox.Show(poruka);
             }
         }
-
-
 
         // ================================================================
         // Ostalo
@@ -811,19 +764,20 @@ namespace WpfClient
         {
             this.Width = SystemParameters.PrimaryScreenWidth * 0.75;
             this.Height = SystemParameters.PrimaryScreenHeight * 0.75;
-
         }
-
 
         private void MainTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            // Ignoriši događaje koji dolaze od child kontrola (DataGrid, ComboBox...)
             if (e.OriginalSource != MainTabControl) return;
 
             int tab = MainTabControl.SelectedIndex;
             if (tab == 0) stranicaPosetioci = 1;
             else if (tab == 1) stranicaAutori = 1;
             else if (tab == 2) stranicaKnjige = 1;
+
+            // Promena taba uvek izlazi iz režima pretrage i resetuje polje
+            _uRezimuPretrage = false;
+            if (txtPretraga != null) txtPretraga.Text = "";
 
             OsveziPrikaz();
             OsveziVidljivostDugmadi();
@@ -842,6 +796,27 @@ namespace WpfClient
                 : Visibility.Collapsed;
         }
 
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            string pitanje = Application.Current.FindResource("msgSaveOnClose").ToString();
+            string naslov = Application.Current.FindResource("titleSaveOnClose").ToString();
+
+            var result = MessageBox.Show(pitanje, naslov, MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                BtnSave_Click(null, null);
+                base.OnClosing(e);
+            }
+            else if (result == MessageBoxResult.No)
+            {
+                base.OnClosing(e);
+            }
+            else
+            {
+                e.Cancel = true;
+            }
+        }
 
         private void timer_Tick(object? sender, EventArgs e)
         {
@@ -849,7 +824,5 @@ namespace WpfClient
             lblTime.Text = now.ToString("HH:mm:ss");
             lblDate.Text = now.ToString("dd.MM.yyyy.");
         }
-
-
     }
 }

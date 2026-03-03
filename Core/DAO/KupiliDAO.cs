@@ -51,7 +51,7 @@ namespace Core.DAO
         public void Add(Kupovina k)
         {
             listaKupovina.Add(k);
-            _storage.Save(listaKupovina);
+            //_storage.Save(listaKupovina);
         }
 
         // Uklanja kupovinu po posetiocu i knjizi
@@ -61,14 +61,30 @@ namespace Core.DAO
                 .Where(k => !(k.Posetilac?.BrClanskeKarte == brClanskeKarte &&
                               k.Knjiga?.ISBN == isbn))
                 .ToList();
-            _storage.Save(listaKupovina);
+            //_storage.Save(listaKupovina);
         }
 
         // Uklanja konkretan objekat kupovine
         public void Remove(Kupovina kupovina)
         {
             listaKupovina.Remove(kupovina);
-            _storage.Save(listaKupovina);
+            //_storage.Save(listaKupovina);
+        }
+
+        // Uklanja SVE kupovine jednog posetioca (koristi se pri brisanju posetioca)
+        public void RemoveByPosetilac(string brClanskeKarte)
+        {
+            listaKupovina = listaKupovina
+                .Where(k => k.Posetilac?.BrClanskeKarte != brClanskeKarte)
+                .ToList();
+        }
+
+        // Uklanja SVE kupovine odredjene knjige (koristi se pri brisanju knjige)
+        public void RemoveByKnjiga(string isbn)
+        {
+            listaKupovina = listaKupovina
+                .Where(k => k.Knjiga?.ISBN != isbn)
+                .ToList();
         }
 
         // Azurira prosecnu ocenu posetioca na osnovu svih njegovih kupovina

@@ -1,12 +1,6 @@
-﻿using Core.Languages;
-using SajamKnjigaProjekat.Core.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 public class AutorDTO : IDataErrorInfo
 {
@@ -15,12 +9,11 @@ public class AutorDTO : IDataErrorInfo
     public DateTime? DatumRodjenja { get; set; }
     public string Telefon { get; set; }
     public string Email { get; set; }
-    public int GodineIskustva { get; set; }
+    public string GodineIskustva { get; set; }
     public string BrojLk { get; set; }
     public string Ulica { get; set; }
     public string Broj { get; set; }
     public string Grad { get; set; }
-
     public string Drzava { get; set; }
 
     public string Error => null;
@@ -33,37 +26,38 @@ public class AutorDTO : IDataErrorInfo
             {
                 case nameof(Ime):
                     if (string.IsNullOrWhiteSpace(Ime)) return "X";
+                    if (Ime.Trim().Length < 2) return "X";
                     break;
 
                 case nameof(Prezime):
                     if (string.IsNullOrWhiteSpace(Prezime)) return "X";
+                    if (Prezime.Trim().Length < 2) return "X";
                     break;
 
                 case nameof(DatumRodjenja):
-                    if (DatumRodjenja == null || DatumRodjenja > DateTime.Now) return "X";
+                    if (DatumRodjenja == null) return "X";
+                    if (DatumRodjenja > DateTime.Now) return "X";
                     break;
 
                 case nameof(Telefon):
                     if (string.IsNullOrWhiteSpace(Telefon)) return "X";
-                    break;
-
-
-                case nameof(Drzava):
-                    if (string.IsNullOrWhiteSpace(Telefon)) return "X";
+                    if (!Regex.IsMatch(Telefon.Trim(), @"^[0-9+\-\s\(\)]{6,20}$")) return "X";
                     break;
 
                 case nameof(Email):
-                    if (string.IsNullOrWhiteSpace(Email) || !Email.Contains("@")) return "X";
+                    if (string.IsNullOrWhiteSpace(Email)) return "X";
+                    if (!Regex.IsMatch(Email.Trim(), @"^[^@\s]+@[^@\s]+$")) return "X";
                     break;
 
                 case nameof(GodineIskustva):
-                    // Iskustvo obično ne može biti negativno
-                    if (GodineIskustva < 0) return "X";
+                    if (string.IsNullOrWhiteSpace(GodineIskustva)) return "X";
+                    if (!int.TryParse(GodineIskustva, out int god) || god < 0) return "X";
+                    if (god > 70) return "X";
                     break;
 
                 case nameof(BrojLk):
-                    // Provera da li je uneto i da li ima npr. 9 cifara
-                    if (string.IsNullOrWhiteSpace(BrojLk) || BrojLk.Length != 9) return "X";
+                    if (string.IsNullOrWhiteSpace(BrojLk)) return "X";
+                    if (!Regex.IsMatch(BrojLk.Trim(), @"^\d{8}$")) return "X";
                     break;
 
                 case nameof(Ulica):
@@ -76,6 +70,10 @@ public class AutorDTO : IDataErrorInfo
 
                 case nameof(Grad):
                     if (string.IsNullOrWhiteSpace(Grad)) return "X";
+                    break;
+
+                case nameof(Drzava):
+                    if (string.IsNullOrWhiteSpace(Drzava)) return "X";
                     break;
             }
             return string.Empty;
