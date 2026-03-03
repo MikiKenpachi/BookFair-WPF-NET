@@ -7,6 +7,27 @@
         ResizeMode="NoResize"
         Icon="/Resources/bookshelf.ico">
 
+    <Window.Resources>
+        <ControlTemplate x:Key="GreskaTemplate">
+            <Border BorderBrush="Red" BorderThickness="1.5">
+                <AdornedElementPlaceholder x:Name="OriginalnaKontrola"/>
+            </Border>
+        </ControlTemplate>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource GreskaTemplate}"/>
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors).CurrentItem.ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Validation.ErrorTemplate" Value="{StaticResource GreskaTemplate}"/>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="16">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="140"/>
@@ -25,93 +46,51 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource lblISBN}"
-                   VerticalAlignment="Center" Margin="0,4,8,4"/>
-        <TextBox   Grid.Row="0" Grid.Column="1" x:Name="txtISBN"
-                   Margin="0,4" Height="26" Padding="4,2"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{DynamicResource lblISBN}" VerticalAlignment="Center" Margin="0,4,8,4"/>
+        <TextBox   Grid.Row="0" Grid.Column="1" x:Name="txtISBN" Margin="0,4" Height="26" Padding="4,2"
+                   Text="{Binding ISBN, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
 
-        <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource lblNazivKnjige}"
-                   VerticalAlignment="Center" Margin="0,4,8,4"/>
-        <TextBox   Grid.Row="1" Grid.Column="1" x:Name="txtNaziv"
-                   Margin="0,4" Height="26" Padding="4,2"/>
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{DynamicResource lblNazivKnjige}" VerticalAlignment="Center" Margin="0,4,8,4"/>
+        <TextBox   Grid.Row="1" Grid.Column="1" x:Name="txtNaziv" Margin="0,4" Height="26" Padding="4,2"
+                   Text="{Binding Naziv, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
 
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource lblCena}"
-                   VerticalAlignment="Center" Margin="0,4,8,4"/>
-        <TextBox   Grid.Row="2" Grid.Column="1" x:Name="txtCena"
-                   Margin="0,4" Height="26" Padding="4,2"/>
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="{DynamicResource lblCena}" VerticalAlignment="Center" Margin="0,4,8,4"/>
+        <TextBox   Grid.Row="2" Grid.Column="1" x:Name="txtCena" Margin="0,4" Height="26" Padding="4,2"
+                   Text="{Binding Cena, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
 
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="{DynamicResource lblGodinaIzdanja}"
-                   VerticalAlignment="Center" Margin="0,4,8,4"/>
-        <TextBox   Grid.Row="3" Grid.Column="1" x:Name="txtGodinaIzdanja"
-                   Margin="0,4" Height="26" Padding="4,2"/>
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="{DynamicResource lblGodinaIzdanja}" VerticalAlignment="Center" Margin="0,4,8,4"/>
+        <TextBox   Grid.Row="3" Grid.Column="1" x:Name="txtGodinaIzdanja" Margin="0,4" Height="26" Padding="4,2"
+                   Text="{Binding GodinaIzdanja, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
 
-        <TextBlock Grid.Row="4" Grid.Column="0" Text="{DynamicResource lblBrojStrana}"
-                   VerticalAlignment="Center" Margin="0,4,8,4"/>
-        <TextBox   Grid.Row="4" Grid.Column="1" x:Name="txtBrojStrana"
-                   Margin="0,4" Height="26" Padding="4,2"/>
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="{DynamicResource lblBrojStrana}" VerticalAlignment="Center" Margin="0,4,8,4"/>
+        <TextBox   Grid.Row="4" Grid.Column="1" x:Name="txtBrojStrana" Margin="0,4" Height="26" Padding="4,2"
+                   Text="{Binding BrojStrana, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
 
-        <TextBlock Grid.Row="5" Grid.Column="0" Text="{DynamicResource lblZanr}"
-                   VerticalAlignment="Center" Margin="0,4,8,4"/>
-        <ComboBox  Grid.Row="5" Grid.Column="1" x:Name="cbZanr"
-                   Margin="0,4" Height="26"/>
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="{DynamicResource lblZanr}" VerticalAlignment="Center" Margin="0,4,8,4"/>
+        <ComboBox  Grid.Row="5" Grid.Column="1" x:Name="cbZanr" Margin="0,4" Height="26"
+                   SelectedItem="{Binding Zanr, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
 
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="{DynamicResource lblIzdavac}"
-                   VerticalAlignment="Center" Margin="0,4,8,4"/>
-        <ComboBox  Grid.Row="6" Grid.Column="1" x:Name="cbIzdavac"
-                   Margin="0,4" Height="26"
-                   DisplayMemberPath="Naziv"/>
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="{DynamicResource lblIzdavac}" VerticalAlignment="Center" Margin="0,4,8,4"/>
+        <ComboBox  Grid.Row="6" Grid.Column="1" x:Name="cbIzdavac" Margin="0,4" Height="26" DisplayMemberPath="Naziv"
+                   SelectedItem="{Binding Izdavac, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
 
-        <TextBlock Grid.Row="7" Grid.Column="0" Text="{DynamicResource lblAutor}"
-                   VerticalAlignment="Center" Margin="0,4,8,4"/>
+        <TextBlock Grid.Row="7" Grid.Column="0" Text="{DynamicResource lblAutor}" VerticalAlignment="Center" Margin="0,4,8,4"/>
         <Grid Grid.Row="7" Grid.Column="1" Margin="0,4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-
-            <TextBox Grid.Column="0" x:Name="txtAutor"
-                     IsReadOnly="True"
-                     Background="WhiteSmoke"
-                     Height="26" Padding="4,2"
-                     VerticalContentAlignment="Center"/>
-
-            <Button Grid.Column="1" x:Name="btnDodajAutora"
-                    Content="+"
-                    Width="26" Height="26"
-                    Margin="4,0,2,0"
-                    FontWeight="Bold"
-                    ToolTip="{DynamicResource tipDodajAutora}"
-                    Click="BtnDodajAutora_Click"/>
-
-            <Button Grid.Column="2" x:Name="btnUkloniAutora"
-                    Content="−"
-                    Width="26" Height="26"
-                    FontWeight="Bold"
-                    ToolTip="{DynamicResource tipUkloniAutora}"
-                    Click="BtnUkloniAutora_Click"/>
+            <TextBox Grid.Column="0" x:Name="txtAutor" IsReadOnly="True" Background="WhiteSmoke" Height="26" Padding="4,2" VerticalContentAlignment="Center"/>
+            <Button Grid.Column="1" x:Name="btnDodajAutora" Content="+" Width="26" Height="26" Margin="4,0,2,0" FontWeight="Bold" Click="BtnDodajAutora_Click"/>
+            <Button Grid.Column="2" x:Name="btnUkloniAutora" Content="−" Width="26" Height="26" FontWeight="Bold" Click="BtnUkloniAutora_Click"/>
         </Grid>
 
-        <ListBox x:Name="listAutori"
-                 ItemsSource="{Binding OdabraniAutori}"
-                 DisplayMemberPath="ImePrezime"
-                 Width="200"
-                 Height="100"
-                 Margin="10"
-                 Visibility="Collapsed"/>
+        <ListBox x:Name="listAutori" Grid.Row="8" Grid.ColumnSpan="2" DisplayMemberPath="ImePrezime" Height="100" Margin="10" Visibility="Collapsed"/>
 
-        <StackPanel Grid.Row="9" Grid.ColumnSpan="2"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0,12,0,0">
-            <Button Content="{DynamicResource btnOdustani}"
-                    Width="90" Height="30"
-                    Margin="0,0,8,0"
-                    Click="BtnOdustani_Click"/>
-            <Button Content="{DynamicResource btnPotvrdi}"
-                    Width="90" Height="30"
-                    IsDefault="True"
-                    Click="BtnPotvrdi_Click"/>
+        <StackPanel Grid.Row="9" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="{DynamicResource btnOdustani}" Width="90" Height="30" Margin="0,0,8,0" Click="BtnOdustani_Click"/>
+            <Button x:Name="btnPotvrdi" Content="{DynamicResource btnPotvrdi}" Width="90" Height="30" IsDefault="True" Click="BtnPotvrdi_Click"/>
         </StackPanel>
     </Grid>
 </Window>

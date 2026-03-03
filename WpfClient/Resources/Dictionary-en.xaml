@@ -13,6 +13,20 @@
     <system:String x:Key="mHelp">_Help</system:String>
     <system:String x:Key="mAbout">_About</system:String>
 
+    <system:String x:Key="errImeObavezno">First name is required.</system:String>
+    <system:String x:Key="errImeKratko">First name must be at least 2 characters long.</system:String>
+    <system:String x:Key="errPrezimeObavezno">Last name is required.</system:String>
+    <system:String x:Key="errDatumObavezan">Date of birth is required.</system:String>
+    <system:String x:Key="errDatumBuducnost">Date cannot be in the future.</system:String>
+    <system:String x:Key="errEmailObavezan">Email is required.</system:String>
+    <system:String x:Key="errEmailFormat">Invalid email format.</system:String>
+    <system:String x:Key="errBrojLkObavezan">ID number is required.</system:String>
+    <system:String x:Key="errBrojLkFormat">ID number must be exactly 8 digits.</system:String>
+    <system:String x:Key="errIskustvoObavezno">Experience is required.</system:String>
+    <system:String x:Key="errIskustvoRaspon">Experience must be between 0 and 70 years.</system:String>
+    <system:String x:Key="errGradObavezan">City is required.</system:String>
+    <system:String x:Key="msgIspraviGreske">Please correct the highlighted errors before confirming.</system:String>
+
     <system:String x:Key="mSrb">Serbian</system:String>
     <system:String x:Key="mEng">English</system:String>
 
@@ -98,7 +112,7 @@
 
     <system:String x:Key="titleIzmenaIzdavaca">Edit Publisher</system:String>
     <system:String x:Key="titleDodajIzdavaca">Add New Publisher</system:String>
-    <system:String x:Key="msgIspraviGreske">Please fix the errors marked in red!</system:String>
+   
     <system:String x:Key="titleValidacija">Validation</system:String>
 
     <system:String x:Key="errSifraObavezna">Publisher code is required.</system:String>

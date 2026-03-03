@@ -17,13 +17,13 @@ namespace WpfClient
     /// </summary>
     public partial class IzmenaAutora : Window
     {
+
         public Autor SelektovaniAutor { get; private set; }
         private ObservableCollection<Knjiga> _knjige;
         private readonly List<Knjiga> _sveKnjige;
-        private readonly AutorDAO _autorDao = new AutorDAO();
-        private readonly KnjigaDAO _knjigaDao = new KnjigaDAO();
+        private readonly AutorDAO _autorDao;
+        private readonly KnjigaDAO _knjigaDao;
 
-        // ── Dodajemo DTO validator ──
         private AutorDTO _validator = new AutorDTO();
 
         public IzmenaAutora(Autor autor, List<Knjiga> sveKnjige, AutorDAO autorDao, KnjigaDAO knjigaDao)
@@ -32,105 +32,93 @@ namespace WpfClient
 
             SelektovaniAutor = autor;
             _sveKnjige = sveKnjige ?? new List<Knjiga>();
+            _autorDao = autorDao;
+            _knjigaDao = knjigaDao;
 
-            PopuniPolja();
+            PopuniValidator();
+            this.DataContext = _validator;
+
             UcitajKnjige();
+            OsveziDugmePotvrdi();
         }
 
-        private void PopuniPolja()
+        private void PopuniValidator()
         {
             if (SelektovaniAutor == null) return;
 
-            // Punimo UI polja
-            txtBrojLK.Text = SelektovaniAutor.Broj_lk;
-            txtIme.Text = SelektovaniAutor.Ime;
-            txtPrezime.Text = SelektovaniAutor.Prezime;
-            txtEmail.Text = SelektovaniAutor.Email;
-            txtTelefon.Text = SelektovaniAutor.Telefon;
-            txtIskustvo.Text = SelektovaniAutor.Godine_iskustva.ToString();
-            dpDatumRodjenja.SelectedDate = SelektovaniAutor.Datum_rodjenja;
+            _validator.BrojLk = SelektovaniAutor.Broj_lk;
+            _validator.Ime = SelektovaniAutor.Ime;
+            _validator.Prezime = SelektovaniAutor.Prezime;
+            _validator.Email = SelektovaniAutor.Email;
+            _validator.Telefon = SelektovaniAutor.Telefon;
+            _validator.GodineIskustva = SelektovaniAutor.Godine_iskustva.ToString();
+            _validator.DatumRodjenja = SelektovaniAutor.Datum_rodjenja;
 
             if (SelektovaniAutor.Adresa != null)
             {
-                txtUlica.Text = SelektovaniAutor.Adresa.Ulica;
-                txtBroj.Text = SelektovaniAutor.Adresa.Broj;
-                txtGrad.Text = SelektovaniAutor.Adresa.Grad;
-                txtDrzava.Text = SelektovaniAutor.Adresa.Drzava;
+                _validator.Ulica = SelektovaniAutor.Adresa.Ulica;
+                _validator.Broj = SelektovaniAutor.Adresa.Broj;
+                _validator.Grad = SelektovaniAutor.Adresa.Grad;
+                _validator.Drzava = SelektovaniAutor.Adresa.Drzava;
             }
-
-            // ── SINHRONIZACIJA SA VALIDATOROM ──
-            // Odmah popunjavamo validator da bi "znao" trenutno stanje
-            AzurirajValidatorIzForme();
         }
 
-        private void AzurirajValidatorIzForme()
+        private void Polje_Changed(object sender, EventArgs e)
         {
-            _validator.Ime = txtIme.Text;
-            _validator.Prezime = txtPrezime.Text;
-            _validator.Email = txtEmail.Text;
-            _validator.Telefon = txtTelefon.Text;
-            _validator.BrojLk = txtBrojLK.Text;
-            _validator.DatumRodjenja = dpDatumRodjenja.SelectedDate;
-            _validator.Ulica = txtUlica.Text;
-            _validator.Broj = txtBroj.Text;
-            _validator.Grad = txtGrad.Text;
-
-            
+            OsveziDugmePotvrdi();
         }
 
-
-
-        private bool JeLiValidno()
+        private void OsveziDugmePotvrdi()
         {
-            // Lista svojstava koja proveravamo (mora se poklapati sa switch-om u AutorDTO)
+            if (btnPotvrdi != null)
+                btnPotvrdi.IsEnabled = FormaJeValidna();
+        }
+
+        private bool FormaJeValidna()
+        {
             string[] polja = {
-            nameof(AutorDTO.Ime), nameof(AutorDTO.Prezime), nameof(AutorDTO.Email),
-            nameof(AutorDTO.BrojLk), nameof(AutorDTO.Ulica), nameof(AutorDTO.Grad)
-        };
+                nameof(_validator.Ime), nameof(_validator.Prezime), nameof(_validator.Email),
+                nameof(_validator.BrojLk), nameof(_validator.GodineIskustva),
+                nameof(_validator.Grad), nameof(_validator.DatumRodjenja)
+            };
 
             foreach (var p in polja)
             {
-                if (_validator[p] == "X") return false;
+                if (!string.IsNullOrEmpty(_validator[p])) return false;
             }
-            return true;
+
+            return !string.IsNullOrWhiteSpace(_validator.Ime) &&
+                   !string.IsNullOrWhiteSpace(_validator.Prezime) &&
+                   _validator.DatumRodjenja.HasValue;
         }
 
         private void BtnPotvrdi_Click(object sender, RoutedEventArgs e)
         {
-            // 1. Prvo ažuriramo validator podacima koji su trenutno u TextBox-ovima
-            AzurirajValidatorIzForme();
-
-            // 2. Provera preko DTO-a
-            if (!JeLiValidno())
+            if (!FormaJeValidna())
             {
-                string poruka = Application.Current.FindResource("msgPopuniteSvaPolja").ToString();
-                string naslov = Application.Current.FindResource("errorTitle").ToString();
-                MessageBox.Show(poruka, naslov, MessageBoxButton.OK, MessageBoxImage.Warning);
+                string poruka = Application.Current.FindResource("msgIspraviGreske").ToString();
+                MessageBox.Show(poruka, "Validacija", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // 3. Ako je sve OK, prepisujemo u originalni objekat
             SelektovaniAutor.Ime = _validator.Ime.Trim();
             SelektovaniAutor.Prezime = _validator.Prezime.Trim();
             SelektovaniAutor.Email = _validator.Email.Trim();
-            SelektovaniAutor.Telefon = _validator.Telefon.Trim();
+            SelektovaniAutor.Telefon = _validator.Telefon?.Trim();
+            SelektovaniAutor.Datum_rodjenja = _validator.DatumRodjenja.Value;
+            SelektovaniAutor.Godine_iskustva = int.Parse(_validator.GodineIskustva);
             SelektovaniAutor.Broj_lk = _validator.BrojLk.Trim();
-            SelektovaniAutor.Datum_rodjenja = _validator.DatumRodjenja ?? SelektovaniAutor.Datum_rodjenja;
-            
 
-            if (SelektovaniAutor.Adresa != null)
-            {
-                SelektovaniAutor.Adresa.Ulica = _validator.Ulica.Trim();
-                SelektovaniAutor.Adresa.Broj = _validator.Broj.Trim();
-                SelektovaniAutor.Adresa.Grad = _validator.Grad.Trim();
-                SelektovaniAutor.Adresa.Drzava = txtDrzava.Text.Trim();
-            }
+            if (SelektovaniAutor.Adresa == null) SelektovaniAutor.Adresa = new Adresa();
+            SelektovaniAutor.Adresa.Ulica = _validator.Ulica?.Trim();
+            SelektovaniAutor.Adresa.Broj = _validator.Broj?.Trim();
+            SelektovaniAutor.Adresa.Grad = _validator.Grad?.Trim();
+            SelektovaniAutor.Adresa.Drzava = _validator.Drzava?.Trim();
 
             this.DialogResult = true;
             this.Close();
         }
 
-        // --- Ostatak koda (UcitajKnjige, BtnDodajKnjigu, itd.) ostaje isti ---
         private void BtnOdustani_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
@@ -143,97 +131,59 @@ namespace WpfClient
             dgKnjige.ItemsSource = _knjige;
         }
 
-        // ── Dugme "Dodaj knjigu" ─────────────────────────────────────────
         private void BtnDodajKnjigu_Click(object sender, RoutedEventArgs e)
         {
-            // Skup ISBN-ova knjiga koje autor već ima — da ih ne nudimo ponovo
             var autoroveISBN = _knjige.Select(k => k.ISBN).ToHashSet();
+            var dostupne = _sveKnjige.Where(k => !autoroveISBN.Contains(k.ISBN)).ToList();
 
-            var dostupne = _sveKnjige
-                .Where(k => !autoroveISBN.Contains(k.ISBN))
-                .ToList();
             if (!dostupne.Any())
             {
-                string poruka = Application.Current.FindResource("msgNemaKnjigaZaDodavanje").ToString();
-                string naslov = Application.Current.FindResource("titleInfo").ToString();
-
-                MessageBox.Show(poruka, naslov, MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(Application.Current.FindResource("msgNemaKnjigaZaDodavanje").ToString(),
+                    Application.Current.FindResource("titleInfo").ToString(), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            var prozor = new OdaberiKnjiguProzor(dostupne)
-            {
-                Owner = this,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner
-            };
+            var prozor = new OdaberiKnjiguProzor(dostupne) { Owner = this };
 
             if (prozor.ShowDialog() == true && prozor.OdabranaKnjiga != null)
             {
                 Knjiga odabrana = prozor.OdabranaKnjiga;
-
-                // 1. Dodaj u DataGrid (ObservableCollection obaveštava UI automatski)
                 _knjige.Add(odabrana);
+                if (SelektovaniAutor.SpisakKnjiga == null) SelektovaniAutor.SpisakKnjiga = new List<Knjiga>();
+                if (!SelektovaniAutor.SpisakKnjiga.Contains(odabrana)) SelektovaniAutor.SpisakKnjiga.Add(odabrana);
+                if (odabrana.ListaAutora == null) odabrana.ListaAutora = new List<Autor>();
+                if (!odabrana.ListaAutora.Contains(SelektovaniAutor)) odabrana.ListaAutora.Add(SelektovaniAutor);
 
-                // 2. Dodaj u memorijsku listu autora
-                if (SelektovaniAutor.SpisakKnjiga == null)
-                    SelektovaniAutor.SpisakKnjiga = new List<Knjiga>();
-
-                if (!SelektovaniAutor.SpisakKnjiga.Contains(odabrana))
-                    SelektovaniAutor.SpisakKnjiga.Add(odabrana);
-
-                // 3. Bidirekciona veza — dodaj autora u ListaAutora knjige
-                if (odabrana.ListaAutora == null)
-                    odabrana.ListaAutora = new List<Autor>();
-
-                if (!odabrana.ListaAutora.Contains(SelektovaniAutor))
-                    odabrana.ListaAutora.Add(SelektovaniAutor);
-
-                // 4. Snimi u fajlove
                 _autorDao.Update(SelektovaniAutor);
                 _knjigaDao.Save();
             }
         }
 
-        // ── Dugme "Ukloni knjigu" ────────────────────────────────────────
         private void BtnUkloniKnjigu_Click(object sender, RoutedEventArgs e)
         {
-            var selektovane = dgKnjige.SelectedItems
-                .Cast<Knjiga>()
-                .ToList();
-
+            var selektovane = dgKnjige.SelectedItems.Cast<Knjiga>().ToList();
             if (!selektovane.Any())
             {
-                MessageBox.Show(
-                    Application.Current.FindResource("msgOdaberiKnjiguIzTabele").ToString(),
-                    Application.Current.FindResource("titleObavestenje").ToString(),
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(Application.Current.FindResource("msgOdaberiKnjiguIzTabele").ToString(),
+                    Application.Current.FindResource("titleObavestenje").ToString(), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            // Poruka potvrde
             string start = Application.Current.FindResource("msgPotvrdaUklanjanjaStart").ToString();
-            
-            string naslov = Application.Current.FindResource("titleUklanjanjeKnjige").ToString();
-
             string popisKnjiga = string.Join("\n", selektovane.Select(k => $"• {k.Naziv}"));
-            string punaPoruka = $"{start}\n{popisKnjiga}\n";
-
-            var potvrda = MessageBox.Show(punaPoruka, naslov, MessageBoxButton.YesNo, MessageBoxImage.None);
-            if (potvrda != MessageBoxResult.Yes) return;
-
-            foreach (var knjiga in selektovane)
+            if (MessageBox.Show($"{start}\n{popisKnjiga}", Application.Current.FindResource("titleUklanjanjeKnjige").ToString(),
+                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                // 1. Ukloni iz DataGrid-a (ObservableCollection)
-                _knjige.Remove(knjiga);
-                // 2. Ukloni iz memorijskog spiska autora
-                SelektovaniAutor.SpisakKnjiga?.Remove(knjiga);
-                // 3. Bidirekciona veza
-                knjiga.ListaAutora?.Remove(SelektovaniAutor);
+                foreach (var knjiga in selektovane)
+                {
+                    _knjige.Remove(knjiga);
+                    SelektovaniAutor.SpisakKnjiga?.Remove(knjiga);
+                    knjiga.ListaAutora?.Remove(SelektovaniAutor);
+                }
+                _autorDao.Update(SelektovaniAutor);
+                _knjigaDao.Save();
             }
 
-            // 4. Snimi promene — jednom nakon petlje
-            _autorDao.Update(SelektovaniAutor);
-            _knjigaDao.Save();
         }
     }
 }

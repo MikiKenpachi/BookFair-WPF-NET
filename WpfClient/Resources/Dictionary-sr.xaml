@@ -18,6 +18,8 @@
     <system:String x:Key="mSrb"> Srpski </system:String>
     <system:String x:Key="mEng">Engleski</system:String>
 
+
+
     <system:String x:Key="titlePoredjenjePosetilaca">Poređenje posetilaca</system:String>
     <system:String x:Key="lblNaslovPoredjenja">Poređenje posetilaca po dve knjige</system:String>
     <system:String x:Key="lblKnjiga1">Knjiga 1:</system:String>
@@ -257,4 +259,18 @@
     <system:String x:Key="tipPrikaziKnjigeIzdavaca">Prikaži knjige selektovanog izdavača</system:String>
 
     <system:String x:Key="errISBNFormat">ISBN mora imati tačno 6 cifara.</system:String>
+
+    <system:String x:Key="errImeObavezno">Ime je obavezno.</system:String>
+    <system:String x:Key="errImeKratko">Ime mora imati bar 2 slova.</system:String>
+    <system:String x:Key="errPrezimeObavezno">Prezime je obavezno.</system:String>
+    <system:String x:Key="errDatumObavezan">Datum rođenja je obavezan.</system:String>
+    <system:String x:Key="errDatumBuducnost">Datum ne može biti u budućnosti.</system:String>
+    <system:String x:Key="errEmailObavezan">Email je obavezan.</system:String>
+    <system:String x:Key="errEmailFormat">Neispravan format email adrese.</system:String>
+    <system:String x:Key="errBrojLkObavezan">Broj lične karte je obavezan.</system:String>
+    <system:String x:Key="errBrojLkFormat">Broj lične karte mora imati tačno 8 cifara.</system:String>
+    <system:String x:Key="errIskustvoObavezno">Unesite godine iskustva.</system:String>
+    <system:String x:Key="errIskustvoRaspon">Iskustvo mora biti između 0 i 70 godina.</system:String>
+    <system:String x:Key="errGradObavezan">Grad je obavezan.</system:String>
+   
 </ResourceDictionary>

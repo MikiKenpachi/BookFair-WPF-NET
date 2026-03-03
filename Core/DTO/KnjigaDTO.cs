@@ -2,19 +2,28 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace Core.DTO
 {
     public class KnjigaDTO : IDataErrorInfo
     {
-        public string ISBN { get; set; }
-        public string Naziv { get; set; }
-        public string Cena { get; set; }
-        public string BrojStrana { get; set; }
-        public string GodinaIzdanja { get; set; }
-        public Knjiga.Zanrovi? Zanr { get; set; }
-        public Izdavac Izdavac { get; set; }
+        private string _isbn;
+        private string _naziv;
+        private string _cena;
+        private string _brojStrana;
+        private string _godinaIzdanja;
+        private Knjiga.Zanrovi? _zanr;
+        private Izdavac _izdavac;
+
+        public string ISBN { get => _isbn; set { _isbn = value; OnPropertyChanged(); } }
+        public string Naziv { get => _naziv; set { _naziv = value; OnPropertyChanged(); } }
+        public string Cena { get => _cena; set { _cena = value; OnPropertyChanged(); } }
+        public string BrojStrana { get => _brojStrana; set { _brojStrana = value; OnPropertyChanged(); } }
+        public string GodinaIzdanja { get => _godinaIzdanja; set { _godinaIzdanja = value; OnPropertyChanged(); } }
+        public Knjiga.Zanrovi? Zanr { get => _zanr; set { _zanr = value; OnPropertyChanged(); } }
+        public Izdavac Izdavac { get => _izdavac; set { _izdavac = value; OnPropertyChanged(); } }
         public List<Autor> Autori { get; set; } = new List<Autor>();
 
         public string Error => null;
@@ -50,7 +59,7 @@ namespace Core.DTO
                     case nameof(GodinaIzdanja):
                         if (string.IsNullOrWhiteSpace(GodinaIzdanja)) return "X";
                         if (!int.TryParse(GodinaIzdanja, out int god)) return "X";
-                        if (god < 1400 || god > DateTime.Now.Year) return "X";
+                        if (god > DateTime.Now.Year) return "X";
                         break;
 
                     case nameof(Zanr):
@@ -63,6 +72,12 @@ namespace Core.DTO
                 }
                 return string.Empty;
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

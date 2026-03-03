@@ -22,61 +22,59 @@ public class AutorDTO : IDataErrorInfo
     {
         get
         {
+            string rezultat = string.Empty;
+
             switch (columnName)
             {
                 case nameof(Ime):
-                    if (string.IsNullOrWhiteSpace(Ime)) return "X";
-                    if (Ime.Trim().Length < 2) return "X";
+                    if (string.IsNullOrWhiteSpace(Ime))
+                        rezultat = Core.Languages.Translator.Prevedi("errImeObavezno");
+                    else if (Ime.Trim().Length < 2)
+                        rezultat = Core.Languages.Translator.Prevedi("errImeKratko");
                     break;
 
                 case nameof(Prezime):
-                    if (string.IsNullOrWhiteSpace(Prezime)) return "X";
-                    if (Prezime.Trim().Length < 2) return "X";
+                    if (string.IsNullOrWhiteSpace(Prezime))
+                        rezultat = Core.Languages.Translator.Prevedi("errPrezimeObavezno");
                     break;
 
                 case nameof(DatumRodjenja):
-                    if (DatumRodjenja == null) return "X";
-                    if (DatumRodjenja > DateTime.Now) return "X";
-                    break;
-
-                case nameof(Telefon):
-                    if (string.IsNullOrWhiteSpace(Telefon)) return "X";
-                    if (!Regex.IsMatch(Telefon.Trim(), @"^[0-9+\-\s\(\)]{6,20}$")) return "X";
+                    if (DatumRodjenja == null)
+                        rezultat = Core.Languages.Translator.Prevedi("errDatumObavezan");
+                    else if (DatumRodjenja > DateTime.Now)
+                        rezultat = Core.Languages.Translator.Prevedi("errDatumBuducnost");
                     break;
 
                 case nameof(Email):
-                    if (string.IsNullOrWhiteSpace(Email)) return "X";
-                    if (!Regex.IsMatch(Email.Trim(), @"^[^@\s]+@[^@\s]+$")) return "X";
-                    break;
-
-                case nameof(GodineIskustva):
-                    if (string.IsNullOrWhiteSpace(GodineIskustva)) return "X";
-                    if (!int.TryParse(GodineIskustva, out int god) || god < 0) return "X";
-                    if (god > 70) return "X";
+                    if (string.IsNullOrWhiteSpace(Email))
+                        rezultat = Core.Languages.Translator.Prevedi("errEmailObavezan");
+                    else if (!Regex.IsMatch(Email.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+                        rezultat = Core.Languages.Translator.Prevedi("errEmailFormat");
                     break;
 
                 case nameof(BrojLk):
-                    if (string.IsNullOrWhiteSpace(BrojLk)) return "X";
-                    if (!Regex.IsMatch(BrojLk.Trim(), @"^\d{8}$")) return "X";
+                    if (string.IsNullOrWhiteSpace(BrojLk))
+                        rezultat = Core.Languages.Translator.Prevedi("errBrojLkObavezan");
+                    else if (!Regex.IsMatch(BrojLk.Trim(), @"^\d{8}$"))
+                        rezultat = Core.Languages.Translator.Prevedi("errBrojLkFormat");
                     break;
 
-                case nameof(Ulica):
-                    if (string.IsNullOrWhiteSpace(Ulica)) return "X";
-                    break;
-
-                case nameof(Broj):
-                    if (string.IsNullOrWhiteSpace(Broj)) return "X";
+                case nameof(GodineIskustva):
+                    if (string.IsNullOrWhiteSpace(GodineIskustva))
+                        rezultat = Core.Languages.Translator.Prevedi("errIskustvoObavezno");
+                    else if (!int.TryParse(GodineIskustva, out int god) || god < 0 || god > 70)
+                        rezultat = Core.Languages.Translator.Prevedi("errIskustvoRaspon");
                     break;
 
                 case nameof(Grad):
-                    if (string.IsNullOrWhiteSpace(Grad)) return "X";
+                    if (string.IsNullOrWhiteSpace(Grad))
+                        rezultat = Core.Languages.Translator.Prevedi("errGradObavezan");
                     break;
 
-                case nameof(Drzava):
-                    if (string.IsNullOrWhiteSpace(Drzava)) return "X";
-                    break;
+                    // Dodaj ostala polja (Ulica, Broj, Drzava) po istom principu ako su obavezna
             }
-            return string.Empty;
+            return rezultat;
         }
     }
+
 }
