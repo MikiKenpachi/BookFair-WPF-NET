@@ -38,10 +38,10 @@ The project was implemented with strict adherence to engineering principles and 
 
 ## 👥 Team Members
 
-| Name and Surname | Index Number | Department |
-| :--- | :--- | :--- |
-| **Miloš Trišić** | RA 39/2023 | Computing and Control |
-| **Boris Stepanović** | RA 97/2023 | Computing and Control |
+| Name and Surname | Index Number | Department | Module |
+| :--- | :--- | :--- | :--- |
+| **Miloš Trišić** | RA 39/2023 | Computing and Control | Applied Computer Science and Informatics |
+| **Boris Stepanović** | RA 97/2023 | Computing and Control | Applied Computer Science and Informatics |
 
 ## 📄 License
 
