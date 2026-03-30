@@ -1,48 +1,48 @@
-# 📚 Sajam Knjiga - Informacioni sistem uprave sajma knjiga
+# 📚 Book Fair - Management Information System
 
-Predmetni projekat iz predmeta **Osnovi informacionih sistema i softverskog inženjerstva (OISISI)** **Fakultet tehničkih nauka, Univerzitet u Novom Sadu**
+Course project for **The Fundamentals of Information Systems and Software Engineering (OISISI)** **Faculty of Technical Sciences, University of Novi Sad**
 
-## 📖 Opis projekta
+## 📖 Project Description
 
-**SajamKnjiga** je desktop aplikacija namenjena referentu sajma za efikasno upravljanje podacima tokom sajamske manifestacije. Projekat je fokusiran na implementaciju sistema za evidenciju učesnika, kataloga knjiga i realizovanih kupovina kroz intuitivan grafički interfejs.
+**BookFair** is a desktop application designed for fair administrators to efficiently manage data during book fair events. The project focuses on implementing a system for tracking participants, book catalogs, and completed purchases through an intuitive graphical user interface.
 
-Aplikacija omogućava rad sa sledećim entitetima:
-* **Posetioci** (evidencija i podaci o posetiocima sajma)
-* **Autori i Knjige** (katalog napisanih dela i biografije autora)
-* **Izdavači** (upravljanje podacima o izdavačkim kućama)
-* **Kupovine** (evidencija realizovanih kupovina)
+The application enables work with the following entities:
+* **Visitors** (records and data of fair visitors)
+* **Authors and Books** (catalog of written works and author biographies)
+* **Publishers** (management of publishing house data)
+* **Purchases** (records of completed purchases)
 
-## 🏗️ Arhitektura softvera
+## 🏗️ Software Architecture
 
-Projekat je realizovan uz strogo poštovanje inženjerskih principa i obrazaca:
-* **MVC (Model-View-Controller):** Jasno razdvajanje poslovne logike, podataka i korisničkog prikaza.
-* **DAO (Data Access Object):** Standardizovan sloj za pristup podacima i njihovu perzistenciju.
-* **Serijalizacija:** Čuvanje i učitavanje stanja sistema putem datoteka.
+The project was implemented with strict adherence to engineering principles and patterns:
+* **MVC (Model-View-Controller):** Clear separation of business logic, data, and user interface.
+* **DAO (Data Access Object):** Standardized layer for data access and persistence.
+* **Serialization:** Saving and loading the system state via data files.
 
-## 🛠️ Tehnologije
+## 🛠️ Technologies
 
-| Tehnologija | Opis |
+| Technology | Description |
 | :--- | :--- |
-| **C# / .NET** | Osnovni programski jezik i platforma. |
-| **WPF (XAML)** | Izrada korisničkog interfejsa. |
-| **MVC** | Arhitektonski šablon za organizaciju koda. |
-| **Git** | Sistem za kontrolu verzija. |
+| **C# / .NET** | Primary programming language and platform. |
+| **WPF (XAML)** | User interface development. |
+| **MVC** | Architectural pattern for code organization. |
+| **Git** | Version control system. |
 
-## ✨ Ključne funkcionalnosti
+## ✨ Key Features
 
-* **CRUD operacije:** Dodavanje, izmena, brisanje i pregled svih entiteta sistema.
-* **Lokalizacija:** Podrška za srpski i engleski jezik unutar cele aplikacije.
-* **Paginacija:** Efikasan prikaz podataka (do 16 entiteta po stranici).
-* **Pretraga i filtriranje:** Case-insensitive pretraga po specifičnim kriterijumima za posetioce, autore i knjige.
-* **Validacija:** Provera ispravnosti unosa pre potvrde akcija.
+* **CRUD operations:** Adding, editing, deleting, and viewing all system entities.
+* **Localization:** Support for Serbian and English languages within the entire application.
+* **Pagination:** Efficient data display (up to 16 entities per page).
+* **Search and Filtering:** Case-insensitive search based on specific criteria for visitors, authors, and books.
+* **Validation:** Input correctness checks before action confirmation.
 
-## 👥 Članovi tima
+## 👥 Team Members
 
-| Ime i prezime | Broj indeksa | Smer |
+| Name and Surname | Index Number | Department |
 | :--- | :--- | :--- |
-| **Miloš Trišić** | RA 39/2023 | Računarstvo i automatika |
-| **Boris Stepanović** | RA 97/2023 | Računarstvo i automatika |
+| **Miloš Trišić** | RA 39/2023 | Computing and Control |
+| **Boris Stepanović** | RA 97/2023 | Computing and Control |
 
-## 📄 Licenca
+## 📄 License
 
-Ovaj projekat je izrađen isključivo u obrazovne svrhe u okviru studija na Fakultetu tehničkih nauka u Novom Sadu.
+This project was developed exclusively for educational purposes as part of the curriculum at the Faculty of Technical Sciences in Novi Sad.
